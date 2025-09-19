@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI AI AI - Clean Experience</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        /* Three.js canvas */
+        #three-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+        
+        /* Content container */
+        .content {
+            position: relative;
+            z-index: 10;
+            min-height: 2000vh; /* Much longer scrollable content for extended videos */
+        }
+        
+        /* Story sections */
+        .story-section {
+            min-height: 150vh; /* Each section takes 1.5x viewport height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        
+        .story-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .story-content {
+            max-width: 900px;
+            text-align: left;
+            position: relative;
+            z-index: 20;
+            padding: 0 2rem;
+        }
+        
+        .story-content::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, 
+                rgba(255, 255, 255, 0.8) 0%, 
+                rgba(255, 255, 255, 0.4) 50%, 
+                rgba(255, 255, 255, 0.1) 100%);
+            border-radius: 2px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        
+        .story-content h2 {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1.5rem;
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            font-weight: 200;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+        
+        .story-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 2rem;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 0.8) 0%, 
+                rgba(255, 255, 255, 0.2) 100%);
+            border-radius: 1px;
+        }
+        
+        .story-content p {
+            padding-left: 2rem;
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            line-height: 1.6;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0;
+        }
+        
+        
+        /* Company logos styling */
+        .company-logos {
+            margin-top: 3rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            padding: 0 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .company-logos {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+                padding: 0 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .company-logos {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+                padding: 0 0.25rem;
+            }
+        }
+        
+        .logo-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(30px) scale(0.9);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .logo-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(115, 251, 211, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (max-width: 768px) {
+            .logo-container {
+                padding: 1.5rem;
+                height: 100px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo-container {
+                padding: 1rem;
+                height: 80px;
+            }
+        }
+        
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(115, 251, 211, 0.1), rgba(138, 126, 252, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            border-radius: 15px;
+        }
+        
+        .logo-container:hover::before {
+            opacity: 1;
+        }
+        
+        .logo-container:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(115, 251, 211, 0.5);
+            box-shadow: 0 10px 30px rgba(115, 251, 211, 0.2);
+        }
+        
+        .company-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+            opacity: 0.9;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px;
+        }
+        
+        @media (max-width: 768px) {
+            .company-logo {
+                width: 70px;
+                height: 70px;
+                padding: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .company-logo {
+                width: 60px;
+                height: 60px;
+                padding: 8px;
+            }
+        }
+        
+        .logo-container:hover .company-logo {
+            filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(160deg);
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        
+        .amazon-logo {
+            filter: none !important;
+            opacity: 0.9 !important;
+            background: transparent !important;
+        }
+        
+        .logo-container:hover .amazon-logo {
+            filter: none !important;
+            opacity: 1 !important;
+            transform: scale(1.1);
+            background: transparent !important;
+        }
+        
+        .logo-text {
+            font-size: clamp(0.8rem, 1.8vw, 1rem);
+            font-weight: 600;
+            color: #ffffff;
+            position: relative;
+            z-index: 2;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+            display: block;
+            line-height: 1.2;
+            text-align: center;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        
+        .logo-container:hover .logo-text {
+            color: #73fbd3;
+            text-shadow: 0 0 20px rgba(115, 251, 211, 0.5);
+        }
+        
+        /* Fun card styling */
+        .fun-card {
+            background: linear-gradient(135deg, rgba(115, 251, 211, 0.15), rgba(138, 126, 252, 0.15));
+            border: 2px solid rgba(115, 251, 211, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .fun-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(115, 251, 211, 0.1), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        .fun-text {
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 700;
+            color: #73fbd3;
+            text-align: center;
+            line-height: 1;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(115, 251, 211, 0.6);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .fun-card:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(115, 251, 211, 0.3);
+            border-color: rgba(115, 251, 211, 0.8);
+        }
+        
+        .fun-card:hover .fun-text {
+            text-shadow: 0 0 30px rgba(115, 251, 211, 0.9);
+            transform: scale(1.1);
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+        
+        /* Services Grid Styling */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            padding: 0 1rem;
+        }
+        
+        .service-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(115, 251, 211, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            height: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(115, 251, 211, 0.1), rgba(138, 126, 252, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            border-radius: 15px;
+        }
+        
+        .service-card:hover::before {
+            opacity: 1;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(115, 251, 211, 0.5);
+            box-shadow: 0 15px 40px rgba(115, 251, 211, 0.2);
+        }
+        
+        .service-icon {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #73fbd3;
+            background: rgba(115, 251, 211, 0.1);
+            border: 1px solid rgba(115, 251, 211, 0.3);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        
+        .service-card h3 {
+            font-size: clamp(1.3rem, 2.5vw, 1.6rem);
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+            letter-spacing: 0.02em;
+        }
+        
+        .service-card p {
+            font-size: clamp(1rem, 2vw, 1.1rem);
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+            margin: 0;
+        }
+        
+        .service-card:hover h3 {
+            color: #73fbd3;
+            text-shadow: 0 0 20px rgba(115, 251, 211, 0.5);
+        }
+        
+        .service-card:hover p {
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
+        @media (max-width: 768px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 0 0.5rem;
+            }
+            
+            .service-card {
+                height: 250px;
+                padding: 1.5rem;
+            }
+        }
+        
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* CTA styling */
+        .cta {
+            margin-top: 3rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #fff;
+        }
+        
+        /* Debug overlay */
+        #debug {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 20;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Scroll indicator */
+        .scroll-hint {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            animation: fadeInOut 3s infinite;
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .story-content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Three.js Canvas -->
+    <canvas id="three-canvas"></canvas>
+    
+    <!-- Debug overlay -->
+    <div id="debug">
+        Loading...
+    </div>
+    
+    <!-- Scroll hint -->
+    <div class="scroll-hint">Scroll to explore ↓</div>
+    
+    <!-- Content -->
+    <div class="content">
+        <!-- Initial spacer to let video breathe -->
+        <div style="height: 100vh;"></div>
+        
+        <!-- Story Section 1 -->
+        <div class="story-section">
+            <div class="story-content">
+                <h2>You hear AI in every sentence</h2>
+                <p>Everyone's trying to build with it, everyone's talking about it</p>
+            </div>
+        </div>
+        
+        <!-- Spacer - Extra long for typewriter and A1 video -->
+        <div style="height: 300vh;"></div>
+        
+        <!-- Story Section 2 -->
+        <div class="story-section">
+            <div class="story-content">
+                <h2>Jokes aside, AI is really powerful.</h2>
+                <p>It enables people to do things they normally couldn't do</p>
+            </div>
+        </div>
+        
+        <!-- Spacer -->
+        <div style="height: 200vh;"></div>
+        
+        <!-- Story Section 3 -->
+        <div class="story-section">
+            <div class="story-content">
+                <h2>Enter Vibe Coding</h2>
+                <p>People who don't know engineering are empowered to write and build amazing software.</p>
+                <div style="margin-top: 2rem; text-align: center;">
+                    <img src="assets/vibecoding.webp" 
+                         alt="Vibe Coding" 
+                         style="max-width: 100%; 
+                                height: auto; 
+                                border-radius: 15px; 
+                                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+                                opacity: 0;
+                                transform: translateY(30px);
+                                transition: all 0.8s ease;">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Story Section 4 -->
+        <div class="story-section">
+            <div class="story-content">
+                <h2>On the surface it looks calm and ready</h2>
+                <p>But in reality it causes mom's spaghetti code.</p>
+                <div style="margin-top: 2rem; text-align: center;">
+                    <img src="assets/news.png" 
+                         alt="Real world example of vibe coding gone wrong" 
+                         style="max-width: 100%; 
+                                height: auto; 
+                                border-radius: 15px; 
+                                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+                                opacity: 0;
+                                transform: translateY(30px);
+                                transition: all 0.8s ease;">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Spacer -->
+        <div style="height: 100vh;"></div>
+        
+        <!-- Story Section 5 - Merged -->
+        <div class="story-section">
+            <div class="story-content">
+                <h2>Luckily there are ways to make it work better</h2>
+                <p>For you. Trust me, I've built software with AI for the largest companies</p>
+                <div class="company-logos">
+                    <div class="logo-item">
+                        <div class="logo-container">
+                            <img src="assets/meta-logo-facebook.svg" alt="Meta" class="company-logo" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="logo-item">
+                        <div class="logo-container">
+                            <img src="assets/Google__G__logo.svg.webp" alt="Google" class="company-logo" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="logo-item">
+                        <div class="logo-container">
+                            <img src="assets/GM2.png" alt="General Motors" class="company-logo" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="logo-item">
+                        <div class="logo-container">
+                            <img src="assets/unilever.png" alt="Unilever" class="company-logo" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="logo-item">
+                        <div class="logo-container fun-card">
+                            <div class="fun-text">More</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Spacer -->
+        <div style="height: 100vh;"></div>
+        
+        <!-- Services Section -->
+        <div class="story-section">
+            <div class="story-content">
+                <h2>Let's Build Your AI Future</h2>
+                <p>From strategy to implementation, I help companies transform with AI</p>
+                
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">STRATEGY</div>
+                        <h3>AI Strategy & Consulting</h3>
+                        <p>Custom AI roadmaps tailored to your business goals and technical capabilities</p>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon">PROTOTYPE</div>
+                        <h3>Rapid AI Prototyping</h3>
+                        <p>Fast-track your AI ideas from concept to working prototype in weeks, not months</p>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon">DEVELOP</div>
+                        <h3>Custom AI Development</h3>
+                        <p>Build production-ready AI systems that scale with your business</p>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon">INTEGRATE</div>
+                        <h3>AI Integration</h3>
+                        <p>Seamlessly integrate AI into your existing workflows and systems</p>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon">TRAIN</div>
+                        <h3>AI Training & Workshops</h3>
+                        <p>Empower your team with hands-on AI knowledge and best practices</p>
+                    </div>
+                    
+                    <div class="service-card">
+                        <div class="service-icon">OPTIMIZE</div>
+                        <h3>AI Optimization</h3>
+                        <p>Fine-tune and optimize your existing AI systems for maximum performance</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Spacer -->
+        <div style="height: 100vh;"></div>
+        
+        <!-- CTA Section -->
+        <div class="story-section">
+            <div class="story-content">
+                <h2>Ready to stop the spaghetti code?</h2>
+                <div class="cta">
+                    <a href="mailto:yousef+ai@hey.com?subject=AI%20Consulting%20Inquiry" class="cta-button">
+                        Let's Build Better →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <!-- Postprocessing (order matters: shaders first) -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/FXAAShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/FilmShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/FilmPass.js"></script>
+    
+    <!-- Clean script -->
+    <script src="script-clean.js?v=34"></script>
+</body>
+</html>
