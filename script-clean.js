@@ -13,9 +13,9 @@ let starfield = null;
 let auroraMesh = null;
 let shockwaves = [];
 let gokuModel = null;
-let gokuBubble = null;
 let gokuEntranceTime = 0;
 let gokuEntranceComplete = false;
+let gokuEnergyParticles = [];
 let spaghettiArrow = null;
 let emVideo = null;
 let emVideoElement = null;
@@ -35,6 +35,13 @@ let audioPermissionGranted = false;
 let audioPermissionPrompt = null;
 let audioControlButton = null;
 let isAudioMuted = false;
+let introModal = null;
+let enterButton = null;
+// Hamburger menu
+let menuTrigger = null;
+let menuOverlay = null;
+let isMenuOpen = false;
+let menuAnimationInProgress = false;
 
 // Centralized audio helpers
 function setMediaAudio(element, shouldBeMuted, targetVolume) {
@@ -87,6 +94,7 @@ function init() {
 	createAurora();
 	// createNeonRings(); // Removed - user doesn't like this effect
 	loadGokuModel();
+	gokuEnergyParticles = createGokuEnergyParticles();
 	loadSpaghettiModel();
 	createEmVideo();
 	setupPostprocessing();
@@ -95,8 +103,9 @@ function init() {
     createA1Video();
     setupScrolling();
 	setupInteractions();
-    createAudioPermissionPrompt();
-    createAudioControlButton();
+    createIntroModal();
+    createHamburgerMenu();
+    // createAudioControlButton(); // Moved to after modal is dismissed
     startAnimation();
     
     console.log('✅ Clean experience ready!');
@@ -292,8 +301,6 @@ function loadGokuModel() {
 			
 			console.log('✅ Goku Super Saiyan model loaded');
 			
-			// Create speech bubble after model loads
-			createGokuBubble();
 		},
 		function(progress) {
 			console.log('Loading Goku model:', (progress.loaded / progress.total * 100) + '%');
@@ -304,107 +311,45 @@ function loadGokuModel() {
 	);
 }
 
-// Create anime-style speech bubble for Goku
-function createGokuBubble() {
-	// Create canvas for the speech bubble (match bubble size for crispness)
-	const canvas = document.createElement('canvas');
-	const context = canvas.getContext('2d');
-	// Bubble dimensions in canvas pixels (higher res for sharp texture)
-	const bubbleX = 50;
-	const bubbleY = 30;
-	const bubbleWidth = 900;
-	const bubbleHeight = 170;
-	// Make canvas large enough to include bubble and padding
-	canvas.width = bubbleX + bubbleWidth + 50;
-	canvas.height = bubbleY + bubbleHeight + 50;
+// Create energy particles around Goku
+function createGokuEnergyParticles() {
+	const particleCount = 50;
+	const particles = [];
 	
-	// Draw anime-style speech bubble
-	context.fillStyle = '#ffffff';
-	context.strokeStyle = '#000000';
-	context.lineWidth = 4;
-	context.lineCap = 'round';
-	context.lineJoin = 'round';
+	for (let i = 0; i < particleCount; i++) {
+		const particle = new THREE.Mesh(
+			new THREE.SphereGeometry(0.08, 8, 8), // Much larger particles
+			new THREE.MeshBasicMaterial({
+				color: new THREE.Color().setHSL(0.1, 1, 1), // Brighter golden energy color
+				transparent: true,
+				opacity: 0.9
+			})
+		);
+		
+		// Random position around Goku
+		const angle = (i / particleCount) * Math.PI * 2;
+		const radius = 2 + Math.random() * 3;
+		particle.position.set(
+			Math.cos(angle) * radius,
+			-4 + (Math.random() - 0.5) * 2,
+			-15 + (Math.random() - 0.5) * 2
+		);
+		
+		particle.userData = {
+			originalY: particle.position.y,
+			angle: angle,
+			radius: radius,
+			speed: 0.5 + Math.random() * 1.0
+		};
+		
+		particle.visible = false;
+		scene.add(particle);
+		particles.push(particle);
+	}
 	
-	// Main bubble shape with rounded corners
-	const cornerRadius = 25;
-	
-	// Draw main bubble
-	context.beginPath();
-	context.moveTo(bubbleX + cornerRadius, bubbleY);
-	context.lineTo(bubbleX + bubbleWidth - cornerRadius, bubbleY);
-	context.quadraticCurveTo(bubbleX + bubbleWidth, bubbleY, bubbleX + bubbleWidth, bubbleY + cornerRadius);
-	context.lineTo(bubbleX + bubbleWidth, bubbleY + bubbleHeight - cornerRadius);
-	context.quadraticCurveTo(bubbleX + bubbleWidth, bubbleY + bubbleHeight, bubbleX + bubbleWidth - cornerRadius, bubbleY + bubbleHeight);
-	context.lineTo(bubbleX + cornerRadius, bubbleY + bubbleHeight);
-	context.quadraticCurveTo(bubbleX, bubbleY + bubbleHeight, bubbleX, bubbleY + bubbleHeight - cornerRadius);
-	context.lineTo(bubbleX, bubbleY + cornerRadius);
-	context.quadraticCurveTo(bubbleX, bubbleY, bubbleX + cornerRadius, bubbleY);
-	context.closePath();
-	
-	// Add shadow
-	context.shadowColor = 'rgba(0, 0, 0, 0.3)';
-	context.shadowBlur = 8;
-	context.shadowOffsetX = 4;
-	context.shadowOffsetY = 4;
-	context.fill();
-	
-	// Reset shadow for stroke
-	context.shadowColor = 'transparent';
-	context.shadowBlur = 0;
-	context.shadowOffsetX = 0;
-	context.shadowOffsetY = 0;
-	context.stroke();
-	
-	// No tail - clean rounded rectangle
-	
-	// Draw text with better contrast
-	context.fillStyle = '#000000';
-	context.font = 'bold 56px "Arial", sans-serif';
-	context.textAlign = 'left';
-	context.textBaseline = 'middle';
-	
-	// Subtle text shadow for readability without brightness
-	context.shadowColor = 'rgba(0, 0, 0, 0.3)';
-	context.shadowBlur = 2;
-	context.shadowOffsetX = 1;
-	context.shadowOffsetY = 1;
-	
-	// Draw text with slight rotation for anime effect, aligned to left inside bubble
-	context.save();
-	context.translate(bubbleX + 34, bubbleY + bubbleHeight / 2);
-	context.rotate(-0.03); // Subtle tilt
-	context.fillText('build time machine NOWW', 0, 0);
-	context.restore();
-	
-	// Reset shadow
-	context.shadowColor = 'transparent';
-	context.shadowBlur = 0;
-	context.shadowOffsetX = 0;
-	context.shadowOffsetY = 0;
-	
-	// Create texture from canvas
-	const bubbleTexture = new THREE.CanvasTexture(canvas);
-	bubbleTexture.needsUpdate = true;
-	
-	// Create 3D plane sized to canvas aspect to avoid squishing
-	const aspect = canvas.width / canvas.height;
-	const planeHeight = 1.8; // world units (smaller display)
-	const planeWidth = planeHeight * aspect;
-	const bubbleGeometry = new THREE.PlaneGeometry(planeWidth, planeHeight);
-	const bubbleMaterial = new THREE.MeshBasicMaterial({
-		map: bubbleTexture,
-		transparent: true,
-		opacity: 0.85,
-		side: THREE.DoubleSide
-	});
-	
-	gokuBubble = new THREE.Mesh(bubbleGeometry, bubbleMaterial);
-	gokuBubble.position.set(7.5, 8.5, -12); // move right and up to avoid overlap
-	gokuBubble.visible = false; // Start hidden
-	scene.add(gokuBubble);
-	
-	console.log('✅ Goku speech bubble created');
+	return particles;
 }
+
 
 // Create funny arrow pointing at spaghetti monster
 function createSpaghettiArrow() {
@@ -481,7 +426,7 @@ function createSpaghettiArrow() {
 	});
 	
 	spaghettiArrow = new THREE.Mesh(arrowGeometry, arrowMaterial);
-	spaghettiArrow.position.set(1, 0, -8); // Position to point at spaghetti monster from the right
+	spaghettiArrow.position.set(3, 0, -8); // Position further to the right to point at the monster
 	spaghettiArrow.visible = false; // Start hidden
 	scene.add(spaghettiArrow);
 	
@@ -498,7 +443,7 @@ function loadSpaghettiModel() {
 			
 			// Scale and position the model
 			spaghettiModel.scale.setScalar(1.2); // Even bigger!
-			spaghettiModel.position.set(-3, -2, -10); // Position on the left side
+			spaghettiModel.position.set(0, -2, -10); // Center the monster
 			
 			// Add some lighting for the model
 			const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
@@ -536,22 +481,27 @@ function createEmVideo() {
 	emVideoElement.volume = 0.8;
 	emVideoElement.playsInline = true;
 
-	// Video styling for right side
-	emVideoElement.style.position = 'fixed';
-	emVideoElement.style.top = '50%';
-	emVideoElement.style.right = '5%';
-	emVideoElement.style.transform = 'translateY(-50%)';
-	emVideoElement.style.width = 'min(40vw, 400px)';
+	// Video styling - position in container below news image
+	emVideoElement.style.position = 'relative';
+	emVideoElement.style.width = '100%';
+	emVideoElement.style.maxWidth = window.innerWidth <= 768 ? '400px' : '500px';
 	emVideoElement.style.height = 'auto';
-	emVideoElement.style.zIndex = '1003';
+	emVideoElement.style.margin = '0 auto';
+	emVideoElement.style.display = 'block';
 	emVideoElement.style.borderRadius = '15px';
 	emVideoElement.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
 	emVideoElement.style.opacity = '0';
 	emVideoElement.style.transition = 'opacity 1s ease-in-out';
 	emVideoElement.style.pointerEvents = 'none';
-
-	// Add to DOM
-	document.body.appendChild(emVideoElement);
+	
+	// Add to mobile container
+	const mobileContainer = document.getElementById('mobile-video-container');
+	if (mobileContainer) {
+		mobileContainer.appendChild(emVideoElement);
+	} else {
+		// Fallback to body if container not found
+		document.body.appendChild(emVideoElement);
+	}
 
 	// Initialize WebAudio analyser for audio-reactive visuals
 	try {
@@ -571,6 +521,23 @@ function createEmVideo() {
 	}
 
 	console.log('✅ EM video created');
+}
+
+// Handle window resize for video positioning
+function handleVideoResize() {
+	if (!emVideoElement) return;
+	
+	const mobileContainer = document.getElementById('mobile-video-container');
+	
+	// Ensure video is in the correct container
+	if (mobileContainer && emVideoElement.parentNode !== mobileContainer) {
+		// Update max width based on screen size
+		emVideoElement.style.maxWidth = window.innerWidth <= 768 ? '400px' : '500px';
+		
+		// Move to mobile container
+		mobileContainer.appendChild(emVideoElement);
+		console.log('📱 Video repositioned in container');
+	}
 }
 
 // Neon ring corridor - REMOVED (user doesn't like this effect)
@@ -1103,88 +1070,449 @@ function createA1Video() {
 }
 
 // Create audio permission prompt
-function createAudioPermissionPrompt() {
-    // Create audio permission prompt overlay with subtle background
-    audioPermissionPrompt = document.createElement('div');
-    audioPermissionPrompt.style.position = 'fixed';
-    audioPermissionPrompt.style.top = '0';
-    audioPermissionPrompt.style.left = '0';
-    audioPermissionPrompt.style.width = '100vw';
-    audioPermissionPrompt.style.height = '100vh';
-    audioPermissionPrompt.style.background = 'radial-gradient(ellipse at center, rgba(10, 10, 14, 0.95) 0%, rgba(5, 5, 8, 0.98) 70%)';
-    audioPermissionPrompt.style.display = 'flex';
-    audioPermissionPrompt.style.flexDirection = 'column';
-    audioPermissionPrompt.style.alignItems = 'center';
-    audioPermissionPrompt.style.justifyContent = 'center';
-    audioPermissionPrompt.style.zIndex = '9999';
-    audioPermissionPrompt.style.color = '#ffffff';
-    audioPermissionPrompt.style.fontFamily = '"Inter", "Arial", sans-serif';
-    audioPermissionPrompt.style.textAlign = 'center';
-    audioPermissionPrompt.style.padding = '2rem';
-    audioPermissionPrompt.style.backdropFilter = 'blur(15px)';
+function createIntroModal() {
+    introModal = document.getElementById('introModal');
+    enterButton = document.getElementById('enterButton');
     
-    // Create subtle animated background particles
-    const particles = document.createElement('div');
-    particles.style.position = 'absolute';
-    particles.style.top = '0';
-    particles.style.left = '0';
-    particles.style.width = '100%';
-    particles.style.height = '100%';
-    particles.style.pointerEvents = 'none';
-    particles.style.overflow = 'hidden';
-    
-    // Add fewer, more subtle floating particles
-    for (let i = 0; i < 20; i++) {
-        const particle = document.createElement('div');
-        particle.style.position = 'absolute';
-        particle.style.width = '1px';
-        particle.style.height = '1px';
-        particle.style.background = 'rgba(115, 251, 211, 0.3)';
-        particle.style.borderRadius = '50%';
-        particle.style.opacity = '0.4';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-        particle.style.animation = `float ${4 + Math.random() * 6}s ease-in-out infinite`;
-        particle.style.animationDelay = Math.random() * 3 + 's';
-        particles.appendChild(particle);
+    if (!introModal || !enterButton) {
+        console.error('❌ Intro modal elements not found');
+        return;
     }
     
-    // Create compact main content container with modern glassmorphism
-    const content = document.createElement('div');
-    content.style.position = 'relative';
-    content.style.maxWidth = '420px';
-    content.style.width = '90vw';
-    content.style.background = 'rgba(15, 15, 20, 0.8)';
-    content.style.borderRadius = '16px';
-    content.style.padding = '2.5rem 2rem';
-    content.style.border = '1px solid rgba(115, 251, 211, 0.15)';
-    content.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)';
-    content.style.backdropFilter = 'blur(20px)';
-    content.style.overflow = 'hidden';
+    // Prevent scrolling on the body when modal is active
+    document.body.classList.add('modal-active');
     
-    // Add subtle animated border glow
-    const borderGlow = document.createElement('div');
-    borderGlow.style.position = 'absolute';
-    borderGlow.style.top = '0';
-    borderGlow.style.left = '0';
-    borderGlow.style.right = '0';
-    borderGlow.style.bottom = '0';
-    borderGlow.style.borderRadius = '16px';
-    borderGlow.style.background = 'linear-gradient(45deg, rgba(115, 251, 211, 0.1), rgba(138, 126, 252, 0.08), rgba(115, 251, 211, 0.1))';
-    borderGlow.style.backgroundSize = '200% 200%';
-    borderGlow.style.animation = 'gradientShift 4s ease infinite';
-    borderGlow.style.zIndex = '-1';
-    borderGlow.style.opacity = '0.6';
-    content.appendChild(borderGlow);
+    // Handle enter button click
+    enterButton.addEventListener('click', async () => {
+        try {
+            // Grant audio permission
+            await ensureAudioContextResumed();
+            audioPermissionGranted = true;
+            applyAudioState();
+            
+            // Re-enable scrolling on the body
+            document.body.classList.remove('modal-active');
+            
+            // Create audio control button now that we're in the main experience
+            createAudioControlButton();
+            
+            // Hide intro modal with smooth transition
+            introModal.classList.add('hidden');
+            
+            // Remove modal after transition completes
+            setTimeout(() => {
+                if (introModal.parentNode) {
+                    introModal.remove();
+                }
+            }, 1000);
+            
+            console.log('✅ Entered experience with audio permission granted');
+        } catch (error) {
+            console.log('❌ Audio permission denied, continuing muted:', error);
+            // Still hide modal but without audio
+            audioPermissionGranted = false;
+            applyAudioState();
+            
+            // Re-enable scrolling on the body
+            document.body.classList.remove('modal-active');
+            
+            // Create audio control button now that we're in the main experience
+            createAudioControlButton();
+            
+            introModal.classList.add('hidden');
+            setTimeout(() => {
+                if (introModal.parentNode) {
+                    introModal.remove();
+                }
+            }, 1000);
+        }
+    });
     
-    // Create compact title with better typography
-    const title = document.createElement('h1');
-    title.textContent = 'Audio Experience';
-    title.style.fontSize = 'clamp(1.8rem, 4vw, 2.2rem)';
-    title.style.marginBottom = '0.8rem';
-    title.style.background = 'linear-gradient(135deg, #73fbd3, #8a7efc)';
-    title.style.backgroundClip = 'text';
-    title.style.webkitBackgroundClip = 'text';
+    console.log('✅ Intro modal created');
+}
+
+// Create and setup hamburger menu
+function createHamburgerMenu() {
+    menuTrigger = document.getElementById('menuTrigger');
+    menuOverlay = document.getElementById('menuOverlay');
+    
+    if (!menuTrigger || !menuOverlay) {
+        console.error('❌ Menu elements not found');
+        return;
+    }
+    
+    // Setup hamburger icon animation on canvas
+    setupHamburgerIcon();
+    
+    // Setup menu text letter animations
+    setupMenuLetterAnimations();
+    
+    // Set initial state
+    menuTrigger.classList.add('is-default-out');
+    
+    // Add click handler
+    menuTrigger.addEventListener('click', toggleMenu);
+    
+    // Close menu when clicking on overlay
+    menuOverlay.addEventListener('click', (e) => {
+        if (e.target === menuOverlay) {
+            closeMenu();
+        }
+    });
+    
+    // Close menu with escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isMenuOpen) {
+            closeMenu();
+        }
+    });
+    
+    // Add navigation handlers to menu links
+    const menuLinks = menuOverlay.querySelectorAll('.main-link');
+    menuLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href');
+            
+            // Handle email links normally
+            if (href && href.startsWith('mailto:')) {
+                closeMenu();
+                return;
+            }
+            
+            // Handle anchor links with smooth scrolling
+            if (href && href.startsWith('#')) {
+                e.preventDefault();
+                closeMenu();
+                
+                // Wait for menu to close, then scroll
+                setTimeout(() => {
+                    const targetId = href.substring(1);
+                    let targetElement = null;
+                    
+                    // Map menu items to actual sections
+                    if (targetId === 'services') {
+                        // Find the services section
+                        targetElement = document.querySelector('.story-section:nth-child(12)'); // Services section
+                    } else if (targetId === 'about') {
+                        // Find the about section (first story section)
+                        targetElement = document.querySelector('.story-section:nth-child(2)'); // First story section
+                    } else if (targetId === 'experience') {
+                        // Find the experience section (company logos)
+                        targetElement = document.querySelector('.story-section:nth-child(10)'); // Company section
+                    }
+                    
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    }
+                }, 800);
+            }
+        });
+    });
+    
+    console.log('✅ Hamburger menu created');
+}
+
+// Setup hamburger icon animation on canvas
+function setupHamburgerIcon() {
+    const canvas = menuTrigger.querySelector('.canvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const size = 40;
+    const lineHeight = 2;
+    const lineSpacing = 8;
+    
+    function drawHamburger(progress = 0) {
+        ctx.clearRect(0, 0, size, size);
+        ctx.strokeStyle = '#73fbd3';
+        ctx.lineWidth = lineHeight;
+        ctx.lineCap = 'round';
+        
+        const centerY = size / 2;
+        const lineWidth = 20;
+        const startX = (size - lineWidth) / 2;
+        const endX = startX + lineWidth;
+        
+        if (progress === 0) {
+            // Hamburger state
+            // Top line
+            ctx.beginPath();
+            ctx.moveTo(startX, centerY - lineSpacing);
+            ctx.lineTo(endX, centerY - lineSpacing);
+            ctx.stroke();
+            
+            // Middle line
+            ctx.beginPath();
+            ctx.moveTo(startX, centerY);
+            ctx.lineTo(endX, centerY);
+            ctx.stroke();
+            
+            // Bottom line
+            ctx.beginPath();
+            ctx.moveTo(startX, centerY + lineSpacing);
+            ctx.lineTo(endX, centerY + lineSpacing);
+            ctx.stroke();
+        } else if (progress === 1) {
+            // X state
+            const diagonal = lineWidth * 0.7;
+            const offsetX = (lineWidth - diagonal) / 2;
+            
+            // First diagonal
+            ctx.beginPath();
+            ctx.moveTo(startX + offsetX, centerY - diagonal/2);
+            ctx.lineTo(startX + offsetX + diagonal, centerY + diagonal/2);
+            ctx.stroke();
+            
+            // Second diagonal
+            ctx.beginPath();
+            ctx.moveTo(startX + offsetX, centerY + diagonal/2);
+            ctx.lineTo(startX + offsetX + diagonal, centerY - diagonal/2);
+            ctx.stroke();
+        } else {
+            // Animated state between hamburger and X
+            const easeProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+            
+            // Top line animates to first diagonal
+            ctx.beginPath();
+            const topStartY = centerY - lineSpacing + (lineSpacing - lineWidth*0.35) * easeProgress;
+            const topEndY = centerY - lineSpacing + (lineSpacing + lineWidth*0.35) * easeProgress;
+            const topStartX = startX + (lineWidth - lineWidth*0.7) / 2 * easeProgress;
+            const topEndX = endX - (lineWidth - lineWidth*0.7) / 2 * easeProgress;
+            ctx.moveTo(topStartX, topStartY);
+            ctx.lineTo(topEndX, topEndY);
+            ctx.stroke();
+            
+            // Middle line fades out
+            ctx.globalAlpha = 1 - easeProgress;
+            ctx.beginPath();
+            ctx.moveTo(startX, centerY);
+            ctx.lineTo(endX, centerY);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+            
+            // Bottom line animates to second diagonal
+            ctx.beginPath();
+            const bottomStartY = centerY + lineSpacing - (lineSpacing + lineWidth*0.35) * easeProgress;
+            const bottomEndY = centerY + lineSpacing - (lineSpacing - lineWidth*0.35) * easeProgress;
+            const bottomStartX = startX + (lineWidth - lineWidth*0.7) / 2 * easeProgress;
+            const bottomEndX = endX - (lineWidth - lineWidth*0.7) / 2 * easeProgress;
+            ctx.moveTo(bottomStartX, bottomStartY);
+            ctx.lineTo(bottomEndX, bottomEndY);
+            ctx.stroke();
+        }
+    }
+    
+    // Initial draw
+    drawHamburger(0);
+    
+    // Store animation function for use in menu transitions
+    canvas.drawHamburger = drawHamburger;
+}
+
+// Setup letter-by-letter animations for menu items
+function setupMenuLetterAnimations() {
+    const menuLinks = menuOverlay.querySelectorAll('.main-link');
+    
+    menuLinks.forEach((link) => {
+        const text = link.getAttribute('data-text') || '';
+        const titleElement = link.querySelector('.title');
+        
+        if (!titleElement || !text) return;
+        
+        // Clear existing content
+        titleElement.innerHTML = '';
+        
+        // Create letter elements
+        text.split('').forEach((char, index) => {
+            const letter = document.createElement('span');
+            letter.className = `letter letter-in-${index}`;
+            
+            const letterInner = document.createElement('span');
+            letterInner.className = 'letter-inner';
+            letterInner.textContent = char === ' ' ? '\u00A0' : char; // Non-breaking space
+            
+            letter.appendChild(letterInner);
+            titleElement.appendChild(letter);
+        });
+    });
+}
+
+// Toggle menu open/close
+function toggleMenu() {
+    if (menuAnimationInProgress) return;
+    
+    if (isMenuOpen) {
+        closeMenu();
+    } else {
+        openMenu();
+    }
+}
+
+// Open menu with animation
+function openMenu() {
+    if (isMenuOpen || menuAnimationInProgress) return;
+    
+    menuAnimationInProgress = true;
+    isMenuOpen = true;
+    
+    // Update trigger state
+    menuTrigger.classList.remove('is-default-out');
+    menuTrigger.classList.add('is-menu-in');
+    
+    // Animate hamburger to X
+    animateHamburgerIcon(0, 1, 300);
+    
+    // Show overlay
+    menuOverlay.classList.add('menu-open');
+    menuOverlay.classList.add('menu-opening');
+    
+    // Animate letters in
+    const letters = menuOverlay.querySelectorAll('.letter');
+    letters.forEach((letter, index) => {
+        letter.style.opacity = '0';
+        letter.style.transform = 'translateX(-100px)';
+        
+        setTimeout(() => {
+            letter.style.opacity = '1';
+            letter.style.transform = 'translateX(0)';
+        }, 500 + index * 20); // Staggered animation
+    });
+    
+    // Enable menu state after animation
+    setTimeout(() => {
+        menuAnimationInProgress = false;
+        menuOverlay.classList.remove('menu-opening');
+    }, 1000);
+    
+    console.log('🍔 Menu opened');
+}
+
+// Close menu with animation
+function closeMenu() {
+    if (!isMenuOpen || menuAnimationInProgress) return;
+    
+    menuAnimationInProgress = true;
+    isMenuOpen = false;
+    
+    // Update trigger state
+    menuTrigger.classList.remove('is-menu-in');
+    menuTrigger.classList.add('is-default-out');
+    
+    // Animate X back to hamburger
+    animateHamburgerIcon(1, 0, 300);
+    
+    // Add closing animation class
+    menuOverlay.classList.add('menu-closing');
+    
+    // Animate letters out
+    const letters = menuOverlay.querySelectorAll('.letter');
+    letters.forEach((letter, index) => {
+        setTimeout(() => {
+            letter.style.opacity = '0';
+            letter.style.transform = 'translateX(-100px)';
+        }, index * 10); // Faster staggered exit
+    });
+    
+    // Hide overlay after animation
+    setTimeout(() => {
+        menuOverlay.classList.remove('menu-open');
+        menuOverlay.classList.remove('menu-closing');
+        menuAnimationInProgress = false;
+    }, 800);
+    
+    console.log('🍔 Menu closed');
+}
+
+// Animate hamburger icon transformation
+function animateHamburgerIcon(startProgress, endProgress, duration) {
+    const canvas = menuTrigger.querySelector('.canvas');
+    if (!canvas || !canvas.drawHamburger) return;
+    
+    const startTime = Date.now();
+    
+    function animate() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Ease out cubic
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
+        const currentProgress = startProgress + (endProgress - startProgress) * easedProgress;
+        
+        canvas.drawHamburger(currentProgress);
+        
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        }
+    }
+    
+    animate();
+}
+
+
+// Show audio control button
+function showAudioControl() {
+    if (audioControlButton) {
+        audioControlButton.style.opacity = '1';
+        audioControlButton.style.transform = 'translateY(0)';
+        audioControlButton.style.transition = 'all 0.5s ease';
+    }
+}
+
+// Toggle audio on/off
+async function toggleAudio() {
+    isAudioMuted = !isAudioMuted;
+    
+    if (isAudioMuted) {
+        // Mute all audio immediately
+        applyAudioState();
+        console.log('🔇 Audio muted');
+    } else {
+        // Treat user toggle as explicit permission grant if previously skipped
+        audioPermissionGranted = true;
+        await ensureAudioContextResumed();
+        applyAudioState();
+        console.log('🔊 Audio unmuted (permission: ' + audioPermissionGranted + ')');
+    }
+}
+
+// Enable all audio
+function enableAllAudio() {
+    setMediaAudio(video, false, CONFIG.videoVolume);
+    setMediaAudio(a1VideoElement, false, 0.8);
+    setMediaAudio(emVideoElement, false, 0.8);
+    applyAudioState();
+    
+    console.log('🔊 All audio enabled');
+}
+
+// Disable all audio
+function disableAllAudio() {
+    setMediaAudio(video, true, 0);
+    setMediaAudio(a1VideoElement, true, 0);
+    setMediaAudio(emVideoElement, true, 0);
+    applyAudioState();
+    
+    console.log('🔇 All audio disabled');
+}
+
+// Hide audio prompt
+function hideAudioPrompt() {
+    if (audioPermissionPrompt) {
+        audioPermissionPrompt.style.opacity = '0';
+        audioPermissionPrompt.style.transition = 'opacity 0.5s ease';
+        setTimeout(() => {
+            if (audioPermissionPrompt && audioPermissionPrompt.parentNode) {
+                audioPermissionPrompt.parentNode.removeChild(audioPermissionPrompt);
+            }
+        }, 500);
+    }
+}
+
+// Enhanced animation loop with WebGL effects
+function startAnimation() {
     title.style.webkitTextFillColor = 'transparent';
     title.style.fontWeight = '500';
     title.style.letterSpacing = '0.02em';
@@ -1594,9 +1922,10 @@ function setupScrolling() {
                 if (gokuModel.userData.directionalLight) {
                     gokuModel.userData.directionalLight.visible = true;
                 }
-                if (gokuBubble) {
-                    gokuBubble.visible = true;
-                }
+                // Show energy particles
+                gokuEnergyParticles.forEach(particle => {
+                    particle.visible = true;
+                });
                 console.log('🥋 Goku Super Saiyan appears!');
             } else if (!gokuShouldBeVisible && gokuModel.visible) {
                 gokuModel.visible = false;
@@ -1604,9 +1933,10 @@ function setupScrolling() {
                 if (gokuModel.userData.directionalLight) {
                     gokuModel.userData.directionalLight.visible = false;
                 }
-                if (gokuBubble) {
-                    gokuBubble.visible = false;
-                }
+                // Hide energy particles
+                gokuEnergyParticles.forEach(particle => {
+                    particle.visible = false;
+                });
                 console.log('🥋 Goku Super Saiyan disappears!');
             }
         }
@@ -1682,8 +2012,6 @@ function setupScrolling() {
             }
         }
         
-        // Update debug
-        updateDebug(scrollY, scrollProgress);
     }
     
     // Add scroll listener
@@ -1696,24 +2024,6 @@ function setupScrolling() {
     console.log('✅ Scrolling setup complete');
 }
 
-// Simple debug display
-function updateDebug(scrollY, scrollProgress) {
-    const debug = document.getElementById('debug');
-    if (debug) {
-        const videoOpacity = videoPlane && videoPlane.material ? 
-            Math.round(videoPlane.material.opacity * 100) : 100;
-        const visibleSections = sections.filter(s => s.classList.contains('visible')).length;
-        const bloomStrength = bloomPass ? bloomPass.strength.toFixed(2) : 'n/a';
-        
-        debug.innerHTML = `
-            ScrollY: ${Math.round(scrollY)}<br>
-            Progress: ${Math.round(scrollProgress * 100)}%<br>
-            Video: ${videoOpacity}%<br>
-            Sections: ${visibleSections}/${sections.length}<br>
-            Bloom: ${bloomStrength}
-        `;
-    }
-}
 
 // Enhanced animation loop with WebGL effects
 function startAnimation() {
@@ -1789,18 +2099,34 @@ function startAnimation() {
                 // Normal floating motion after entrance
                 gokuModel.position.y = -4 + Math.sin(time * 0.5) * 0.1;
             }
+            
+            // Animate energy particles - more dramatic and obvious
+            gokuEnergyParticles.forEach((particle, index) => {
+                if (particle.visible) {
+                    const userData = particle.userData;
+                    
+                    // Faster orbital motion around Goku
+                    userData.angle += userData.speed * 0.02;
+                    particle.position.x = Math.cos(userData.angle) * userData.radius;
+                    particle.position.z = -15 + Math.sin(userData.angle) * userData.radius;
+                    
+                    // More dramatic floating motion
+                    particle.position.y = userData.originalY + Math.sin(time * 3 + index * 0.5) * 0.8;
+                    
+                    // More dramatic pulsing opacity
+                    particle.material.opacity = 0.7 + Math.sin(time * 4 + index * 0.3) * 0.3;
+                    
+                    // More vibrant color shifting for energy effect
+                    const hue = (0.1 + Math.sin(time * 3 + index * 0.2) * 0.1) % 1;
+                    particle.material.color.setHSL(hue, 1, 1);
+                    
+                    // Add scaling for more dynamic effect
+                    const scale = 1 + Math.sin(time * 5 + index * 0.4) * 0.3;
+                    particle.scale.setScalar(scale);
+                }
+            });
         }
 
-        // Animate speech bubble
-        if (gokuBubble && gokuBubble.visible) {
-            // Gentle floating motion much higher above bigger Goku
-            gokuBubble.position.y = 7 + Math.sin(time * 0.3) * 0.05;
-            // Slight rotation for anime effect
-            gokuBubble.rotation.z = Math.sin(time * 0.2) * 0.02;
-            // Scale pulsing effect
-            const scale = 1 + Math.sin(time * 0.8) * 0.02;
-            gokuBubble.scale.setScalar(scale);
-        }
 
         // Animate Spaghetti Monster
         if (spaghettiModel && spaghettiModel.visible) {
@@ -1869,6 +2195,9 @@ window.addEventListener('resize', () => {
 		if (composer) composer.setSize(window.innerWidth, window.innerHeight);
 		if (fxaaPass) fxaaPass.material.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
     }
+    
+    // Handle video layout changes
+    handleVideoResize();
 });
 
 // Start when page loads
