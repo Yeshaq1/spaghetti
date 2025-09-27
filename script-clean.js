@@ -1141,6 +1141,7 @@ function createHamburgerMenu() {
         return;
     }
     
+    
     // Setup hamburger icon animation on canvas
     setupHamburgerIcon();
     
@@ -1149,6 +1150,40 @@ function createHamburgerMenu() {
     
     // Set initial state
     menuTrigger.classList.add('is-default-out');
+    
+    // Draw initial hamburger icon
+    const canvas = menuTrigger.querySelector('.canvas');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        const size = 40;
+        const lineHeight = 2;
+        const lineSpacing = 8;
+        const centerY = size / 2;
+        const lineWidth = 20;
+        const startX = (size - lineWidth) / 2;
+        const endX = startX + lineWidth;
+        
+        ctx.clearRect(0, 0, size, size);
+        ctx.strokeStyle = '#73fbd3';
+        ctx.lineWidth = lineHeight;
+        ctx.lineCap = 'round';
+        
+        // Draw hamburger lines
+        ctx.beginPath();
+        ctx.moveTo(startX, centerY - lineSpacing);
+        ctx.lineTo(endX, centerY - lineSpacing);
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.moveTo(startX, centerY);
+        ctx.lineTo(endX, centerY);
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.moveTo(startX, centerY + lineSpacing);
+        ctx.lineTo(endX, centerY + lineSpacing);
+        ctx.stroke();
+    }
     
     // Add click handler
     menuTrigger.addEventListener('click', toggleMenu);
@@ -1214,6 +1249,7 @@ function createHamburgerMenu() {
     
     console.log('✅ Hamburger menu created');
 }
+
 
 // Setup hamburger icon animation on canvas
 function setupHamburgerIcon() {
@@ -2199,6 +2235,7 @@ window.addEventListener('resize', () => {
     // Handle video layout changes
     handleVideoResize();
 });
+
 
 // Start when page loads
 document.addEventListener('DOMContentLoaded', init);

@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience - Spaghetti AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* WebGL Canvas Background */
+        #webgl-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+        }
+
+        #webgl-canvas.loaded {
+            opacity: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Mobile-first header */
+        .header {
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 1px solid #333;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid #73fbd3;
+            color: #73fbd3;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(115, 251, 211, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .back-btn:hover::before {
+            left: 100%;
+        }
+
+        .back-btn:hover {
+            background: #73fbd3;
+            color: #0a0a0a;
+            transform: translateY(-2px);
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            color: #73fbd3;
+            margin-bottom: 10px;
+            font-weight: bold;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: #ccc;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease-out 0.7s forwards;
+        }
+        
+        .experience-logo-container {
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: experienceLogoEnter 1s cubic-bezier(0, 0, 0, 1) 0.2s forwards;
+        }
+        
+        .experience-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+            transition: all 0.3s ease;
+        }
+        
+        .experience-logo:hover {
+            filter: brightness(0) invert(1) sepia(1) saturate(5) hue-rotate(160deg);
+            transform: scale(1.05);
+        }
+        
+        @keyframes experienceLogoEnter {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile-first experience cards */
+        .experience-section {
+            margin-bottom: 60px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .experience-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #73fbd3;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #73fbd3, transparent);
+        }
+
+        .experience-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .experience-card {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .experience-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(115, 251, 211, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .experience-card:hover::before {
+            left: 100%;
+        }
+
+        .experience-card:hover {
+            border-color: #73fbd3;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(115, 251, 211, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            color: #73fbd3;
+            margin-bottom: 8px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .card-company {
+            font-size: 0.9rem;
+            color: #999;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-description {
+            font-size: 0.95rem;
+            color: #ccc;
+            line-height: 1.5;
+        }
+
+        /* Mobile-first stats */
+        .stats-section {
+            margin-bottom: 60px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .stats-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .stat-item {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #73fbd3, #ff7edb, #73fbd3);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .stat-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-3px);
+            border-color: #73fbd3;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            color: #73fbd3;
+            font-weight: bold;
+            margin-bottom: 5px;
+            position: relative;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #ccc;
+            line-height: 1.3;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Mobile-first CTA */
+        .cta-section {
+            background: rgba(26, 26, 26, 0.8);
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(115, 251, 211, 0.05), rgba(255, 126, 219, 0.05));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .cta-section:hover::before {
+            opacity: 1;
+        }
+
+        .cta-title {
+            font-size: 1.5rem;
+            color: #73fbd3;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #73fbd3, #ff7edb);
+            color: #0a0a0a;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(115, 251, 211, 0.4);
+        }
+
+        /* Floating particles overlay */
+        .particles-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #73fbd3;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 6s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* Tablet styles */
+        @media (min-width: 768px) {
+            .container {
+                padding: 0 40px;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .experience-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            .cta-section {
+                padding: 40px;
+            }
+
+            .cta-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Desktop styles */
+        @media (min-width: 1024px) {
+            .container {
+                padding: 0 60px;
+            }
+
+            .hero-title {
+                font-size: 3.5rem;
+            }
+
+            .experience-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 30px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 25px;
+            }
+
+            .cta-section {
+                padding: 50px;
+            }
+        }
+
+        /* Extra small mobile */
+        @media (max-width: 360px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .experience-card {
+                padding: 15px;
+            }
+
+            .card-title {
+                font-size: 1.1rem;
+            }
+
+            .card-description {
+                font-size: 0.9rem;
+            }
+
+            .stat-item {
+                padding: 15px;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+
+            .stat-label {
+                font-size: 0.75rem;
+            }
+
+            .cta-section {
+                padding: 20px 15px;
+            }
+
+            .cta-title {
+                font-size: 1.3rem;
+            }
+
+            .cta-button {
+                padding: 12px 25px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            .particle {
+                animation: none;
+            }
+            
+            .experience-card,
+            .stat-item,
+            .cta-button {
+                transition: none;
+            }
+            
+            .hero-title,
+            .hero-subtitle {
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- WebGL Canvas -->
+    <canvas id="webgl-canvas"></canvas>
+    
+    <!-- Floating particles overlay -->
+    <div class="particles-overlay" id="particles-overlay"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <a href="index.html" class="back-btn">← BACK TO HOME</a>
+            <div class="experience-logo-container">
+                <img src="assets/logo.png" alt="Spaghetti AI" class="experience-logo">
+            </div>
+            <h1 class="hero-title">What We've Built</h1>
+            <p class="hero-subtitle">
+                Real projects, real results. We've helped companies build AI that actually works 
+                instead of the usual spaghetti code mess.
+            </p>
+        </div>
+
+        <!-- Experience Section -->
+        <div class="experience-section" id="experience-section">
+            <h2 class="section-title">What We've Actually Built</h2>
+            <div class="experience-grid">
+                <div class="experience-card">
+                    <h3 class="card-title">Smart Chatbots</h3>
+                    <div class="card-company">Fortune 500 Companies</div>
+                    <p class="card-description">
+                        Built chatbots that actually understand context using GraphRAG and knowledge graphs. 
+                        80% reduction in support tickets.
+                    </p>
+                </div>
+
+                <div class="experience-card">
+                    <h3 class="card-title">Document Analysis</h3>
+                    <div class="card-company">Legal & Finance Firms</div>
+                    <p class="card-description">
+                        AI that reads contracts and legal docs in seconds. 
+                        Saved one law firm 200+ hours per month.
+                    </p>
+                </div>
+
+                <div class="experience-card">
+                    <h3 class="card-title">Predictive Analytics</h3>
+                    <div class="card-company">Retail & E-commerce</div>
+                    <p class="card-description">
+                        Recommendation engines that actually increase sales. 
+                        Boosted average order value by 35%.
+                    </p>
+                </div>
+
+                <div class="experience-card">
+                    <h3 class="card-title">Computer Vision</h3>
+                    <div class="card-company">Manufacturing</div>
+                    <p class="card-description">
+                        Image recognition that catches defects humans miss. 
+                        Reduced defect rates by 60%.
+                    </p>
+                </div>
+
+                <div class="experience-card">
+                    <h3 class="card-title">NLP Systems</h3>
+                    <div class="card-company">Customer Service</div>
+                    <p class="card-description">
+                        AI that understands sentiment and routes issues automatically. 
+                        Cut response times by 70%.
+                    </p>
+                </div>
+
+                <div class="experience-card">
+                    <h3 class="card-title">Optimization AI</h3>
+                    <div class="card-company">Supply Chain</div>
+                    <p class="card-description">
+                        Algorithms that optimize routes, schedules, and inventory. 
+                        Reduced shipping costs by 25%.
+                    </p>
+                </div>
+
+                <div class="experience-card">
+                    <h3 class="card-title">AI-Generated Creative Campaigns</h3>
+                    <div class="card-company">Marketing Agencies</div>
+                    <p class="card-description">
+                        Built AI systems that generate personalized ad creatives at scale. 
+                        Increased campaign performance by 40%.
+                    </p>
+                </div>
+
+                <div class="experience-card">
+                    <h3 class="card-title">Content Personalization</h3>
+                    <div class="card-company">Media & Publishing</div>
+                    <p class="card-description">
+                        AI that creates personalized content and recommendations. 
+                        Boosted engagement rates by 60%.
+                    </p>
+                </div>
+
+                <div class="experience-card">
+                    <h3 class="card-title">Brand Recognition AI</h3>
+                    <div class="card-company">Consumer Brands</div>
+                    <p class="card-description">
+                        Developed AI that analyzes brand perception and generates creative briefs. 
+                        Improved brand recall by 50%.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section" id="stats-section">
+            <h2 class="section-title">The Numbers Don't Lie</h2>
+            <p style="text-align: center; color: #999; margin-bottom: 30px;">Real results from real projects</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">$50M+</div>
+                    <div class="stat-label">COST SAVINGS DELIVERED</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">AI SYSTEMS DEPLOYED</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">200+</div>
+                    <div class="stat-label">ENGINEERS TRAINED</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">95%</div>
+                    <div class="stat-label">CLIENT SATISFACTION RATE</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">INDUSTRY AWARDS WON</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">PROJECTS FAILED</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <h2 class="cta-title">Ready to build AI that actually works? Let's talk.</h2>
+            <div style="margin-top: 20px;">
+                <a href="mailto:yousef+ai@hey.com?subject=AI%20Consulting%20Inquiry" class="cta-button">
+                    Start a Conversation
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'https://esm.sh/three@0.159.0';
+        import { EffectComposer } from 'https://esm.sh/three@0.159.0/examples/jsm/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'https://esm.sh/three@0.159.0/examples/jsm/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'https://esm.sh/three@0.159.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+
+        const canvas = document.getElementById('webgl-canvas');
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x0a0b12, 0.045);
+
+        const camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 300);
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+        const pixelRatio = Math.min(window.devicePixelRatio, 1.6);
+        renderer.setPixelRatio(pixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000, 1);
+
+        // Lights
+        const ambient = new THREE.AmbientLight(0x8e96bf, 0.30);
+        scene.add(ambient);
+        const dir = new THREE.DirectionalLight(0x9fa7e8, 0.85);
+        dir.position.set(-2.2, 3.8, 2.6);
+        scene.add(dir);
+        const rim = new THREE.DirectionalLight(0x73fbd3, 0.25);
+        rim.position.set(2.5, -1.5, -2.8);
+        scene.add(rim);
+
+        // Root
+        const root = new THREE.Group();
+        scene.add(root);
+
+        // Colors
+        const colorA = new THREE.Color(0x8a7efc);
+        const colorB = new THREE.Color(0x73fbd3);
+        const colorC = new THREE.Color(0xff7edb);
+
+
+        // Floating particles
+        const particleCount = prefersReducedMotion ? 50 : 200;
+        const particles = new THREE.BufferGeometry();
+        const particlePositions = new Float32Array(particleCount * 3);
+        const particleVelocities = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount; i++) {
+            const i3 = i * 3;
+            particlePositions[i3] = (Math.random() - 0.5) * 20;
+            particlePositions[i3 + 1] = (Math.random() - 0.5) * 20;
+            particlePositions[i3 + 2] = (Math.random() - 0.5) * 20;
+            particleVelocities[i3] = (Math.random() - 0.5) * 0.02;
+            particleVelocities[i3 + 1] = (Math.random() - 0.5) * 0.02;
+            particleVelocities[i3 + 2] = (Math.random() - 0.5) * 0.02;
+        }
+
+        particles.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.05,
+            color: 0x73fbd3,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending
+        });
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        root.add(particleSystem);
+
+
+        // Camera and post-processing
+        camera.position.set(0, 0, 10);
+        const composer = new EffectComposer(renderer);
+        composer.addPass(new RenderPass(scene, camera));
+        const bloom = new UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.0, 0.8, 0.85
+        );
+        bloom.threshold = 0.0;
+        bloom.strength = 0.3;
+        bloom.radius = 0.45;
+        composer.addPass(bloom);
+
+        // Mouse interaction
+        const pointer = new THREE.Vector2();
+        let targetRotX = 0;
+        let targetRotY = 0;
+
+        window.addEventListener('pointermove', (e) => {
+            pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+            pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            targetRotX = pointer.y * 0.1;
+            targetRotY = pointer.x * 0.1;
+        });
+
+        // Scroll progress
+        let scrollProgress = 0;
+        function updateScrollProgress() {
+            const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+            scrollProgress = Math.min(1, Math.max(0, (window.scrollY || window.pageYOffset) / maxScroll));
+        }
+        window.addEventListener('scroll', updateScrollProgress);
+        updateScrollProgress();
+
+        // Intersection Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.experience-section, .stats-section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Create floating particles for overlay
+        function createFloatingParticles() {
+            const overlay = document.getElementById('particles-overlay');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (6 + Math.random() * 4) + 's';
+                overlay.appendChild(particle);
+            }
+        }
+
+        // Animation loop
+        const clock = new THREE.Clock();
+        function animate() {
+            const t = clock.getElapsedTime();
+
+
+            // Rotate root group
+            if (!prefersReducedMotion) {
+                root.rotation.y += 0.001;
+                root.rotation.x += (targetRotX - root.rotation.x) * 0.02;
+                root.rotation.y += (targetRotY - root.rotation.y) * 0.02;
+            }
+
+            // Update particles
+            if (!prefersReducedMotion) {
+                const positions = particles.attributes.position.array;
+                for (let i = 0; i < particleCount; i++) {
+                    const i3 = i * 3;
+                    positions[i3] += particleVelocities[i3];
+                    positions[i3 + 1] += particleVelocities[i3 + 1];
+                    positions[i3 + 2] += particleVelocities[i3 + 2];
+
+                    // Wrap around
+                    if (positions[i3] > 10) positions[i3] = -10;
+                    if (positions[i3] < -10) positions[i3] = 10;
+                    if (positions[i3 + 1] > 10) positions[i3 + 1] = -10;
+                    if (positions[i3 + 1] < -10) positions[i3 + 1] = 10;
+                    if (positions[i3 + 2] > 10) positions[i3 + 2] = -10;
+                    if (positions[i3 + 2] < -10) positions[i3 + 2] = 10;
+                }
+                particles.attributes.position.needsUpdate = true;
+            }
+
+            // Update camera based on scroll
+            camera.position.z = 10 - scrollProgress * 3;
+            camera.position.y = scrollProgress * 2;
+
+            // Update bloom based on scroll
+            bloom.strength = 0.2 + scrollProgress * 0.3;
+
+            composer.render();
+            requestAnimationFrame(animate);
+        }
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Initialize
+        function init() {
+            // Show canvas
+            canvas.classList.add('loaded');
+            
+            // Create floating particles
+            createFloatingParticles();
+            
+            // Start animation
+            animate();
+        }
+
+        // WebGL check
+        function isWebGLAvailable() {
+            try {
+                const canvas = document.createElement('canvas');
+                return !!(window.WebGLRenderingContext && 
+                    (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+            } catch (e) {
+                return false;
+            }
+        }
+
+        if (isWebGLAvailable()) {
+            init();
+        } else {
+            // Fallback background
+            document.body.style.background = '#000000';
+            canvas.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
