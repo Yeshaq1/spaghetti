@@ -1,13 +1,22 @@
 # 🚀 Quick Deployment Guide
 
-## Option 1: Netlify (Recommended)
+## Option 1: Railway (Recommended for Node.js)
+
+1. **Install Railway CLI**: `npm install -g @railway/cli`
+2. **Login**: `railway login`
+3. **Navigate** to project: `cd ai-consulting-site`
+4. **Initialize**: `railway init`
+5. **Deploy**: `railway up`
+6. **Get your URL** from the Railway dashboard!
+
+## Option 2: Netlify (Static Site)
 
 1. **Go to**: [netlify.com/drop](https://app.netlify.com/drop)
 2. **Drag and drop** the entire `ai-consulting-site` folder
 3. **Wait** for deployment (usually 30-60 seconds)
 4. **Get your URL** and share!
 
-## Option 2: Vercel
+## Option 3: Vercel
 
 1. **Install Vercel CLI**: `npm i -g vercel`
 2. **Navigate** to the project folder: `cd ai-consulting-site`
@@ -15,7 +24,7 @@
 4. **Follow** the prompts
 5. **Deploy!**
 
-## Option 3: GitHub Pages
+## Option 4: GitHub Pages
 
 1. **Create** a new GitHub repository
 2. **Upload** all files to the repository
@@ -24,7 +33,7 @@
 5. **Choose** main/master branch
 6. **Save** and wait for deployment
 
-## Option 4: Any Web Host
+## Option 5: Any Web Host
 
 1. **Upload** all files to your web server
 2. **Ensure** the video file is accessible

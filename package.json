@@ -1,0 +1,25 @@
+{
+  "name": "spaghetti-ai-consulting",
+  "version": "1.0.0",
+  "description": "Spaghetti AI Consulting Website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "path": "^0.12.7"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "ai",
+    "consulting",
+    "spaghetti",
+    "web"
+  ],
+  "author": "Yousef",
+  "license": "MIT"
+}
