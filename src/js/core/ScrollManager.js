@@ -121,10 +121,15 @@ export class ScrollManager {
         if (!firstSection) return;
 
         const firstSectionBottom = firstSection.offsetTop + firstSection.offsetHeight;
-        const typewriterStart = firstSectionBottom - window.innerHeight * 0.8;
+        const typewriterStart = firstSectionBottom - window.innerHeight * 0.3; // Reduced from 0.8 to 0.3
         const videoDisappearPoint = typewriterStart;
 
         const videoVisible = scrollY < videoDisappearPoint;
+        
+        // Debug logging for mobile
+        if (window.innerWidth <= 768) {
+            console.log(`📱 Main video: scrollY=${scrollY.toFixed(0)}, videoDisappearPoint=${videoDisappearPoint.toFixed(0)}, visible=${videoVisible}`);
+        }
         
         // Notify callbacks about video state
         this.notifyCallbacks('onVideoStateChange', { 
@@ -167,12 +172,17 @@ export class ScrollManager {
         if (!firstSection) return;
 
         const firstSectionBottom = firstSection.offsetTop + firstSection.offsetHeight;
-        const a1VideoStart = firstSectionBottom + window.innerHeight * 0.2;
+        const a1VideoStart = firstSectionBottom - window.innerHeight * 0.1; // Start earlier
         const a1VideoEnd = secondSection ? 
             secondSection.offsetTop - window.innerHeight * 0.1 : 
             firstSectionBottom + window.innerHeight * 4;
 
         const a1VideoVisible = scrollY >= a1VideoStart && scrollY <= a1VideoEnd;
+        
+        // Debug logging for mobile
+        if (window.innerWidth <= 768) {
+            console.log(`📱 A1 video: scrollY=${scrollY.toFixed(0)}, a1VideoStart=${a1VideoStart.toFixed(0)}, a1VideoEnd=${a1VideoEnd.toFixed(0)}, visible=${a1VideoVisible}`);
+        }
         
         // Notify callbacks about A1 video state
         this.notifyCallbacks('onA1VideoStateChange', { 

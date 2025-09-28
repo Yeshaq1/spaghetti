@@ -136,6 +136,7 @@ export class VideoPlayer {
      */
     showImmediately() {
         if (this.isMobile() && this.mobileVideoElement) {
+            this.mobileVideoElement.style.display = 'block';
             this.mobileVideoElement.style.opacity = '1';
             this.play();
             console.log('📱 Mobile video shown immediately');
@@ -154,7 +155,13 @@ export class VideoPlayer {
         }
         
         if (this.mobileVideoElement) {
-            this.mobileVideoElement.style.opacity = visible ? '1' : '0';
+            // Ensure video is not hidden by CSS when it should be visible
+            if (visible) {
+                this.mobileVideoElement.style.display = 'block';
+                this.mobileVideoElement.style.opacity = '1';
+            } else {
+                this.mobileVideoElement.style.opacity = '0';
+            }
         }
         
         // Handle video playback and audio based on visibility
