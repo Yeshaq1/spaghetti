@@ -310,7 +310,7 @@ class App {
                 return;
             }
             
-            const contactLinks = document.querySelectorAll('a[href*="mailto:yousef+ai@hey.com"]');
+            const contactLinks = document.querySelectorAll('a[href*="mailto:info@spgti.com"]');
             
             contactLinks.forEach(link => {
                 const container = document.createElement('div');
