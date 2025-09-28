@@ -121,10 +121,8 @@ export class ScrollManager {
         if (!firstSection) return;
 
         const firstSectionBottom = firstSection.offsetTop + firstSection.offsetHeight;
-        // Mobile-specific adjustment: use different multiplier for mobile to fix timing
-        const isMobile = window.innerWidth <= 768;
-        const videoDisappearMultiplier = isMobile ? 0.6 : 0.3; // More conservative on mobile
-        const typewriterStart = firstSectionBottom - window.innerHeight * videoDisappearMultiplier;
+        // Restore original working value - both desktop and mobile should use 0.8
+        const typewriterStart = firstSectionBottom - window.innerHeight * 0.8;
         const videoDisappearPoint = typewriterStart;
 
         const videoVisible = scrollY < videoDisappearPoint;

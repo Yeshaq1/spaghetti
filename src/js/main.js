@@ -166,9 +166,28 @@ class App {
      * Setup scroll callbacks
      */
     setupScrollCallbacks() {
-        // Video state changes
+        // Video state changes - use direct control like A1/EM videos
         this.scrollManager.on('onVideoStateChange', (data) => {
-            this.videoPlayer.updateVisibility(data.visible);
+            // Handle desktop WebGL video
+            if (this.videoPlayer.videoPlane && this.videoPlayer.videoPlane.material) {
+                this.videoPlayer.videoPlane.material.opacity = data.visible ? 1 : 0;
+            }
+            
+            // Handle mobile HTML5 video - same logic as A1/EM videos
+            const mobileVideo = this.videoPlayer.getMobileVideo();
+            if (mobileVideo) {
+                if (data.visible && mobileVideo.style.opacity === '0') {
+                    mobileVideo.style.opacity = '1';
+                    mobileVideo.play().catch(console.log);
+                    this.audioManager.applyAudioState();
+                } else if (!data.visible && mobileVideo.style.opacity === '1') {
+                    mobileVideo.style.opacity = '0';
+                    mobileVideo.pause();
+                    mobileVideo.currentTime = 0;
+                    mobileVideo.muted = true;
+                    mobileVideo.volume = 0;
+                }
+            }
         });
 
         // Typewriter state changes
