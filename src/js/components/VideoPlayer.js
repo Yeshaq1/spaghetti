@@ -26,7 +26,6 @@ export class VideoPlayer {
      */
     init() {
         this.createVideo();
-        console.log('✅ VideoPlayer initialized');
         return this;
     }
 
@@ -36,7 +35,6 @@ export class VideoPlayer {
     createVideo() {
         // Check if mobile - use simple HTML5 video like em/a1 videos
         if (this.isMobile()) {
-            console.log('📱 Mobile detected - using simple HTML5 video like em/a1');
             this.createMobileVideo();
         } else {
             this.createWebGLVideo();
@@ -96,7 +94,6 @@ export class VideoPlayer {
         this.videoPlane.position.set(0, 0, 0);
         this.scene.add(this.videoPlane);
         
-        console.log('✅ WebGL Video with curves created');
     }
 
     /**
@@ -130,7 +127,6 @@ export class VideoPlayer {
         // Try to play immediately like desktop
         this.mobileVideoElement.play().catch(console.log);
         
-        console.log('📱 Mobile video fallback created');
     }
 
 
@@ -235,13 +231,9 @@ export class VideoPlayer {
      */
     handleResize() {
         if (this.mobileVideoElement) {
-            const mobileContainer = document.getElementById('mobile-video-container');
-            
-            if (mobileContainer && this.mobileVideoElement.parentNode !== mobileContainer) {
-                this.mobileVideoElement.style.maxWidth = window.innerWidth <= 768 ? '400px' : '500px';
-                mobileContainer.appendChild(this.mobileVideoElement);
-                console.log('📱 Video repositioned in container');
-            }
+            // DON'T move the main video - keep it fixed on screen
+            // Only update max width if needed
+            this.mobileVideoElement.style.maxWidth = window.innerWidth <= 768 ? '400px' : '500px';
         }
     }
 

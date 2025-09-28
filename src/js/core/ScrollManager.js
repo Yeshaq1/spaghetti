@@ -127,10 +127,6 @@ export class ScrollManager {
 
         const videoVisible = scrollY < videoDisappearPoint;
         
-        // Debug logging for mobile
-        if (window.innerWidth <= 768) {
-            console.log(`📱 Main video: scrollY=${scrollY.toFixed(0)}, videoDisappearPoint=${videoDisappearPoint.toFixed(0)}, visible=${videoVisible}`);
-        }
         
         // Notify callbacks about video state
         this.notifyCallbacks('onVideoStateChange', { 
@@ -173,20 +169,14 @@ export class ScrollManager {
         if (!firstSection) return;
 
         const firstSectionBottom = firstSection.offsetTop + firstSection.offsetHeight;
-        // Mobile-specific adjustment: start A1 video earlier on mobile
-        const isMobile = window.innerWidth <= 768;
-        const a1VideoStartMultiplier = isMobile ? 0.05 : 0.1; // Start earlier on mobile
-        const a1VideoStart = firstSectionBottom - window.innerHeight * a1VideoStartMultiplier;
+        // A1 video starts exactly when typewriter ends for perfect timing
+        const a1VideoStart = firstSectionBottom + window.innerHeight * 0.2;
         const a1VideoEnd = secondSection ? 
             secondSection.offsetTop - window.innerHeight * 0.1 : 
             firstSectionBottom + window.innerHeight * 4;
 
         const a1VideoVisible = scrollY >= a1VideoStart && scrollY <= a1VideoEnd;
         
-        // Debug logging for mobile
-        if (window.innerWidth <= 768) {
-            console.log(`📱 A1 video: scrollY=${scrollY.toFixed(0)}, a1VideoStart=${a1VideoStart.toFixed(0)}, a1VideoEnd=${a1VideoEnd.toFixed(0)}, visible=${a1VideoVisible}`);
-        }
         
         // Notify callbacks about A1 video state
         this.notifyCallbacks('onA1VideoStateChange', { 

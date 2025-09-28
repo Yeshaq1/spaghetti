@@ -51,7 +51,6 @@ class App {
      * Initialize the application
      */
     async init() {
-        console.log('🚀 Starting modular AI experience...');
         
         try {
             // Initialize core managers
@@ -84,7 +83,6 @@ class App {
             // Start animation loop
             this.startAnimation();
             
-            console.log('✅ Modular AI experience ready!');
             
         } catch (error) {
             console.error('❌ Error initializing application:', error);
@@ -159,7 +157,6 @@ class App {
             this.videoPlayer.getMobileVideo()
         );
 
-        console.log('✅ Additional video elements created');
     }
 
     /**
@@ -171,6 +168,20 @@ class App {
             // Handle desktop WebGL video
             if (this.videoPlayer.videoPlane && this.videoPlayer.videoPlane.material) {
                 this.videoPlayer.videoPlane.material.opacity = data.visible ? 1 : 0;
+                
+                // Also control the underlying video element's audio
+                const desktopVideo = this.videoPlayer.getVideo();
+                if (desktopVideo) {
+                    if (data.visible) {
+                        desktopVideo.play().catch(console.log);
+                        this.audioManager.applyAudioState();
+                    } else {
+                        desktopVideo.pause();
+                        desktopVideo.currentTime = 0;
+                        desktopVideo.muted = true;
+                        desktopVideo.volume = 0;
+                    }
+                }
             }
             
             // Handle mobile HTML5 video - same logic as A1/EM videos
@@ -207,7 +218,6 @@ class App {
                 this.a1VideoElement.play().catch(console.log);
                 // Apply audio state after playing (handles mobile/desktop differences)
                 this.audioManager.applyAudioState();
-                console.log('Starting A1 video!');
             } else if (!data.visible && this.a1VideoElement.style.opacity === '1') {
                 this.a1VideoElement.style.transition = 'none';
                 this.a1VideoElement.style.opacity = '0';
@@ -236,7 +246,6 @@ class App {
                     this.emVideoElement.style.opacity = '1';
                     this.audioManager.applyAudioState();
                     this.emVideoElement.play().catch(console.log);
-                    console.log('🎬 EM video appears!');
                 }
             } else {
                 this.models.hideSpaghetti();
@@ -317,7 +326,6 @@ class App {
         };
         
         animate();
-        console.log('✅ Animation loop started');
     }
 
     /**
@@ -337,7 +345,6 @@ class App {
      */
     stopAnimation() {
         this.isAnimating = false;
-        console.log('⏹️ Animation loop stopped');
     }
 
     /**
