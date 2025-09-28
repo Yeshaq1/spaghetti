@@ -309,6 +309,14 @@ class ExperienceApp {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+    // Prevent browser from restoring scroll position
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    
+    // Reset scroll position to top on page load/refresh
+    window.scrollTo(0, 0);
+    
     const app = new ExperienceApp();
     app.init();
     

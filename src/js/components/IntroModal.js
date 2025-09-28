@@ -4,8 +4,9 @@
  */
 
 export class IntroModal {
-    constructor(audioManager) {
+    constructor(audioManager, onEnterCallback = null) {
         this.audioManager = audioManager;
+        this.onEnterCallback = onEnterCallback;
         this.introModal = null;
         this.enterButton = null;
         this.isVisible = false;
@@ -62,6 +63,11 @@ export class IntroModal {
             // Hide intro modal with smooth transition
             this.hide();
             
+            // Call the callback if provided
+            if (this.onEnterCallback) {
+                this.onEnterCallback();
+            }
+            
             console.log('✅ Entered experience with audio permission:', permissionGranted);
         } catch (error) {
             console.log('❌ Error entering experience:', error);
@@ -92,6 +98,8 @@ export class IntroModal {
         if (this.introModal) {
             this.introModal.style.opacity = '1';
             this.introModal.style.visibility = 'visible';
+            this.introModal.classList.remove('hidden');
+            document.body.classList.add('modal-visible');
             this.isVisible = true;
         }
     }
@@ -102,6 +110,7 @@ export class IntroModal {
     hide() {
         if (this.introModal) {
             this.introModal.classList.add('hidden');
+            document.body.classList.remove('modal-visible');
             
             // Remove modal after transition completes
             setTimeout(() => {

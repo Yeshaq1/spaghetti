@@ -5,6 +5,11 @@
     box-sizing: border-box;
 }
 
+/* Prevent scroll restoration on page refresh */
+html {
+    scroll-behavior: auto;
+}
+
 body {
     font-family: 'Arial', sans-serif;
     background: #000;
