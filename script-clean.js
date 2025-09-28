@@ -5,6 +5,8 @@
 
 // Simple global state
 let scene, camera, renderer, video, videoTexture, videoPlane;
+// Mobile fallback
+let mobileVideoElement = null;
 // Postprocessing
 let composer, renderPass, bloomPass, fxaaPass, filmPass, scanlinePass;
 // Immersive elements
@@ -63,6 +65,7 @@ function applyAudioState() {
     setMediaAudio(video, effectiveMuted, CONFIG.videoVolume);
     setMediaAudio(a1VideoElement, effectiveMuted, 0.8);
     setMediaAudio(emVideoElement, effectiveMuted, 0.8);
+    setMediaAudio(mobileVideoElement, effectiveMuted, CONFIG.videoVolume);
 
     if (audioControlButton) {
         if (effectiveMuted) {
@@ -83,6 +86,45 @@ const CONFIG = {
     videoVolume: 0.7,
     textContent: ['AI', 'AI', 'AI', 'AI', 'AI', 'AI'] // More AIs for a crowd effect
 };
+
+// Mobile detection
+function isMobile() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+           window.innerWidth <= 768;
+}
+
+// Create mobile video fallback (like a1 and em videos)
+function createMobileVideo() {
+    mobileVideoElement = document.createElement('video');
+    mobileVideoElement.src = CONFIG.videoPath;
+    mobileVideoElement.crossOrigin = 'anonymous';
+    mobileVideoElement.loop = true;
+    mobileVideoElement.muted = true; // Start muted for autoplay
+    mobileVideoElement.volume = 0;
+    mobileVideoElement.playsInline = true; // Important for mobile
+    
+    // Video styling - position in center of screen like a1 video
+    mobileVideoElement.style.position = 'fixed';
+    mobileVideoElement.style.top = '50%';
+    mobileVideoElement.style.left = '50%';
+    mobileVideoElement.style.transform = 'translate(-50%, -50%)';
+    mobileVideoElement.style.width = 'min(90vw, 500px)';
+    mobileVideoElement.style.height = 'auto';
+    mobileVideoElement.style.zIndex = '1'; // Behind text content (z-index 10) but above background
+    mobileVideoElement.style.borderRadius = '20px';
+    mobileVideoElement.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
+    mobileVideoElement.style.opacity = '0'; // Start hidden, will be controlled by scroll
+    mobileVideoElement.style.transition = 'opacity 0.3s ease-in-out';
+    mobileVideoElement.style.pointerEvents = 'none';
+    
+    // Add to DOM
+    document.body.appendChild(mobileVideoElement);
+    
+    // Try to play immediately
+    mobileVideoElement.play().catch(console.log);
+    
+    console.log('📱 Mobile video fallback created');
+}
 
 // Initialize everything
 function init() {
@@ -137,6 +179,48 @@ function createScene() {
 
 // WebGL video with curve and effects
 function createVideo() {
+    // Check if mobile - use HTML5 video fallback but still create 3D scene
+    if (isMobile()) {
+        console.log('📱 Mobile detected - using HTML5 video fallback but keeping 3D scene');
+        createMobileVideo();
+        
+        // Still create the 3D scene elements for proper lighting and models
+        // Create a simple plane without video texture for mobile
+        const geometry = new THREE.PlaneGeometry(8, 4.5, 32, 32);
+        
+        // Add slight curve to the video plane
+        const positions = geometry.attributes.position.array;
+        for (let i = 0; i < positions.length; i += 3) {
+            const x = positions[i];
+            const y = positions[i + 1];
+            positions[i + 2] += Math.sin(x * 0.1) * 0.3 + Math.sin(y * 0.1) * 0.2; // Subtle curve
+        }
+        geometry.attributes.position.needsUpdate = true;
+        geometry.computeVertexNormals();
+        
+        // Create material without video texture for mobile
+        const material = new THREE.MeshLambertMaterial({
+            color: 0x000000, // Black background
+            transparent: true,
+            opacity: 0.3 // Subtle background
+        });
+        
+        videoPlane = new THREE.Mesh(geometry, material);
+        videoPlane.position.set(0, 0, 0);
+        scene.add(videoPlane);
+        
+        // Add lighting for 3D models (same as desktop)
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.8);
+        scene.add(ambientLight);
+        
+        const pointLight = new THREE.PointLight(0x73fbd3, 0.5, 100);
+        pointLight.position.set(0, 0, 5);
+        scene.add(pointLight);
+        
+        console.log('✅ Mobile 3D scene created with proper lighting');
+        return;
+    }
+    
     video = document.createElement('video');
     video.src = CONFIG.videoPath;
     video.crossOrigin = 'anonymous';
@@ -1519,6 +1603,7 @@ function enableAllAudio() {
     setMediaAudio(video, false, CONFIG.videoVolume);
     setMediaAudio(a1VideoElement, false, 0.8);
     setMediaAudio(emVideoElement, false, 0.8);
+    setMediaAudio(mobileVideoElement, false, CONFIG.videoVolume);
     applyAudioState();
     
     console.log('🔊 All audio enabled');
@@ -1529,6 +1614,7 @@ function disableAllAudio() {
     setMediaAudio(video, true, 0);
     setMediaAudio(a1VideoElement, true, 0);
     setMediaAudio(emVideoElement, true, 0);
+    setMediaAudio(mobileVideoElement, true, 0);
     applyAudioState();
     
     console.log('🔇 All audio disabled');
@@ -1788,6 +1874,7 @@ function enableAllAudio() {
     setMediaAudio(video, false, CONFIG.videoVolume);
     setMediaAudio(a1VideoElement, false, 0.8);
     setMediaAudio(emVideoElement, false, 0.8);
+    setMediaAudio(mobileVideoElement, false, CONFIG.videoVolume);
     applyAudioState();
     
     console.log('🔊 All audio enabled');
@@ -1798,6 +1885,7 @@ function disableAllAudio() {
     setMediaAudio(video, true, 0);
     setMediaAudio(a1VideoElement, true, 0);
     setMediaAudio(emVideoElement, true, 0);
+    setMediaAudio(mobileVideoElement, true, 0);
     applyAudioState();
     
     console.log('🔇 All audio disabled');
@@ -2002,6 +2090,32 @@ function setupScrolling() {
                     // Hide video instantly
                     videoPlane.material.opacity = 0;
                     setMediaAudio(video, true, 0);
+                }
+            }
+            
+            // Handle mobile video fallback - same logic as WebGL video
+            if (mobileVideoElement) {
+                const typewriterStart = firstSectionBottom - window.innerHeight * 0.8; // When typewriter starts
+                const videoDisappearPoint = typewriterStart; // Video disappears right before typewriter
+                
+                const videoVisible = scrollY < videoDisappearPoint;
+                
+                if (videoVisible) {
+                    // Show mobile video with appropriate audio
+                    mobileVideoElement.style.opacity = '1';
+                    // Also show the 3D plane background
+                    if (videoPlane && videoPlane.material) {
+                        videoPlane.material.opacity = 0.3;
+                    }
+                    applyAudioState();
+                } else {
+                    // Hide mobile video instantly
+                    mobileVideoElement.style.opacity = '0';
+                    // Hide the 3D plane background too
+                    if (videoPlane && videoPlane.material) {
+                        videoPlane.material.opacity = 0;
+                    }
+                    setMediaAudio(mobileVideoElement, true, 0);
                 }
             }
             
