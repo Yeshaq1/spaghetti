@@ -121,30 +121,19 @@ export class VideoPlayer {
         this.mobileVideoElement.style.zIndex = '1002';
         this.mobileVideoElement.style.borderRadius = '20px';
         this.mobileVideoElement.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
-        this.mobileVideoElement.style.opacity = '0';
+        this.mobileVideoElement.style.opacity = '1'; // Start visible like desktop
         this.mobileVideoElement.style.transition = 'opacity 1s ease-in-out';
         this.mobileVideoElement.style.pointerEvents = 'none';
         
         document.body.appendChild(this.mobileVideoElement);
         
+        // Try to play immediately like desktop
+        this.mobileVideoElement.play().catch(console.log);
+        
         console.log('📱 Mobile video fallback created');
     }
 
 
-    /**
-     * Show video immediately (for mobile after Enter button)
-     */
-    showImmediately() {
-        if (this.isMobile() && this.mobileVideoElement) {
-            this.mobileVideoElement.style.display = 'block';
-            this.mobileVideoElement.style.opacity = '1';
-            this.play();
-            console.log('📱 Mobile video shown immediately');
-        } else if (this.videoPlane && this.videoPlane.material) {
-            this.videoPlane.material.opacity = 1;
-            this.play();
-        }
-    }
 
     /**
      * Update video visibility based on scroll

@@ -63,10 +63,7 @@ class App {
             this.videoPlayer = new VideoPlayer(this.sceneManager.getScene(), this.audioManager).init();
             this.typewriterEffect = new TypewriterEffect().init();
             this.hamburgerMenu = new HamburgerMenu().init();
-            this.introModal = new IntroModal(this.audioManager, () => {
-                // Show video immediately when user hits Enter (like desktop)
-                this.videoPlayer.showImmediately();
-            }).init();
+            this.introModal = new IntroModal(this.audioManager).init();
             
             // Initialize Three.js modules
             this.models = new Models(this.sceneManager.getScene()).init();

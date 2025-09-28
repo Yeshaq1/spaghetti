@@ -4,9 +4,8 @@
  */
 
 export class IntroModal {
-    constructor(audioManager, onEnterCallback = null) {
+    constructor(audioManager) {
         this.audioManager = audioManager;
-        this.onEnterCallback = onEnterCallback;
         this.introModal = null;
         this.enterButton = null;
         this.isVisible = false;
@@ -62,11 +61,6 @@ export class IntroModal {
             
             // Hide intro modal with smooth transition
             this.hide();
-            
-            // Call the callback if provided
-            if (this.onEnterCallback) {
-                this.onEnterCallback();
-            }
             
             console.log('✅ Entered experience with audio permission:', permissionGranted);
         } catch (error) {
