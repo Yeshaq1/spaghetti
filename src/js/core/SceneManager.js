@@ -36,7 +36,6 @@ export class SceneManager {
         this.setupPostprocessing();
         this.setupInteractions();
         
-        console.log('✅ SceneManager initialized');
         return this;
     }
 
@@ -46,7 +45,6 @@ export class SceneManager {
     createScene() {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0x000000);
-        console.log('✅ Scene created');
     }
 
     /**
@@ -55,7 +53,6 @@ export class SceneManager {
     setupCamera() {
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.camera.position.set(0, 0, 8);
-        console.log('✅ Camera setup complete');
     }
 
     /**
@@ -70,7 +67,6 @@ export class SceneManager {
         });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        console.log('✅ Renderer setup complete');
     }
 
     /**
@@ -86,7 +82,6 @@ export class SceneManager {
         pointLight.position.set(0, 0, 5);
         this.scene.add(pointLight);
         
-        console.log('✅ Lighting setup complete');
     }
 
     /**
@@ -144,7 +139,6 @@ export class SceneManager {
             this.fxaaPass.material.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
             this.composer.addPass(this.fxaaPass);
             
-            console.log('✅ Postprocessing setup complete');
         } catch (error) {
             console.warn('Postprocessing setup failed, falling back to basic rendering:', error);
             this.composer = null;

@@ -21,7 +21,6 @@ export class HamburgerMenu {
         this.setupEventListeners();
         this.setInitialState();
         
-        console.log('✅ HamburgerMenu initialized');
         return this;
     }
 
@@ -310,7 +309,6 @@ export class HamburgerMenu {
             this.menuOverlay.classList.remove('menu-opening');
         }, 1000);
         
-        console.log('🍔 Menu opened');
     }
 
     /**
@@ -354,7 +352,6 @@ export class HamburgerMenu {
             this.menuAnimationInProgress = false;
         }, 800);
         
-        console.log('🍔 Menu closed');
     }
 
     /**

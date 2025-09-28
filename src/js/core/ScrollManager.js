@@ -24,7 +24,6 @@ export class ScrollManager {
     init() {
         this.setupSections();
         this.setupScrollListener();
-        console.log('✅ ScrollManager initialized');
         return this;
     }
 
@@ -33,7 +32,6 @@ export class ScrollManager {
      */
     setupSections() {
         this.sections = Array.from(document.querySelectorAll('.story-section'));
-        console.log(`📄 Found ${this.sections.length} story sections`);
     }
 
     /**
@@ -62,7 +60,6 @@ export class ScrollManager {
         // Initial call
         handleScroll();
         
-        console.log('✅ Scroll listener setup complete');
     }
 
     /**
@@ -75,7 +72,6 @@ export class ScrollManager {
             
             if (sectionVisible && !section.classList.contains('visible')) {
                 section.classList.add('visible');
-                console.log(`✨ Section ${index + 1} visible`);
                 
                 // Handle specific section animations
                 this.handleSectionAnimations(section, index);
@@ -96,7 +92,6 @@ export class ScrollManager {
             if (vibeImage) {
                 vibeImage.style.opacity = '1';
                 vibeImage.style.transform = 'translateY(0)';
-                console.log('🎨 Vibe Coding image appears!');
             }
         }
         
@@ -109,7 +104,6 @@ export class ScrollManager {
                     item.style.transform = 'translateY(0) scale(1)';
                 }, logoIndex * 150);
             });
-            console.log('🏢 Company logos animating!');
         }
     }
 
@@ -232,7 +226,6 @@ export class ScrollManager {
             if (section4Visible && newsImage.style.opacity === '0') {
                 newsImage.style.opacity = '1';
                 newsImage.style.transform = 'translateY(0)';
-                console.log('📰 News image appears!');
             } else if (!section4Visible && newsImage.style.opacity === '1') {
                 newsImage.style.opacity = '0';
                 newsImage.style.transform = 'translateY(30px)';

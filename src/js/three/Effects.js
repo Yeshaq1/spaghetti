@@ -22,7 +22,6 @@ export class Effects {
     init() {
         this.createStarfield();
         this.createAurora();
-        console.log('✅ Effects initialized');
         return this;
     }
 
@@ -57,7 +56,6 @@ export class Effects {
         this.starfield.position.z = -50;
         this.scene.add(this.starfield);
         
-        console.log('✅ Starfield created');
     }
 
     /**
@@ -129,7 +127,6 @@ export class Effects {
         this.auroraMesh.position.set(0, 0, -45);
         this.scene.add(this.auroraMesh);
         
-        console.log('✅ Aurora plane created');
     }
 
     /**
@@ -172,7 +169,6 @@ export class Effects {
         this.scene.add(mesh);
         this.shockwaves.push(mesh);
         
-        console.log('💥 Shockwave created at', x, y, z);
     }
 
     /**

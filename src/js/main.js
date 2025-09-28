@@ -179,7 +179,7 @@ class App {
                 const desktopVideo = this.videoPlayer.getVideo();
                 if (desktopVideo) {
                     if (data.visible) {
-                        desktopVideo.play().catch(console.log);
+                        desktopVideo.play().catch(() => {});
                         this.audioManager.applyAudioState();
                     } else {
                         desktopVideo.pause();
@@ -195,7 +195,7 @@ class App {
             if (mobileVideo) {
                 if (data.visible && mobileVideo.style.opacity === '0') {
                     mobileVideo.style.opacity = '1';
-                    mobileVideo.play().catch(console.log);
+                    mobileVideo.play().catch(() => {});
                     this.audioManager.applyAudioState();
                 } else if (!data.visible && mobileVideo.style.opacity === '1') {
                     mobileVideo.style.opacity = '0';
@@ -221,7 +221,7 @@ class App {
             if (data.visible && this.a1VideoElement.style.opacity === '0') {
                 this.a1VideoElement.style.opacity = '1';
                 this.a1VideoElement.style.transition = 'none';
-                this.a1VideoElement.play().catch(console.log);
+                    this.a1VideoElement.play().catch(() => {});
                 // Apply audio state after playing (handles mobile/desktop differences)
                 this.audioManager.applyAudioState();
             } else if (!data.visible && this.a1VideoElement.style.opacity === '1') {
@@ -251,7 +251,7 @@ class App {
                 if (this.emVideoElement.style.opacity === '0') {
                     this.emVideoElement.style.opacity = '1';
                     this.audioManager.applyAudioState();
-                    this.emVideoElement.play().catch(console.log);
+                    this.emVideoElement.play().catch(() => {});
                 }
             } else {
                 this.models.hideSpaghetti();
@@ -307,7 +307,6 @@ class App {
             const features = await response.json();
             
             if (!features.webrtcEnabled) {
-                console.log('WebRTC feature disabled');
                 return;
             }
             

@@ -61,7 +61,7 @@ export class VideoPlayer {
         this.video.volume = 0; // Start with no volume until permission granted
         
         // Try to play immediately
-        this.video.play().catch(console.log);
+        this.video.play().catch(() => {});
         
         // Create video texture
         this.videoTexture = new THREE.VideoTexture(this.video);
@@ -125,7 +125,7 @@ export class VideoPlayer {
         document.body.appendChild(this.mobileVideoElement);
         
         // Try to play immediately like desktop
-        this.mobileVideoElement.play().catch(console.log);
+        this.mobileVideoElement.play().catch(() => {});
         
     }
 
@@ -186,10 +186,10 @@ export class VideoPlayer {
      */
     play() {
         if (this.video) {
-            this.video.play().catch(console.log);
+            this.video.play().catch(() => {});
         }
         if (this.mobileVideoElement) {
-            this.mobileVideoElement.play().catch(console.log);
+            this.mobileVideoElement.play().catch(() => {});
         }
         
         // Apply audio state after playing

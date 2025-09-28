@@ -19,7 +19,6 @@ export class IntroModal {
         this.setupEventListeners();
         this.preventScrolling();
         
-        console.log('✅ IntroModal initialized');
         return this;
     }
 
@@ -62,9 +61,7 @@ export class IntroModal {
             // Hide intro modal with smooth transition
             this.hide();
             
-            console.log('✅ Entered experience with audio permission:', permissionGranted);
         } catch (error) {
-            console.log('❌ Error entering experience:', error);
             // Still hide modal but without audio
             this.enableScrolling();
             this.hide();

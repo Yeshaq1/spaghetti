@@ -38,7 +38,6 @@ class ExperienceApp {
      * Initialize the experience page
      */
     init() {
-        console.log('🚀 Starting experience page...');
         
         if (!this.isWebGLAvailable()) {
             this.showFallback();
@@ -56,7 +55,6 @@ class ExperienceApp {
         this.createFloatingParticles();
         this.startAnimation();
         
-        console.log('✅ Experience page ready!');
     }
 
     /**
@@ -65,7 +63,6 @@ class ExperienceApp {
     createScene() {
         this.scene = new THREE.Scene();
         this.scene.fog = new THREE.FogExp2(0x0a0b12, 0.045);
-        console.log('✅ Scene created');
     }
 
     /**
@@ -74,7 +71,6 @@ class ExperienceApp {
     setupCamera() {
         this.camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 300);
         this.camera.position.set(0, 0, 10);
-        console.log('✅ Camera setup complete');
     }
 
     /**
@@ -91,7 +87,6 @@ class ExperienceApp {
         this.renderer.setPixelRatio(pixelRatio);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setClearColor(0x000000, 1);
-        console.log('✅ Renderer setup complete');
     }
 
     /**
@@ -108,7 +103,6 @@ class ExperienceApp {
         const rim = new THREE.DirectionalLight(0x73fbd3, 0.25);
         rim.position.set(2.5, -1.5, -2.8);
         this.scene.add(rim);
-        console.log('✅ Lighting setup complete');
     }
 
     /**
@@ -140,7 +134,6 @@ class ExperienceApp {
         });
         this.particleSystem = new THREE.Points(this.particles, particleMaterial);
         this.scene.add(this.particleSystem);
-        console.log('✅ Particles created');
     }
 
     /**
@@ -158,7 +151,6 @@ class ExperienceApp {
         this.bloomPass.strength = 0.3;
         this.bloomPass.radius = 0.45;
         this.composer.addPass(this.bloomPass);
-        console.log('✅ Postprocessing setup complete');
     }
 
     /**
@@ -171,7 +163,6 @@ class ExperienceApp {
             this.targetRotX = this.pointer.y * 0.1;
             this.targetRotY = this.pointer.x * 0.1;
         });
-        console.log('✅ Interactions setup complete');
     }
 
     /**
@@ -199,7 +190,6 @@ class ExperienceApp {
             observer.observe(section);
         });
         
-        console.log('✅ Scroll handling setup complete');
     }
 
     /**
@@ -215,7 +205,6 @@ class ExperienceApp {
             particle.style.animationDuration = (6 + Math.random() * 4) + 's';
             overlay.appendChild(particle);
         }
-        console.log('✅ Floating particles created');
     }
 
     /**
@@ -271,7 +260,6 @@ class ExperienceApp {
         };
         
         animate();
-        console.log('✅ Animation loop started');
     }
 
     /**
@@ -303,7 +291,6 @@ class ExperienceApp {
     showFallback() {
         document.body.style.background = '#000000';
         this.canvas.style.display = 'none';
-        console.log('⚠️ WebGL not available, showing fallback');
     }
 }
 

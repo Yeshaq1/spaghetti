@@ -27,7 +27,6 @@ export class Models {
     init() {
         this.loadGokuModel();
         this.loadSpaghettiModel();
-        console.log('✅ Models initialized');
         return this;
     }
 
@@ -60,10 +59,8 @@ export class Models {
                 // Create energy particles
                 this.gokuEnergyParticles = this.createGokuEnergyParticles();
                 
-                console.log('✅ Goku Super Saiyan model loaded');
             },
             (progress) => {
-                console.log('Loading Goku model:', (progress.loaded / progress.total * 100) + '%');
             },
             (error) => {
                 console.error('Error loading Goku model:', error);
@@ -140,10 +137,8 @@ export class Models {
                 // Create funny arrow
                 this.createSpaghettiArrow();
                 
-                console.log('✅ Flying Spaghetti Monster model loaded');
             },
             (progress) => {
-                console.log('Loading Spaghetti Monster:', (progress.loaded / progress.total * 100) + '%');
             },
             (error) => {
                 console.error('Error loading Spaghetti Monster:', error);
@@ -230,7 +225,6 @@ export class Models {
         this.spaghettiArrow.visible = false;
         this.scene.add(this.spaghettiArrow);
         
-        console.log('✅ Spaghetti arrow created');
     }
 
     /**
@@ -252,7 +246,6 @@ export class Models {
             });
             
             this.gokuVisible = true;
-            console.log('🥋 Goku Super Saiyan appears!');
         }
     }
 
@@ -274,7 +267,6 @@ export class Models {
             });
             
             this.gokuVisible = false;
-            console.log('🥋 Goku Super Saiyan disappears!');
         }
     }
 
@@ -287,12 +279,10 @@ export class Models {
             if (this.spaghettiModel.userData.directionalLight) {
                 this.spaghettiModel.userData.directionalLight.visible = true;
             }
-            console.log('🍝 Flying Spaghetti Monster appears!');
         }
         
         if (this.spaghettiArrow && !this.spaghettiVisible) {
             this.spaghettiArrow.visible = true;
-            console.log('🏹 Spaghetti arrow appears!');
         }
         
         this.spaghettiVisible = true;
@@ -307,12 +297,10 @@ export class Models {
             if (this.spaghettiModel.userData.directionalLight) {
                 this.spaghettiModel.userData.directionalLight.visible = false;
             }
-            console.log('🍝 Flying Spaghetti Monster disappears!');
         }
         
         if (this.spaghettiArrow && this.spaghettiVisible) {
             this.spaghettiArrow.visible = false;
-            console.log('🏹 Spaghetti arrow disappears!');
         }
         
         this.spaghettiVisible = false;

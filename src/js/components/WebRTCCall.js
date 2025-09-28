@@ -176,7 +176,6 @@ export class WebRTCCall {
                 this.endCall();
             }, 30000); // 30 seconds
             
-            console.log('WebRTC connection established with OpenAI');
 
         } catch (error) {
             console.error('WebRTC connection error:', error);

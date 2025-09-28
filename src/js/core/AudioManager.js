@@ -35,7 +35,6 @@ export class AudioManager {
     init() {
         this.setupAudioContext();
         this.createAudioControlButton();
-        console.log('✅ AudioManager initialized');
         return this;
     }
 
@@ -49,9 +48,7 @@ export class AudioManager {
             this.analyserNode.fftSize = 256;
             this.audioDataArray = new Uint8Array(this.analyserNode.frequencyBinCount);
             this.audioReady = true;
-            console.log('✅ Audio context ready');
         } catch (e) {
-            console.log('Audio context not available:', e);
         }
     }
 
@@ -175,7 +172,6 @@ export class AudioManager {
             this.showAudioControl();
         }, 2000);
         
-        console.log('✅ Audio control button created');
     }
 
     /**
@@ -208,12 +204,10 @@ export class AudioManager {
         
         if (this.isAudioMuted) {
             this.applyAudioState();
-            console.log('🔇 Audio muted');
         } else {
             this.audioPermissionGranted = true;
             await this.ensureAudioContextResumed();
             this.applyAudioState();
-            console.log('🔊 Audio unmuted');
         }
     }
 
@@ -224,7 +218,6 @@ export class AudioManager {
         this.isAudioMuted = false;
         this.audioPermissionGranted = true;
         this.applyAudioState();
-        console.log('🔊 All audio enabled');
     }
 
     /**
@@ -233,7 +226,6 @@ export class AudioManager {
     disableAllAudio() {
         this.isAudioMuted = true;
         this.applyAudioState();
-        console.log('🔇 All audio disabled');
     }
 
     /**
@@ -244,10 +236,8 @@ export class AudioManager {
             await this.ensureAudioContextResumed();
             this.audioPermissionGranted = true;
             this.applyAudioState();
-            console.log('✅ Audio permission granted');
             return true;
         } catch (error) {
-            console.log('❌ Audio permission denied:', error);
             this.audioPermissionGranted = false;
             this.applyAudioState();
             return false;

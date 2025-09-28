@@ -16,7 +16,6 @@ export class TypewriterEffect {
      */
     init() {
         this.createTypewriterElement();
-        console.log('✅ TypewriterEffect initialized');
         return this;
     }
 
@@ -151,7 +150,6 @@ export class TypewriterEffect {
         
         document.body.appendChild(this.typewriterElement);
         
-        console.log('✅ Futuristic typewriter effect created');
     }
 
     /**
@@ -233,7 +231,6 @@ export class TypewriterEffect {
 
         this.isVisible = true;
         this.currentText = text;
-        console.log('✅ Glitch text started:', text);
     }
 
     /**
@@ -297,7 +294,6 @@ export class TypewriterEffect {
         // Start typing
         typeNextChar();
         
-        console.log('✅ Typewriter started:', text);
     }
 
     /**
