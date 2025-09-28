@@ -1,0 +1,126 @@
+/* Video Player and 3D Scene Styles */
+#three-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: var(--z-content);
+}
+
+/* Content container */
+.content {
+    position: relative;
+    z-index: var(--z-overlay);
+    min-height: 2000vh; /* Much longer scrollable content for extended videos */
+}
+
+/* Story sections */
+.story-section {
+    min-height: 150vh; /* Each section takes 1.5x viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+}
+
+.story-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.story-content {
+    max-width: 900px;
+    text-align: left;
+    position: relative;
+    z-index: 20;
+    padding: 0 2rem;
+}
+
+.story-content::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, 
+        rgba(255, 255, 255, 0.8) 0%, 
+        rgba(255, 255, 255, 0.4) 50%, 
+        rgba(255, 255, 255, 0.1) 100%);
+    border-radius: 2px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.story-content h2 {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 1.5rem;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    font-weight: 200;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.story-content h2::after {
+    content: '';
+    position: absolute;
+    bottom: -0.5rem;
+    left: 2rem;
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.8) 0%, 
+        rgba(255, 255, 255, 0.2) 100%);
+    border-radius: 1px;
+}
+
+.story-content p {
+    padding-left: 2rem;
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    line-height: 1.6;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 0;
+}
+
+/* Video positioning - below news image for all screen sizes */
+.mobile-video-container {
+    position: relative;
+    width: 100%;
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.mobile-video-container video {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 500px !important;
+    height: auto !important;
+    margin: 0 auto !important;
+    display: block !important;
+}
+
+/* Scroll indicator */
+.scroll-hint {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 15;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    animation: fadeInOut 3s infinite;
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}

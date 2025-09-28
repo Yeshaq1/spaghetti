@@ -1,0 +1,146 @@
+/* Typewriter Effect Styles */
+.typewriter-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1001;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    pointer-events: none;
+    max-width: 90vw;
+    text-align: center;
+}
+
+.terminal {
+    background: linear-gradient(135deg, rgba(5, 5, 8, 0.95), rgba(10, 10, 14, 0.98));
+    border: 1px solid rgba(115, 251, 211, 0.12);
+    border-radius: 15px;
+    padding: 2.5rem 3rem;
+    box-shadow: 0 20px 80px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(115, 251, 211, 0.08);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+}
+
+.terminal-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(115, 251, 211, 0.12);
+}
+
+.terminal-dots {
+    display: flex;
+    gap: 0.5rem;
+    margin-right: 1rem;
+}
+
+.terminal-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px currentColor;
+}
+
+.terminal-dot.red { background: #ff5f56; }
+.terminal-dot.yellow { background: #ffbd2e; }
+.terminal-dot.green { background: #27ca3f; }
+
+.terminal-title {
+    color: rgba(115, 251, 211, 0.9);
+    font-family: "Courier New", monospace;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 8px rgba(115, 251, 211, 0.35);
+}
+
+.terminal-text {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.typewriter-text {
+    font-family: "Courier New", "Monaco", monospace;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    font-weight: 400;
+    color: rgba(115, 251, 211, 0.92);
+    line-height: 1.4;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 14px rgba(115, 251, 211, 0.35);
+}
+
+.typewriter-cursor {
+    color: rgba(115, 251, 211, 0.9);
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    font-weight: 400;
+    animation: terminalBlink 1s infinite;
+    margin-left: 4px;
+    text-shadow: 0 0 12px rgba(115, 251, 211, 0.35);
+}
+
+/* Glitch effect */
+.glitch {
+    position: relative;
+    animation: glitchShift 1s steps(8, end) infinite;
+}
+
+.glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0.75;
+    pointer-events: none;
+}
+
+.glitch::before {
+    color: #ff3b3b;
+    transform: translate(2px, 0);
+    mix-blend-mode: screen;
+}
+
+.glitch::after {
+    color: #00eaff;
+    transform: translate(-2px, 0);
+    mix-blend-mode: screen;
+}
+
+.glitch-no-clone::before,
+.glitch-no-clone::after { 
+    display: none; 
+}
+
+/* Animations */
+@keyframes terminalBlink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+@keyframes terminalGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes scanlines {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(4px); }
+}
+
+@keyframes glitchShift {
+    0% { text-shadow: 0 0 0 #ff3b3b, 0 0 0 #00eaff; transform: translate(0, 0) skew(0deg); }
+    10% { text-shadow: 2px 0 #ff3b3b, -2px 0 #00eaff; transform: translate(0.5px, -0.5px) skew(0.3deg); }
+    20% { text-shadow: -2px 0 #ff3b3b, 2px 0 #00eaff; transform: translate(-0.5px, 0.5px) skew(-0.3deg); }
+    30% { text-shadow: 3px 0 #ff3b3b, -3px 0 #00eaff; transform: translate(0.8px, -0.2px) skew(0.6deg); }
+    40% { text-shadow: -3px 0 #ff3b3b, 3px 0 #00eaff; transform: translate(-0.8px, 0.2px) skew(-0.6deg); }
+    50% { text-shadow: 1px 0 #ff3b3b, -1px 0 #00eaff; transform: translate(0.2px, 0.3px) skew(0.2deg); }
+    60% { text-shadow: -1px 0 #ff3b3b, 1px 0 #00eaff; transform: translate(-0.2px, -0.3px) skew(-0.2deg); }
+    70% { text-shadow: 4px 0 #ff3b3b, -4px 0 #00eaff; transform: translate(1px, -0.6px) skew(0.8deg); }
+    80% { text-shadow: -4px 0 #ff3b3b, 4px 0 #00eaff; transform: translate(-1px, 0.6px) skew(-0.8deg); }
+    90% { text-shadow: 2px 0 #ff3b3b, -2px 0 #00eaff; transform: translate(0.5px, -0.4px) skew(0.4deg); }
+    100% { text-shadow: 0 0 0 #ff3b3b, 0 0 0 #00eaff; transform: translate(0, 0) skew(0deg); }
+}
