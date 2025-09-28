@@ -100,8 +100,9 @@ class App {
         this.a1VideoElement.src = 'assets/a1.mp4';
         this.a1VideoElement.crossOrigin = 'anonymous';
         this.a1VideoElement.loop = true;
-        this.a1VideoElement.muted = false;
-        this.a1VideoElement.volume = 0.8;
+        // Mobile autoplay fix: start muted, unmute after user interaction
+        this.a1VideoElement.muted = true;
+        this.a1VideoElement.volume = 0;
         this.a1VideoElement.playsInline = true;
 
         // Video styling for mobile
@@ -184,8 +185,9 @@ class App {
             if (data.visible && this.a1VideoElement.style.opacity === '0') {
                 this.a1VideoElement.style.opacity = '1';
                 this.a1VideoElement.style.transition = 'none';
-                this.audioManager.applyAudioState();
                 this.a1VideoElement.play().catch(console.log);
+                // Apply audio state after playing (handles mobile/desktop differences)
+                this.audioManager.applyAudioState();
                 console.log('Starting A1 video!');
             } else if (!data.visible && this.a1VideoElement.style.opacity === '1') {
                 this.a1VideoElement.style.transition = 'none';

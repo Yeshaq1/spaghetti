@@ -121,7 +121,10 @@ export class ScrollManager {
         if (!firstSection) return;
 
         const firstSectionBottom = firstSection.offsetTop + firstSection.offsetHeight;
-        const typewriterStart = firstSectionBottom - window.innerHeight * 0.3; // Reduced from 0.8 to 0.3
+        // Mobile-specific adjustment: use different multiplier for mobile to fix timing
+        const isMobile = window.innerWidth <= 768;
+        const videoDisappearMultiplier = isMobile ? 0.6 : 0.3; // More conservative on mobile
+        const typewriterStart = firstSectionBottom - window.innerHeight * videoDisappearMultiplier;
         const videoDisappearPoint = typewriterStart;
 
         const videoVisible = scrollY < videoDisappearPoint;
@@ -172,7 +175,10 @@ export class ScrollManager {
         if (!firstSection) return;
 
         const firstSectionBottom = firstSection.offsetTop + firstSection.offsetHeight;
-        const a1VideoStart = firstSectionBottom - window.innerHeight * 0.1; // Start earlier
+        // Mobile-specific adjustment: start A1 video earlier on mobile
+        const isMobile = window.innerWidth <= 768;
+        const a1VideoStartMultiplier = isMobile ? 0.05 : 0.1; // Start earlier on mobile
+        const a1VideoStart = firstSectionBottom - window.innerHeight * a1VideoStartMultiplier;
         const a1VideoEnd = secondSection ? 
             secondSection.offsetTop - window.innerHeight * 0.1 : 
             firstSectionBottom + window.innerHeight * 4;
