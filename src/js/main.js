@@ -13,6 +13,7 @@ import { VideoPlayer } from './components/VideoPlayer.js';
 import { TypewriterEffect } from './components/TypewriterEffect.js';
 import { HamburgerMenu } from './components/HamburgerMenu.js';
 import { IntroModal } from './components/IntroModal.js';
+import { WebRTCCall } from './components/WebRTCCall.js';
 
 // Import Three.js modules
 import { Models } from './three/Models.js';
@@ -33,6 +34,7 @@ class App {
         this.typewriterEffect = null;
         this.hamburgerMenu = null;
         this.introModal = null;
+        this.webRTCCall = null;
         
         // Three.js modules
         this.models = null;
@@ -63,6 +65,7 @@ class App {
             this.typewriterEffect = new TypewriterEffect().init();
             this.hamburgerMenu = new HamburgerMenu().init();
             this.introModal = new IntroModal(this.audioManager).init();
+            this.webRTCCall = new WebRTCCall().init();
             
             // Initialize Three.js modules
             this.models = new Models(this.sceneManager.getScene()).init();
@@ -79,6 +82,9 @@ class App {
             
             // Setup click handler for shockwaves
             this.setupClickHandler();
+            
+            // Setup WebRTC call buttons
+            this.setupWebRTCCallButtons();
             
             // Start animation loop
             this.startAnimation();
@@ -289,6 +295,55 @@ class App {
             // Create shockwave
             this.effects.createClickShockwave();
         });
+    }
+
+    /**
+     * Setup WebRTC call buttons
+     */
+    async setupWebRTCCallButtons() {
+        try {
+            // Check if WebRTC feature is enabled
+            const response = await fetch('/api/features');
+            const features = await response.json();
+            
+            if (!features.webrtcEnabled) {
+                console.log('WebRTC feature disabled');
+                return;
+            }
+            
+            const contactLinks = document.querySelectorAll('a[href*="mailto:yousef+ai@hey.com"]');
+            
+            contactLinks.forEach(link => {
+                const container = document.createElement('div');
+                container.style.cssText = `
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 10px;
+                    margin: 20px 0;
+                `;
+                
+                // Style the email link
+                link.style.cssText = `
+                    background: rgba(115, 251, 211, 0.1);
+                    color: #73fbd3;
+                    border: 1px solid rgba(115, 251, 211, 0.3);
+                    padding: 12px 24px;
+                    border-radius: 25px;
+                    text-decoration: none;
+                    font-size: 14px;
+                `;
+                
+                // Insert after the link
+                link.parentNode.insertBefore(container, link.nextSibling);
+                container.appendChild(link);
+                
+                // Create call button (now appears first)
+                this.webRTCCall.createCallButton(container);
+            });
+        } catch (error) {
+            console.error('Error setting up WebRTC buttons:', error);
+        }
     }
 
     /**
