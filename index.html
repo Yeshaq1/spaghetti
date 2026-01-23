@@ -73,10 +73,10 @@
     <div class="menu-overlay" id="menuOverlay">
         <div class="page">
             <div class="main-links">
-                <a href="experience.html" class="main-link" data-text="EXPERIENCE">
+                <a href="#packages" class="main-link" data-text="PACKAGES">
                     <div class="inner">
                         <div class="title"></div>
-                        <div class="sup-title">Past Work</div>
+                        <div class="sup-title">What You Get</div>
                     </div>
                 </a>
                 <a href="mailto:yousef+ai@hey.com?subject=AI%20Consulting%20Inquiry" class="main-link" data-text="CONTACT">
@@ -185,7 +185,7 @@
                 <p>Choose a focused package, then add monthly maintenance when you want ongoing stability</p>
 
                 <div class="pricing-grid">
-                    <div class="pricing-card">
+                    <div class="pricing-card" id="blueprint">
                         <div class="pricing-tag">PROMPT + SYSTEM BLUEPRINT</div>
                         <h3>Vibe Blueprint</h3>
                         <div class="price">
@@ -198,9 +198,10 @@
                             <li>Tooling and stack recommendations</li>
                             <li>Implementation plan your team can follow</li>
                         </ul>
+                        <a class="package-link" href="#blueprint">Learn more →</a>
                     </div>
 
-                    <div class="pricing-card featured">
+                    <div class="pricing-card featured" id="build-sprint">
                         <div class="pricing-tag">BUILD + WIRE-UP</div>
                         <h3>Vibe Build Sprint</h3>
                         <div class="price">
@@ -213,9 +214,10 @@
                             <li>Production hardening + security review</li>
                             <li>Launch-ready handoff and documentation</li>
                         </ul>
+                        <a class="package-link" href="#build-sprint">Learn more →</a>
                     </div>
 
-                    <div class="pricing-card">
+                    <div class="pricing-card" id="review">
                         <div class="pricing-tag">REVIEW + STABILIZE</div>
                         <h3>Spaghetti Review</h3>
                         <div class="price">
@@ -228,9 +230,10 @@
                             <li>Fix plan + quick wins implemented</li>
                             <li>Risk report and next-step roadmap</li>
                         </ul>
+                        <a class="package-link" href="#review">Learn more →</a>
                     </div>
 
-                    <div class="pricing-card maintenance-card">
+                    <div class="pricing-card maintenance-card" id="maintenance">
                         <div class="pricing-tag">ONGOING SUPPORT</div>
                         <h3>Maintenance + Reliability</h3>
                         <div class="price">
@@ -244,6 +247,7 @@
                             <li>Roadmap planning and priority triage</li>
                             <li>On-call response for critical issues</li>
                         </ul>
+                        <a class="package-link" href="#maintenance">Learn more →</a>
                     </div>
                 </div>
             </div>
@@ -282,7 +286,7 @@
     <!-- Modular JavaScript -->
     <script type="module" src="src/js/main.js"></script>
     <script>
-        (function () {
+        window.addEventListener('DOMContentLoaded', () => {
             const prices = window.__PRICING__ || {};
             document.querySelectorAll('[data-price-key]').forEach((el) => {
                 const key = el.dataset.priceKey;
@@ -292,7 +296,7 @@
                     el.textContent = value;
                 }
             });
-        })();
+        });
     </script>
 </body>
 </html>

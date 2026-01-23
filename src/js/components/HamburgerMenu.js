@@ -209,7 +209,9 @@ export class HamburgerMenu {
                         const sections = document.querySelectorAll('.story-section');
 
                         // Map menu items to actual sections
-                        if (targetId === 'services') {
+                        if (targetId === 'packages') {
+                            targetElement = document.getElementById('packages');
+                        } else if (targetId === 'services') {
                             targetElement = sections[3];
                         } else if (targetId === 'about') {
                             targetElement = sections[0];

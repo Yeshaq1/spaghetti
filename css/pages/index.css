@@ -277,6 +277,23 @@
     margin-right: 0.5rem;
 }
 
+.package-link {
+    margin-top: 0.75rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    position: relative;
+    z-index: 2;
+    align-self: flex-start;
+}
+
+.package-link:hover {
+    text-shadow: 0 0 12px rgba(115, 251, 211, 0.6);
+}
+
 .pricing-card.featured {
     border-color: rgba(138, 126, 252, 0.7);
     box-shadow: 0 20px 50px rgba(138, 126, 252, 0.25);
