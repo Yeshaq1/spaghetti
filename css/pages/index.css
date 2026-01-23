@@ -162,8 +162,8 @@
     50% { transform: scale(1.05); opacity: 1; }
 }
 
-/* Services Grid Styling */
-.services-grid {
+/* Pricing Grid Styling */
+.pricing-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
@@ -171,24 +171,23 @@
     padding: 0 1rem;
 }
 
-.service-card {
+.pricing-card,
+.maintenance-card {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(115, 251, 211, 0.2);
     border-radius: 15px;
     padding: 2rem;
-    text-align: center;
     transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
     backdrop-filter: blur(10px);
-    height: 280px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    gap: 0.75rem;
 }
 
-.service-card::before {
+.pricing-card::before,
+.maintenance-card::before {
     content: '';
     position: absolute;
     top: 0;
@@ -201,17 +200,19 @@
     border-radius: 15px;
 }
 
-.service-card:hover::before {
+.pricing-card:hover::before,
+.maintenance-card:hover::before {
     opacity: 1;
 }
 
-.service-card:hover {
+.pricing-card:hover,
+.maintenance-card:hover {
     transform: translateY(-8px) scale(1.02);
     border-color: rgba(115, 251, 211, 0.5);
     box-shadow: 0 15px 40px rgba(115, 251, 211, 0.2);
 }
 
-.service-icon {
+.pricing-tag {
     font-size: 0.9rem;
     font-weight: 700;
     color: var(--primary-color);
@@ -219,38 +220,85 @@
     border: 1px solid rgba(115, 251, 211, 0.3);
     border-radius: 20px;
     padding: 0.5rem 1rem;
-    margin-bottom: 1.5rem;
     position: relative;
     z-index: 2;
     letter-spacing: 0.1em;
     text-transform: uppercase;
+    width: fit-content;
 }
 
-.service-card h3 {
+.pricing-card h3,
+.maintenance-card h3 {
     font-size: clamp(1.3rem, 2.5vw, 1.6rem);
     font-weight: 600;
     color: #ffffff;
-    margin-bottom: 1rem;
     position: relative;
     z-index: 2;
     letter-spacing: 0.02em;
 }
 
-.service-card p {
-    font-size: clamp(1rem, 2vw, 1.1rem);
-    color: rgba(255, 255, 255, 0.8);
-    line-height: 1.6;
+.price {
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-weight: 700;
+    color: #ffffff;
     position: relative;
     z-index: 2;
-    margin: 0;
+    letter-spacing: 0.02em;
 }
 
-.service-card:hover h3 {
+.price-note {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.65);
+    position: relative;
+    z-index: 2;
+}
+
+.price-suffix {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.pricing-features {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.85);
+    position: relative;
+    z-index: 2;
+    line-height: 1.5;
+}
+
+.pricing-features li::before {
+    content: '•';
+    color: var(--primary-color);
+    margin-right: 0.5rem;
+}
+
+.pricing-card.featured {
+    border-color: rgba(138, 126, 252, 0.7);
+    box-shadow: 0 20px 50px rgba(138, 126, 252, 0.25);
+    transform: translateY(-6px);
+}
+
+.pricing-card.featured:hover {
+    transform: translateY(-10px) scale(1.02);
+}
+
+.maintenance-card {
+    padding: 2.5rem;
+}
+
+.pricing-card:hover h3,
+.maintenance-card:hover h3 {
     color: var(--primary-color);
     text-shadow: 0 0 20px rgba(115, 251, 211, 0.5);
 }
 
-.service-card:hover p {
+.pricing-card:hover .price,
+.maintenance-card:hover .price {
     color: rgba(255, 255, 255, 0.95);
 }
 
@@ -295,14 +343,14 @@
         padding: 10px;
     }
     
-    .services-grid {
+    .pricing-grid {
         grid-template-columns: 1fr;
         gap: 1.5rem;
         padding: 0 0.5rem;
     }
     
-    .service-card {
-        height: 250px;
+    .pricing-card,
+    .maintenance-card {
         padding: 1.5rem;
     }
 }

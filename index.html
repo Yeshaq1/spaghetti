@@ -47,8 +47,8 @@
         <h1 class="intro-title">Spaghetti</h1>
         <p class="intro-subtitle">AI Code Experience</p>
         <p class="intro-description">
-            Every company is racing to build with AI, but most are creating digital spaghetti—beautiful on the surface, 
-            a tangled mess underneath. Discover the difference between AI that works and AI that actually works for your business.
+            We empower vibe coders to do it right. Our packages handle reliability,
+            quality, and solid engineering principles so you can just vibe away.
         </p>
         <button class="enter-button" id="enterButton">Enter</button>
     </div>
@@ -64,6 +64,9 @@
                 </div>
             </div>
         </div>
+        <a href="#packages" class="header-cta" aria-label="Jump to packages">
+            View Packages
+        </a>
     </div>
     
     <!-- Navigation Menu -->
@@ -94,36 +97,11 @@
     
     <!-- Content -->
     <div class="content">
-        <!-- Initial spacer to let video breathe -->
-        <div style="height: 100vh;"></div>
-        
-        <!-- Story Section 1 -->
-        <div class="story-section">
-            <div class="story-content">
-                <h2>You hear AI in every sentence</h2>
-                <p>Everyone's trying to build with it, everyone's talking about it</p>
-            </div>
-        </div>
-        
-        <!-- Spacer - Extra long for typewriter and A1 video -->
-        <div style="height: 300vh;"></div>
-        
-        <!-- Story Section 2 -->
-        <div class="story-section">
-            <div class="story-content">
-                <h2>Jokes aside, AI is really powerful.</h2>
-                <p>It enables people to do things they normally couldn't do</p>
-            </div>
-        </div>
-        
-        <!-- Spacer -->
-        <div style="height: 200vh;"></div>
-        
         <!-- Story Section 3 -->
         <div class="story-section">
             <div class="story-content">
                 <h2>Enter Vibe Coding</h2>
-                <p>People who don't know engineering are empowered to write and build amazing software.</p>
+                <p>Vibe coding is the future. You build fast, and we add the guardrails, wiring, and reviews that make it production-ready.</p>
                 <div style="margin-top: 2rem; text-align: center;">
                     <img src="assets/vibecoding.webp" 
                          alt="Vibe Coding" 
@@ -142,7 +120,7 @@
         <div class="story-section">
             <div class="story-content">
                 <h2>On the surface it looks calm and ready</h2>
-                <p>But in reality it causes mom's spaghetti code.</p>
+                <p>Without structure, you get spaghetti code and fragile systems.</p>
                 <div style="margin-top: 2rem; text-align: center;">
                     <img src="assets/news.png" 
                          alt="Real world example of vibe coding gone wrong" 
@@ -160,13 +138,13 @@
         </div>
         
         <!-- Spacer -->
-        <div style="height: 100vh;"></div>
+        <div style="height: 50vh;"></div>
         
         <!-- Story Section 5 - Merged -->
         <div class="story-section">
             <div class="story-content">
-                <h2>Luckily there are ways to make it work better</h2>
-                <p>For you. Trust me, I've built software with AI for the largest companies</p>
+                <h2>That’s why Spaghetti exists</h2>
+                <p>We support you as you vibe code, then harden it with real engineering principles.</p>
                 <div class="company-logos">
                     <div class="logo-item">
                         <div class="logo-container">
@@ -201,46 +179,71 @@
         <div style="height: 100vh;"></div>
         
         <!-- Services Section -->
-        <div class="story-section">
+        <div class="story-section" id="packages">
             <div class="story-content">
-                <h2>Let's Build Your AI Future</h2>
-                <p>From strategy to implementation, I help companies transform with AI</p>
-                
-                <div class="services-grid">
-                    <div class="service-card">
-                        <div class="service-icon">STRATEGY</div>
-                        <h3>AI Strategy & Consulting</h3>
-                        <p>Custom AI roadmaps tailored to your business goals and technical capabilities</p>
+                <h2>Packages built for vibe coding</h2>
+                <p>Choose a focused package, then add monthly maintenance when you want ongoing stability</p>
+
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <div class="pricing-tag">PROMPT + SYSTEM BLUEPRINT</div>
+                        <h3>Vibe Blueprint</h3>
+                        <div class="price">
+                            <span class="price-value" data-price-key="VIBE_BLUEPRINT_PRICE" data-default="$4,500">$4,500</span>
+                        </div>
+                        <div class="price-note">1–2 weeks · one-time</div>
+                        <ul class="pricing-features">
+                            <li>Prompt library tailored to your workflow</li>
+                            <li>System design diagrams + data flow</li>
+                            <li>Tooling and stack recommendations</li>
+                            <li>Implementation plan your team can follow</li>
+                        </ul>
                     </div>
-                    
-                    <div class="service-card">
-                        <div class="service-icon">PROTOTYPE</div>
-                        <h3>Rapid AI Prototyping</h3>
-                        <p>Fast-track your AI ideas from concept to working prototype in weeks, not months</p>
+
+                    <div class="pricing-card featured">
+                        <div class="pricing-tag">BUILD + WIRE-UP</div>
+                        <h3>Vibe Build Sprint</h3>
+                        <div class="price">
+                            <span class="price-value" data-price-key="VIBE_BUILD_SPRINT_PRICE" data-default="$12,000">$12,000</span>
+                        </div>
+                        <div class="price-note">2–4 weeks · one-time</div>
+                        <ul class="pricing-features">
+                            <li>Live vibe-coding sessions with your team</li>
+                            <li>We wire everything up after (APIs, data, hosting)</li>
+                            <li>Production hardening + security review</li>
+                            <li>Launch-ready handoff and documentation</li>
+                        </ul>
                     </div>
-                    
-                    <div class="service-card">
-                        <div class="service-icon">DEVELOP</div>
-                        <h3>Custom AI Development</h3>
-                        <p>Build production-ready AI systems that scale with your business</p>
+
+                    <div class="pricing-card">
+                        <div class="pricing-tag">REVIEW + STABILIZE</div>
+                        <h3>Spaghetti Review</h3>
+                        <div class="price">
+                            <span class="price-value" data-price-key="SPAGHETTI_REVIEW_PRICE" data-default="$6,500">$6,500</span>
+                        </div>
+                        <div class="price-note">1–2 weeks · one-time</div>
+                        <ul class="pricing-features">
+                            <li>Codebase audit for failure points</li>
+                            <li>Prompt and model review</li>
+                            <li>Fix plan + quick wins implemented</li>
+                            <li>Risk report and next-step roadmap</li>
+                        </ul>
                     </div>
-                    
-                    <div class="service-card">
-                        <div class="service-icon">INTEGRATE</div>
-                        <h3>AI Integration</h3>
-                        <p>Seamlessly integrate AI into your existing workflows and systems</p>
-                    </div>
-                    
-                    <div class="service-card">
-                        <div class="service-icon">TRAIN</div>
-                        <h3>AI Training & Workshops</h3>
-                        <p>Empower your team with hands-on AI knowledge and best practices</p>
-                    </div>
-                    
-                    <div class="service-card">
-                        <div class="service-icon">OPTIMIZE</div>
-                        <h3>AI Optimization</h3>
-                        <p>Fine-tune and optimize your existing AI systems for maximum performance</p>
+
+                    <div class="pricing-card maintenance-card">
+                        <div class="pricing-tag">ONGOING SUPPORT</div>
+                        <h3>Maintenance + Reliability</h3>
+                        <div class="price">
+                            <span class="price-value" data-price-key="MAINTENANCE_PRICE" data-default="$3,000">$3,000</span>
+                            <span class="price-suffix">/month</span>
+                        </div>
+                        <div class="price-note">Best after any package</div>
+                        <ul class="pricing-features">
+                            <li>Monitoring, bug fixes, and uptime support</li>
+                            <li>Monthly prompt tuning + performance checks</li>
+                            <li>Roadmap planning and priority triage</li>
+                            <li>On-call response for critical issues</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -255,7 +258,7 @@
                 <h2>Ready to stop the spaghetti code?</h2>
                 <div class="cta">
                     <a href="mailto:yousef+ai@hey.com?subject=AI%20Consulting%20Inquiry" class="cta-button">
-                        Let's Build Better →
+                        Book a package →
                     </a>
                 </div>
             </div>
@@ -278,5 +281,18 @@
     
     <!-- Modular JavaScript -->
     <script type="module" src="src/js/main.js"></script>
+    <script>
+        (function () {
+            const prices = window.__PRICING__ || {};
+            document.querySelectorAll('[data-price-key]').forEach((el) => {
+                const key = el.dataset.priceKey;
+                const fallback = el.dataset.default;
+                const value = prices[key] || fallback;
+                if (value) {
+                    el.textContent = value;
+                }
+            });
+        })();
+    </script>
 </body>
 </html>

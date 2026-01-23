@@ -1,6 +1,6 @@
 /**
  * Models.js - 3D Model Loading and Management
- * Handles loading and animation of 3D models (Goku, Spaghetti Monster, etc.)
+ * Handles loading and animation of 3D models (Spaghetti Monster, etc.)
  */
 
 export class Models {
@@ -8,16 +8,10 @@ export class Models {
         this.scene = scene;
         
         // Model references
-        this.gokuModel = null;
-        this.gokuEntranceTime = 0;
-        this.gokuEntranceComplete = false;
-        this.gokuEnergyParticles = [];
-        
         this.spaghettiModel = null;
         this.spaghettiArrow = null;
         
         // Model states
-        this.gokuVisible = false;
         this.spaghettiVisible = false;
     }
 
@@ -25,88 +19,8 @@ export class Models {
      * Initialize models
      */
     init() {
-        this.loadGokuModel();
         this.loadSpaghettiModel();
         return this;
-    }
-
-    /**
-     * Load Goku Super Saiyan 3D model
-     */
-    loadGokuModel() {
-        const loader = new THREE.GLTFLoader();
-        loader.load(
-            'assets/goku_super_saiyan.glb',
-            (gltf) => {
-                this.gokuModel = gltf.scene;
-                
-                // Scale and position the model
-                this.gokuModel.scale.setScalar(0.4);
-                this.gokuModel.position.set(0, -4, -15);
-                
-                // Add lighting for the model
-                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-                directionalLight.position.set(5, 5, 5);
-                directionalLight.visible = false;
-                this.scene.add(directionalLight);
-                this.gokuModel.userData.directionalLight = directionalLight;
-                
-                // Add the model to the scene but start hidden
-                this.gokuModel.visible = false;
-                this.gokuModel.scale.setScalar(0.1);
-                this.scene.add(this.gokuModel);
-                
-                // Create energy particles
-                this.gokuEnergyParticles = this.createGokuEnergyParticles();
-                
-            },
-            (progress) => {
-            },
-            (error) => {
-                console.error('Error loading Goku model:', error);
-            }
-        );
-    }
-
-    /**
-     * Create energy particles around Goku
-     */
-    createGokuEnergyParticles() {
-        const particleCount = 50;
-        const particles = [];
-        
-        for (let i = 0; i < particleCount; i++) {
-            const particle = new THREE.Mesh(
-                new THREE.SphereGeometry(0.08, 8, 8),
-                new THREE.MeshBasicMaterial({
-                    color: new THREE.Color().setHSL(0.1, 1, 1),
-                    transparent: true,
-                    opacity: 0.9
-                })
-            );
-            
-            // Random position around Goku
-            const angle = (i / particleCount) * Math.PI * 2;
-            const radius = 2 + Math.random() * 3;
-            particle.position.set(
-                Math.cos(angle) * radius,
-                -4 + (Math.random() - 0.5) * 2,
-                -15 + (Math.random() - 0.5) * 2
-            );
-            
-            particle.userData = {
-                originalY: particle.position.y,
-                angle: angle,
-                radius: radius,
-                speed: 0.5 + Math.random() * 1.0
-            };
-            
-            particle.visible = false;
-            this.scene.add(particle);
-            particles.push(particle);
-        }
-        
-        return particles;
     }
 
     /**
@@ -228,49 +142,6 @@ export class Models {
     }
 
     /**
-     * Show Goku model
-     */
-    showGoku() {
-        if (this.gokuModel && !this.gokuVisible) {
-            this.gokuModel.visible = true;
-            this.gokuEntranceTime = 0;
-            this.gokuEntranceComplete = false;
-            
-            if (this.gokuModel.userData.directionalLight) {
-                this.gokuModel.userData.directionalLight.visible = true;
-            }
-            
-            // Show energy particles
-            this.gokuEnergyParticles.forEach(particle => {
-                particle.visible = true;
-            });
-            
-            this.gokuVisible = true;
-        }
-    }
-
-    /**
-     * Hide Goku model
-     */
-    hideGoku() {
-        if (this.gokuModel && this.gokuVisible) {
-            this.gokuModel.visible = false;
-            this.gokuEntranceComplete = false;
-            
-            if (this.gokuModel.userData.directionalLight) {
-                this.gokuModel.userData.directionalLight.visible = false;
-            }
-            
-            // Hide energy particles
-            this.gokuEnergyParticles.forEach(particle => {
-                particle.visible = false;
-            });
-            
-            this.gokuVisible = false;
-        }
-    }
-
-    /**
      * Show Spaghetti Monster and arrow
      */
     showSpaghetti() {
@@ -310,69 +181,7 @@ export class Models {
      * Animate models
      */
     animate(time) {
-        this.animateGoku(time);
         this.animateSpaghetti(time);
-    }
-
-    /**
-     * Animate Goku model
-     */
-    animateGoku(time) {
-        if (this.gokuModel && this.gokuVisible) {
-            if (!this.gokuEntranceComplete) {
-                this.gokuEntranceTime += 0.016;
-                
-                // Super-powered entrance animation
-                if (this.gokuEntranceTime < 1.0) {
-                    const scaleProgress = this.gokuEntranceTime / 1.0;
-                    const easeOut = 1 - Math.pow(1 - scaleProgress, 3);
-                    const currentScale = 0.1 + (0.4 - 0.1) * easeOut;
-                    this.gokuModel.scale.setScalar(currentScale);
-                    
-                    // Add dramatic rotation during entrance
-                    this.gokuModel.rotation.y = Math.sin(this.gokuEntranceTime * 10) * 0.2 * (1 - scaleProgress);
-                    
-                    // Add vertical bounce effect
-                    const bounceHeight = Math.sin(this.gokuEntranceTime * Math.PI) * 0.5;
-                    this.gokuModel.position.y = -4 + bounceHeight;
-                } else {
-                    // Entrance complete - normal floating
-                    this.gokuModel.scale.setScalar(0.4);
-                    this.gokuModel.rotation.y = 0;
-                    this.gokuModel.position.y = -4 + Math.sin(time * 0.5) * 0.1;
-                    this.gokuEntranceComplete = true;
-                }
-            } else {
-                // Normal floating motion after entrance
-                this.gokuModel.position.y = -4 + Math.sin(time * 0.5) * 0.1;
-            }
-            
-            // Animate energy particles
-            this.gokuEnergyParticles.forEach((particle, index) => {
-                if (particle.visible) {
-                    const userData = particle.userData;
-                    
-                    // Orbital motion around Goku
-                    userData.angle += userData.speed * 0.02;
-                    particle.position.x = Math.cos(userData.angle) * userData.radius;
-                    particle.position.z = -15 + Math.sin(userData.angle) * userData.radius;
-                    
-                    // Floating motion
-                    particle.position.y = userData.originalY + Math.sin(time * 3 + index * 0.5) * 0.8;
-                    
-                    // Pulsing opacity
-                    particle.material.opacity = 0.7 + Math.sin(time * 4 + index * 0.3) * 0.3;
-                    
-                    // Color shifting
-                    const hue = (0.1 + Math.sin(time * 3 + index * 0.2) * 0.1) % 1;
-                    particle.material.color.setHSL(hue, 1, 1);
-                    
-                    // Scaling
-                    const scale = 1 + Math.sin(time * 5 + index * 0.4) * 0.3;
-                    particle.scale.setScalar(scale);
-                }
-            });
-        }
     }
 
     /**
@@ -401,24 +210,10 @@ export class Models {
     }
 
     /**
-     * Get Goku model
-     */
-    getGokuModel() {
-        return this.gokuModel;
-    }
-
-    /**
      * Get Spaghetti model
      */
     getSpaghettiModel() {
         return this.spaghettiModel;
-    }
-
-    /**
-     * Check if Goku is visible
-     */
-    isGokuVisible() {
-        return this.gokuVisible;
     }
 
     /**

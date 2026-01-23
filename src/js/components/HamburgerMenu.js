@@ -206,13 +206,15 @@ export class HamburgerMenu {
                         const targetId = href.substring(1);
                         let targetElement = null;
                         
+                        const sections = document.querySelectorAll('.story-section');
+
                         // Map menu items to actual sections
                         if (targetId === 'services') {
-                            targetElement = document.querySelector('.story-section:nth-child(12)');
+                            targetElement = sections[3];
                         } else if (targetId === 'about') {
-                            targetElement = document.querySelector('.story-section:nth-child(2)');
+                            targetElement = sections[0];
                         } else if (targetId === 'experience') {
-                            targetElement = document.querySelector('.story-section:nth-child(10)');
+                            targetElement = sections[2];
                         }
                         
                         if (targetElement) {

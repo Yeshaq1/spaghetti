@@ -1,13 +1,47 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 8002;
 
+// Pricing defaults (override with env vars)
+const priceDefaults = {
+  VIBE_BLUEPRINT_PRICE: '$4,500',
+  VIBE_BUILD_SPRINT_PRICE: '$12,000',
+  SPAGHETTI_REVIEW_PRICE: '$6,500',
+  MAINTENANCE_PRICE: '$3,000'
+};
+
+const indexPath = path.join(__dirname, 'index.html');
+
+const renderIndex = () => {
+  let html = fs.readFileSync(indexPath, 'utf8');
+  const replacements = {
+    VIBE_BLUEPRINT_PRICE: process.env.VIBE_BLUEPRINT_PRICE || priceDefaults.VIBE_BLUEPRINT_PRICE,
+    VIBE_BUILD_SPRINT_PRICE: process.env.VIBE_BUILD_SPRINT_PRICE || priceDefaults.VIBE_BUILD_SPRINT_PRICE,
+    SPAGHETTI_REVIEW_PRICE: process.env.SPAGHETTI_REVIEW_PRICE || priceDefaults.SPAGHETTI_REVIEW_PRICE,
+    MAINTENANCE_PRICE: process.env.MAINTENANCE_PRICE || priceDefaults.MAINTENANCE_PRICE
+  };
+
+  Object.entries(replacements).forEach(([key, value]) => {
+    html = html.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
+  });
+
+  const pricingScript = `<script>window.__PRICING__=${JSON.stringify(replacements)};</script>`;
+  if (html.includes('</body>')) {
+    html = html.replace('</body>', `${pricingScript}</body>`);
+  } else if (html.includes('</head>')) {
+    html = html.replace('</head>', `${pricingScript}</head>`);
+  }
+
+  return html;
+};
+
 // Middleware
 app.use(express.json());
-app.use(express.static('.'));
+app.use(express.static('.', { index: false }));
 
 // WebRTC token endpoint - generate ephemeral token
 app.post('/api/get-token', async (req, res) => {
@@ -30,7 +64,7 @@ app.post('/api/get-token', async (req, res) => {
         voice: 'alloy',
         instructions: `You are Spaghetti. You have exactly 30 seconds from NOW. Start immediately with this exact script:
 
-"Hi! I'm Spaghetti. Every company builds AI, but most create digital spaghetti - beautiful outside, mess inside. We're different. We've helped Meta, Google, GM build AI that actually works. $50M+ saved, 50+ systems deployed, zero failures. We don't just build AI - we build AI that works for YOUR business. Ready to stop the spaghetti? Book Yousef at yousef+ai@hey.com. Let's build better AI together."
+"Hi! I'm Spaghetti. Vibe coding is the future of building products, and most teams need guardrails to ship safely. We help you build while you vibe, then we harden it with real engineering. Pick a package: Vibe Blueprint for prompts and system design, Vibe Build Sprint for build plus wire-up, Spaghetti Review to stabilize what you have, and Maintenance + Reliability to keep it running. We've helped Meta, Google, and GM ship AI that works. Book Yousef at yousef+ai@hey.com. Let's build better AI together."
 
 RULES:
 - Start talking IMMEDIATELY when connected
@@ -68,9 +102,16 @@ app.get('/api/features', (req, res) => {
   });
 });
 
+// Serve index with env-based pricing
+app.get(['/', '/index.html'], (req, res) => {
+  res.setHeader('Content-Type', 'text/html');
+  res.send(renderIndex());
+});
+
 // Handle all other routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.setHeader('Content-Type', 'text/html');
+  res.send(renderIndex());
 });
 
 app.listen(PORT, () => {

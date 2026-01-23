@@ -11,9 +11,6 @@ export class ScrollManager {
             onSectionVisible: [],
             onScrollProgress: [],
             onVideoStateChange: [],
-            onTypewriterStateChange: [],
-            onA1VideoStateChange: [],
-            onGokuStateChange: [],
             onSpaghettiStateChange: []
         };
     }
@@ -45,9 +42,6 @@ export class ScrollManager {
             
             this.updateSectionVisibility(scrollY);
             this.handleVideoStates(scrollY);
-            this.handleTypewriterState(scrollY);
-            this.handleA1VideoState(scrollY);
-            this.handleGokuState(scrollY);
             this.handleSpaghettiState(scrollY);
             
             // Notify callbacks
@@ -86,8 +80,8 @@ export class ScrollManager {
      * Handle specific section animations
      */
     handleSectionAnimations(section, index) {
-        // Animate vibe coding image when section 3 becomes visible
-        if (index === 2) {
+        // Animate vibe coding image when section 1 becomes visible
+        if (index === 0) {
             const vibeImage = section.querySelector('img');
             if (vibeImage) {
                 vibeImage.style.opacity = '1';
@@ -96,7 +90,7 @@ export class ScrollManager {
         }
         
         // Animate company logos when credentials section becomes visible
-        if (index === 4) {
+        if (index === 2) {
             const logoItems = section.querySelectorAll('.logo-item');
             logoItems.forEach((item, logoIndex) => {
                 setTimeout(() => {
@@ -131,84 +125,11 @@ export class ScrollManager {
     }
 
     /**
-     * Handle typewriter effect state
-     */
-    handleTypewriterState(scrollY) {
-        const firstSection = this.sections[0];
-        if (!firstSection) return;
-
-        const firstSectionBottom = firstSection.offsetTop + firstSection.offsetHeight;
-        const typewriterStart = firstSectionBottom - window.innerHeight * 0.8;
-        const a1VideoStart = firstSectionBottom + window.innerHeight * 0.2;
-        const typewriterEnd = a1VideoStart;
-
-        const typewriterVisible = scrollY >= typewriterStart && scrollY <= typewriterEnd;
-        
-        // Notify callbacks about typewriter state
-        this.notifyCallbacks('onTypewriterStateChange', { 
-            visible: typewriterVisible, 
-            scrollY, 
-            typewriterStart, 
-            typewriterEnd 
-        });
-    }
-
-    /**
-     * Handle A1 video state
-     */
-    handleA1VideoState(scrollY) {
-        const firstSection = this.sections[0];
-        const secondSection = this.sections[1];
-        
-        if (!firstSection) return;
-
-        const firstSectionBottom = firstSection.offsetTop + firstSection.offsetHeight;
-        // A1 video starts exactly when typewriter ends for perfect timing
-        const a1VideoStart = firstSectionBottom + window.innerHeight * 0.2;
-        const a1VideoEnd = secondSection ? 
-            secondSection.offsetTop - window.innerHeight * 0.1 : 
-            firstSectionBottom + window.innerHeight * 4;
-
-        const a1VideoVisible = scrollY >= a1VideoStart && scrollY <= a1VideoEnd;
-        
-        
-        // Notify callbacks about A1 video state
-        this.notifyCallbacks('onA1VideoStateChange', { 
-            visible: a1VideoVisible, 
-            scrollY, 
-            a1VideoStart, 
-            a1VideoEnd 
-        });
-    }
-
-    /**
-     * Handle Goku model state
-     */
-    handleGokuState(scrollY) {
-        const section2 = this.sections[1];
-        const section3 = this.sections[2];
-        
-        let gokuShouldBeVisible = false;
-        
-        if (section2 && section3) {
-            const section2Middle = section2.offsetTop + (section2.offsetHeight * 0.6);
-            const section3Top = section3.offsetTop;
-            gokuShouldBeVisible = scrollY > section2Middle && scrollY < section3Top;
-        }
-        
-        // Notify callbacks about Goku state
-        this.notifyCallbacks('onGokuStateChange', { 
-            visible: gokuShouldBeVisible, 
-            scrollY 
-        });
-    }
-
-    /**
      * Handle Spaghetti Monster and EM video state
      */
     handleSpaghettiState(scrollY) {
-        const section4 = this.sections[3];
-        const section5 = this.sections[4];
+        const section4 = this.sections[1];
+        const section5 = this.sections[2];
         
         let spaghettiShouldBeVisible = false;
         

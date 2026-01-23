@@ -10,7 +10,6 @@ import { ScrollManager } from './core/ScrollManager.js';
 
 // Import component modules
 import { VideoPlayer } from './components/VideoPlayer.js';
-import { TypewriterEffect } from './components/TypewriterEffect.js';
 import { HamburgerMenu } from './components/HamburgerMenu.js';
 import { IntroModal } from './components/IntroModal.js';
 import { WebRTCCall } from './components/WebRTCCall.js';
@@ -31,7 +30,6 @@ class App {
         
         // Components
         this.videoPlayer = null;
-        this.typewriterEffect = null;
         this.hamburgerMenu = null;
         this.introModal = null;
         this.webRTCCall = null;
@@ -41,7 +39,6 @@ class App {
         this.effects = null;
         
         // Additional video elements
-        this.a1VideoElement = null;
         this.emVideoElement = null;
         
         // Animation state
@@ -62,7 +59,6 @@ class App {
             
             // Initialize components
             this.videoPlayer = new VideoPlayer(this.sceneManager.getScene(), this.audioManager).init();
-            this.typewriterEffect = new TypewriterEffect().init();
             this.hamburgerMenu = new HamburgerMenu().init();
             this.introModal = new IntroModal(this.audioManager).init();
             this.webRTCCall = new WebRTCCall().init();
@@ -96,35 +92,9 @@ class App {
     }
 
     /**
-     * Setup additional video elements (A1 and EM videos)
+     * Setup additional video elements (EM video)
      */
     setupAdditionalVideos() {
-        // Create A1 video element
-        this.a1VideoElement = document.createElement('video');
-        this.a1VideoElement.src = 'assets/a1.mp4';
-        this.a1VideoElement.crossOrigin = 'anonymous';
-        this.a1VideoElement.loop = true;
-        // Mobile autoplay fix: start muted, unmute after user interaction
-        this.a1VideoElement.muted = true;
-        this.a1VideoElement.volume = 0;
-        this.a1VideoElement.playsInline = true;
-
-        // Video styling for mobile
-        this.a1VideoElement.style.position = 'fixed';
-        this.a1VideoElement.style.top = '50%';
-        this.a1VideoElement.style.left = '50%';
-        this.a1VideoElement.style.transform = 'translate(-50%, -50%)';
-        this.a1VideoElement.style.width = 'min(80vw, 400px)';
-        this.a1VideoElement.style.height = 'auto';
-        this.a1VideoElement.style.zIndex = '1002';
-        this.a1VideoElement.style.borderRadius = '20px';
-        this.a1VideoElement.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
-        this.a1VideoElement.style.opacity = '0';
-        this.a1VideoElement.style.transition = 'opacity 1s ease-in-out';
-        this.a1VideoElement.style.pointerEvents = 'none';
-
-        document.body.appendChild(this.a1VideoElement);
-
         // Create EM video element
         this.emVideoElement = document.createElement('video');
         this.emVideoElement.src = 'assets/em.mp4';
@@ -158,7 +128,6 @@ class App {
         // Set video elements in audio manager
         this.audioManager.setVideoElements(
             this.videoPlayer.getVideo(),
-            this.a1VideoElement,
             this.emVideoElement,
             this.videoPlayer.getMobileVideo()
         );
@@ -169,7 +138,7 @@ class App {
      * Setup scroll callbacks
      */
     setupScrollCallbacks() {
-        // Video state changes - use direct control like A1/EM videos
+        // Video state changes - use direct control like EM videos
         this.scrollManager.on('onVideoStateChange', (data) => {
             // Handle desktop WebGL video
             if (this.videoPlayer.videoPlane && this.videoPlayer.videoPlane.material) {
@@ -190,7 +159,7 @@ class App {
                 }
             }
             
-            // Handle mobile HTML5 video - same logic as A1/EM videos
+            // Handle mobile HTML5 video - same logic as EM video
             const mobileVideo = this.videoPlayer.getMobileVideo();
             if (mobileVideo) {
                 if (data.visible && mobileVideo.style.opacity === '0') {
@@ -204,43 +173,6 @@ class App {
                     mobileVideo.muted = true;
                     mobileVideo.volume = 0;
                 }
-            }
-        });
-
-        // Typewriter state changes
-        this.scrollManager.on('onTypewriterStateChange', (data) => {
-            if (data.visible && !this.typewriterEffect.isTypewriterVisible()) {
-                this.typewriterEffect.showGlitchText('and the occasional A1...');
-            } else if (!data.visible && this.typewriterEffect.isTypewriterVisible()) {
-                this.typewriterEffect.hide();
-            }
-        });
-
-        // A1 video state changes
-        this.scrollManager.on('onA1VideoStateChange', (data) => {
-            if (data.visible && this.a1VideoElement.style.opacity === '0') {
-                this.a1VideoElement.style.opacity = '1';
-                this.a1VideoElement.style.transition = 'none';
-                    this.a1VideoElement.play().catch(() => {});
-                // Apply audio state after playing (handles mobile/desktop differences)
-                this.audioManager.applyAudioState();
-            } else if (!data.visible && this.a1VideoElement.style.opacity === '1') {
-                this.a1VideoElement.style.transition = 'none';
-                this.a1VideoElement.style.opacity = '0';
-                this.a1VideoElement.pause();
-                this.a1VideoElement.currentTime = 0;
-                // Mute audio when hiding
-                this.a1VideoElement.muted = true;
-                this.a1VideoElement.volume = 0;
-            }
-        });
-
-        // Goku state changes
-        this.scrollManager.on('onGokuStateChange', (data) => {
-            if (data.visible) {
-                this.models.showGoku();
-            } else {
-                this.models.hideGoku();
             }
         });
 

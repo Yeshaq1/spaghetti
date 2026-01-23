@@ -19,7 +19,6 @@ export class AudioManager {
         
         // Video elements
         this.video = null;
-        this.a1VideoElement = null;
         this.emVideoElement = null;
         this.mobileVideoElement = null;
         
@@ -55,9 +54,8 @@ export class AudioManager {
     /**
      * Set video elements for audio control
      */
-    setVideoElements(video, a1VideoElement, emVideoElement, mobileVideoElement) {
+    setVideoElements(video, emVideoElement, mobileVideoElement) {
         this.video = video;
-        this.a1VideoElement = a1VideoElement;
         this.emVideoElement = emVideoElement;
         this.mobileVideoElement = mobileVideoElement;
     }
@@ -88,7 +86,6 @@ export class AudioManager {
     applyAudioState() {
         const effectiveMuted = this.isAudioMuted || !this.audioPermissionGranted;
         this.setMediaAudio(this.video, effectiveMuted, this.config.videoVolume);
-        this.setMediaAudio(this.a1VideoElement, effectiveMuted, 0.8);
         this.setMediaAudio(this.emVideoElement, effectiveMuted, 0.8);
         this.setMediaAudio(this.mobileVideoElement, effectiveMuted, this.config.videoVolume);
 
