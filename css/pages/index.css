@@ -2,11 +2,12 @@
 
 /* Company logos styling */
 .company-logos {
-    margin-top: 3rem;
+    margin-top: 1.5rem;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(5, minmax(120px, 1fr));
     gap: 1.5rem;
     padding: 0 1rem;
+    align-items: center;
 }
 
 .logo-item {
@@ -28,6 +29,7 @@
     position: relative;
     overflow: hidden;
     backdrop-filter: blur(10px);
+    width: 140px;
     height: 120px;
     display: flex;
     align-items: center;
@@ -109,6 +111,15 @@
 .logo-container:hover .logo-text {
     color: var(--primary-color);
     text-shadow: 0 0 20px rgba(115, 251, 211, 0.5);
+}
+
+.logo-lead {
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.65);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
 }
 
 /* Fun card styling */
@@ -294,6 +305,57 @@
     text-shadow: 0 0 12px rgba(115, 251, 211, 0.6);
 }
 
+.next-steps {
+    margin-top: 2.5rem;
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(115, 251, 211, 0.2);
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.next-steps h3 {
+    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+    color: #ffffff;
+    margin: 0;
+}
+
+.next-steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.next-step {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.step-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    color: #0b1118;
+    background: var(--primary-color);
+}
+
+.step-text {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+}
+
 .pricing-card.featured {
     border-color: rgba(138, 126, 252, 0.7);
     box-shadow: 0 20px 50px rgba(138, 126, 252, 0.25);
@@ -336,6 +398,12 @@
     transition: all 0.3s ease;
 }
 
+.cta-button--small {
+    align-self: flex-start;
+    font-size: 1rem;
+    padding: 12px 22px;
+}
+
 .cta-button:hover {
     background: rgba(255, 255, 255, 0.2);
     border-color: #fff;
@@ -344,14 +412,15 @@
 /* Responsive adjustments for company logos */
 @media (max-width: 768px) {
     .company-logos {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, minmax(100px, 1fr));
         gap: 1rem;
         padding: 0 0.5rem;
     }
     
     .logo-container {
-        padding: 1.5rem;
-        height: 100px;
+        padding: 1.25rem;
+        width: 110px;
+        height: 96px;
     }
     
     .company-logo {
@@ -374,14 +443,15 @@
 
 @media (max-width: 480px) {
     .company-logos {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(100px, 1fr));
         gap: 0.8rem;
         padding: 0 0.25rem;
     }
     
     .logo-container {
         padding: 1rem;
-        height: 80px;
+        width: 100px;
+        height: 84px;
     }
     
     .company-logo {

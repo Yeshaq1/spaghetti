@@ -41,7 +41,6 @@ const renderIndex = () => {
 
 // Middleware
 app.use(express.json());
-app.use(express.static('.', { index: false }));
 
 // WebRTC token endpoint - generate ephemeral token
 app.post('/api/get-token', async (req, res) => {
@@ -107,6 +106,9 @@ app.get(['/', '/index.html'], (req, res) => {
   res.setHeader('Content-Type', 'text/html');
   res.send(renderIndex());
 });
+
+// Static assets (after index route so /index.html is injected)
+app.use(express.static('.'));
 
 // Handle all other routes
 app.get('*', (req, res) => {
