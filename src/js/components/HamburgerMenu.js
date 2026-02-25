@@ -204,20 +204,7 @@ export class HamburgerMenu {
                     // Wait for menu to close, then scroll
                     setTimeout(() => {
                         const targetId = href.substring(1);
-                        let targetElement = null;
-                        
-                        const sections = document.querySelectorAll('.story-section');
-
-                        // Map menu items to actual sections
-                        if (targetId === 'packages') {
-                            targetElement = document.getElementById('packages');
-                        } else if (targetId === 'services') {
-                            targetElement = sections[3];
-                        } else if (targetId === 'about') {
-                            targetElement = sections[0];
-                        } else if (targetId === 'experience') {
-                            targetElement = sections[2];
-                        }
+                        const targetElement = document.getElementById(targetId);
                         
                         if (targetElement) {
                             targetElement.scrollIntoView({

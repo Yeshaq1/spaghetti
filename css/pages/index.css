@@ -1,5 +1,101 @@
 /* Index Page Specific Styles */
 
+/* Door intro section */
+.door-section {
+    max-width: 900px;
+}
+
+.door-media-wrap {
+    position: relative;
+    width: 100%;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+}
+
+.door-video {
+    display: block;
+    width: 100%;
+    height: clamp(300px, 52vh, 560px);
+    object-fit: cover;
+}
+
+.door-video-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.15) 45%, rgba(0, 0, 0, 0.5)),
+        radial-gradient(circle at 50% 40%, rgba(115, 251, 211, 0.12), transparent 55%);
+    pointer-events: none;
+}
+
+/* Case studies */
+.story-section#case-studies .story-content {
+    max-width: 1100px;
+}
+
+.case-studies-grid {
+    margin-top: 2.4rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    gap: 0.9rem;
+}
+
+.case-study-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-top: 2px solid rgba(115, 251, 211, 0.55);
+    border-radius: 10px;
+    padding: 1.4rem 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    backdrop-filter: blur(4px);
+    transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+
+.case-study-card:hover {
+    border-color: rgba(115, 251, 211, 0.35);
+    background: rgba(255, 255, 255, 0.04);
+    transform: translateY(-2px);
+}
+
+.case-study-label {
+    display: inline-block;
+    width: fit-content;
+    padding: 0;
+    border: 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.case-study-card h3 {
+    margin: 0;
+    font-size: clamp(1.12rem, 1.7vw, 1.35rem);
+    letter-spacing: 0.01em;
+    color: #ffffff;
+}
+
+.case-study-card p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.55;
+    max-width: 62ch;
+}
+
+.case-study-impact {
+    color: var(--primary-color) !important;
+    font-weight: 600;
+    font-size: 0.86rem;
+    letter-spacing: 0.02em;
+    padding-top: 0.2rem;
+}
+
 /* Company logos styling */
 .company-logos {
     margin-top: 1.5rem;
@@ -411,6 +507,14 @@
 
 /* Responsive adjustments for company logos */
 @media (max-width: 768px) {
+    .door-video {
+        height: clamp(220px, 38vh, 360px);
+    }
+
+    .case-studies-grid {
+        grid-template-columns: 1fr;
+    }
+
     .company-logos {
         grid-template-columns: repeat(3, minmax(100px, 1fr));
         gap: 1rem;

@@ -80,17 +80,15 @@ export class ScrollManager {
      * Handle specific section animations
      */
     handleSectionAnimations(section, index) {
-        // Animate vibe coding image when section 1 becomes visible
-        if (index === 0) {
-            const vibeImage = section.querySelector('img');
-            if (vibeImage) {
-                vibeImage.style.opacity = '1';
-                vibeImage.style.transform = 'translateY(0)';
-            }
+        // Animate automation image when its section becomes visible
+        const automationImage = section.querySelector('img[alt="AI workflow automation"]');
+        if (automationImage) {
+            automationImage.style.opacity = '1';
+            automationImage.style.transform = 'translateY(0)';
         }
-        
+
         // Animate company logos when credentials section becomes visible
-        if (index === 2) {
+        if (section.querySelector('.company-logos')) {
             const logoItems = section.querySelectorAll('.logo-item');
             logoItems.forEach((item, logoIndex) => {
                 setTimeout(() => {
@@ -128,26 +126,27 @@ export class ScrollManager {
      * Handle Spaghetti Monster and EM video state
      */
     handleSpaghettiState(scrollY) {
-        const section4 = this.sections[1];
-        const section5 = this.sections[2];
-        
+        const newsImage = document.querySelector('img[alt="Real world example of AI rollout problems"]');
+        const newsSection = newsImage ? newsImage.closest('.story-section') : null;
         let spaghettiShouldBeVisible = false;
-        
-        if (section4 && section5) {
-            const section4Middle = section4.offsetTop + (section4.offsetHeight * 0.2);
-            const section5Top = section5.offsetTop;
-            spaghettiShouldBeVisible = scrollY > section4Middle && scrollY < section5Top;
+
+        // Keep monster/video bound to the "On the surface..." section only.
+        if (newsSection) {
+            const viewportEnterOffset = window.innerHeight * 0.45;
+            const viewportExitOffset = window.innerHeight * 0.2;
+            const sectionStart = newsSection.offsetTop - viewportEnterOffset;
+            const sectionEnd = newsSection.offsetTop + newsSection.offsetHeight - viewportExitOffset;
+            spaghettiShouldBeVisible = scrollY > sectionStart && scrollY < sectionEnd;
         }
-        
+
         // Handle news image visibility
-        const newsImage = document.querySelector('img[alt="Real world example of vibe coding gone wrong"]');
-        if (newsImage && section4) {
-            const section4Visible = scrollY + window.innerHeight > section4.offsetTop + 100;
-            
-            if (section4Visible && newsImage.style.opacity === '0') {
+        if (newsImage && newsSection) {
+            const newsSectionVisible = scrollY + window.innerHeight > newsSection.offsetTop + 100;
+
+            if (newsSectionVisible && newsImage.style.opacity === '0') {
                 newsImage.style.opacity = '1';
                 newsImage.style.transform = 'translateY(0)';
-            } else if (!section4Visible && newsImage.style.opacity === '1') {
+            } else if (!newsSectionVisible && newsImage.style.opacity === '1') {
                 newsImage.style.opacity = '0';
                 newsImage.style.transform = 'translateY(30px)';
             }

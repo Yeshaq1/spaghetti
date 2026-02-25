@@ -45,10 +45,9 @@
             <img src="assets/logo.png" alt="Spaghetti AI" class="intro-logo">
         </div>
         <h1 class="intro-title">Spaghetti</h1>
-        <p class="intro-subtitle">AI Code Experience</p>
         <p class="intro-description">
-            We empower vibe coders to do it right. Our packages handle reliability,
-            quality, and solid engineering principles so you can just vibe away.
+            We help companies cut repetitive work with AI, build useful internal tools,
+            and get teams using AI in day-to-day work without the chaos.
         </p>
         <button class="enter-button" id="enterButton">Enter</button>
     </div>
@@ -64,22 +63,27 @@
                 </div>
             </div>
         </div>
-        <a href="#packages" class="header-cta" aria-label="Jump to packages">
-            View Packages
-        </a>
+        <div class="header-actions">
+            <a href="#about" class="header-brand" aria-label="Go to top section">
+                <img src="assets/logo.png" alt="Spaghetti" class="header-brand-logo">
+            </a>
+            <a href="#schedule-call" class="header-cta" aria-label="Jump to schedule call">
+                Book a Call
+            </a>
+        </div>
     </div>
     
     <!-- Navigation Menu -->
     <div class="menu-overlay" id="menuOverlay">
         <div class="page">
             <div class="main-links">
-                <a href="#packages" class="main-link" data-text="PACKAGES">
+                <a href="#case-studies" class="main-link" data-text="CASE STUDIES">
                     <div class="inner">
                         <div class="title"></div>
-                        <div class="sup-title">What You Get</div>
+                        <div class="sup-title">Results</div>
                     </div>
                 </a>
-                <a href="https://calendly.com/yousef-settletechnologies/30min" class="main-link" data-text="SCHEDULE" target="_blank" rel="noopener noreferrer">
+                <a href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" class="main-link" data-text="SCHEDULE" target="_blank" rel="noopener noreferrer">
                     <div class="inner">
                         <div class="title"></div>
                         <div class="sup-title">Book a Call</div>
@@ -97,33 +101,28 @@
     
     <!-- Content -->
     <div class="content">
-        <!-- Story Section 3 -->
-        <div class="story-section">
-            <div class="story-content">
-                <h2>Enter Vibe Coding</h2>
-                <p>Vibe coding is the future. You build fast, and we add the guardrails, wiring, and reviews that make it production-ready.</p>
-                <div style="margin-top: 2rem; text-align: center;">
-                    <img src="assets/vibecoding.webp" 
-                         alt="Vibe Coding" 
-                         style="max-width: 100%; 
-                                height: auto; 
-                                border-radius: 15px; 
-                                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-                                opacity: 0;
-                                transform: translateY(30px);
-                                transition: all 0.8s ease;">
+        <!-- Story Section 1 -->
+        <div class="story-section" id="about">
+            <div class="story-content door-section">
+                <h2>Are you ready for AI before the door closes?</h2>
+                <p>Teams that move now compound speed and lower cost to pull ahead. Teams that wait don’t just fall behind. They get left out.</p>
+                <div class="door-media-wrap">
+                    <video class="door-video" autoplay muted loop playsinline preload="metadata">
+                        <source src="assets/door.mp4" type="video/mp4">
+                    </video>
+                    <div class="door-video-overlay"></div>
                 </div>
             </div>
         </div>
-        
-        <!-- Story Section 4 -->
+
+        <!-- Story Section 3 -->
         <div class="story-section">
             <div class="story-content">
                 <h2>On the surface it looks calm and ready</h2>
-                <p>Without structure, you get spaghetti code and fragile systems.</p>
+                <p>Without structure, AI projects turn into spaghetti code and fragile systems that break under real use.</p>
                 <div style="margin-top: 2rem; text-align: center;">
                     <img src="assets/news.png" 
-                         alt="Real world example of vibe coding gone wrong" 
+                         alt="Real world example of AI rollout problems" 
                          style="max-width: 100%; 
                                 height: auto; 
                                 border-radius: 15px; 
@@ -136,7 +135,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Spacer -->
         <div style="height: 50vh;"></div>
         
@@ -144,7 +143,7 @@
         <div class="story-section">
             <div class="story-content">
                 <h2>That’s why Spaghetti exists</h2>
-                <p>We support you as you vibe code, then harden it with real engineering principles.</p>
+                <p>We help teams replace repetitive work with AI workflows and internal tools that hold up in real operations.</p>
                 <p class="logo-lead">Trusted by teams from</p>
                 <div class="company-logos">
                     <div class="logo-item">
@@ -175,102 +174,60 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Spacer -->
-        <div style="height: 100vh;"></div>
-        
-        <!-- Services Section -->
-        <div class="story-section" id="packages">
+
+        <div class="story-section" id="case-studies">
             <div class="story-content">
-                <h2>Packages built for vibe coding</h2>
-                <p>Choose a focused package, then add monthly maintenance when you want ongoing stability</p>
-
-                <div class="pricing-grid">
-                    <div class="pricing-card" id="blueprint">
-                        <div class="pricing-tag">PROMPT + SYSTEM BLUEPRINT</div>
-                        <h3>Vibe Blueprint</h3>
-                        <div class="price">
-                            <span class="price-value" data-price-key="VIBE_BLUEPRINT_PRICE" data-default="$4,500">$4,500</span>
-                        </div>
-                        <div class="price-note">1–2 weeks · one-time</div>
-                        <ul class="pricing-features">
-                            <li>Prompt library tailored to your workflow</li>
-                            <li>System design diagrams + data flow</li>
-                            <li>Tooling and stack recommendations</li>
-                            <li>Implementation plan your team can follow</li>
-                        </ul>
-                        <a class="package-link" href="#schedule-call">See if this fits →</a>
-                    </div>
-
-                    <div class="pricing-card featured" id="build-sprint">
-                        <div class="pricing-tag">BUILD + WIRE-UP</div>
-                        <h3>Vibe Build Sprint</h3>
-                        <div class="price">
-                            <span class="price-value" data-price-key="VIBE_BUILD_SPRINT_PRICE" data-default="$12,000">$12,000</span>
-                        </div>
-                        <div class="price-note">2–4 weeks · one-time</div>
-                        <ul class="pricing-features">
-                            <li>Live vibe-coding sessions with your team</li>
-                            <li>We wire everything up after (APIs, data, hosting)</li>
-                            <li>Production hardening + security review</li>
-                            <li>Launch-ready handoff and documentation</li>
-                        </ul>
-                        <a class="package-link" href="#schedule-call">See if this fits →</a>
-                    </div>
-
-                    <div class="pricing-card" id="review">
-                        <div class="pricing-tag">REVIEW + STABILIZE</div>
-                        <h3>Spaghetti Review</h3>
-                        <div class="price">
-                            <span class="price-value" data-price-key="SPAGHETTI_REVIEW_PRICE" data-default="$6,500">$6,500</span>
-                        </div>
-                        <div class="price-note">1–2 weeks · one-time</div>
-                        <ul class="pricing-features">
-                            <li>Codebase audit for failure points</li>
-                            <li>Prompt and model review</li>
-                            <li>Fix plan + quick wins implemented</li>
-                            <li>Risk report and next-step roadmap</li>
-                        </ul>
-                        <a class="package-link" href="#schedule-call">See if this fits →</a>
-                    </div>
-
-                    <div class="pricing-card maintenance-card" id="maintenance">
-                        <div class="pricing-tag">ONGOING SUPPORT</div>
-                        <h3>Maintenance + Reliability</h3>
-                        <div class="price">
-                            <span class="price-value" data-price-key="MAINTENANCE_PRICE" data-default="$3,000">$3,000</span>
-                            <span class="price-suffix">/month</span>
-                        </div>
-                        <div class="price-note">Best after any package</div>
-                        <ul class="pricing-features">
-                            <li>Monitoring, bug fixes, and uptime support</li>
-                            <li>Monthly prompt tuning + performance checks</li>
-                            <li>Roadmap planning and priority triage</li>
-                            <li>On-call response for critical issues</li>
-                        </ul>
-                        <a class="package-link" href="#schedule-call">See if this fits →</a>
-                    </div>
-                </div>
-
-                <div class="next-steps">
-                    <h3>What happens next</h3>
-                    <div class="next-steps-grid">
-                        <div class="next-step">
-                            <div class="step-number">1</div>
-                            <div class="step-text">20‑minute fit call</div>
-                        </div>
-                        <div class="next-step">
-                            <div class="step-number">2</div>
-                            <div class="step-text">Tailored recommendation</div>
-                        </div>
-                        <div class="next-step">
-                            <div class="step-number">3</div>
-                            <div class="step-text">Clear proposal in 48 hours</div>
-                        </div>
-                    </div>
-                    <a href="https://calendly.com/yousef-settletechnologies/30min" class="cta-button cta-button--small" target="_blank" rel="noopener noreferrer">
-                        Schedule a call →
-                    </a>
+                <h2>Automation systems we build</h2>
+                <p>Real AI workflow implementations across growth, operations, customer support, and internal systems.</p>
+                <div class="case-studies-grid">
+                    <article class="case-study-card">
+                        <div class="case-study-label">Search</div>
+                        <h3>GEO visibility operations</h3>
+                        <p>Built recurring workflows to improve AI-era search visibility through content refresh, entity alignment, and measurement loops.</p>
+                        <p class="case-study-impact">Typical outcomes: higher qualified traffic and faster content velocity</p>
+                    </article>
+                    <article class="case-study-card">
+                        <div class="case-study-label">Marketing</div>
+                        <h3>Asset generation pipeline</h3>
+                        <p>Automated image and video asset production with brand controls, variation workflows, approvals, and distribution-ready exports.</p>
+                        <p class="case-study-impact">Typical outcomes: lower production cost and shorter campaign cycles</p>
+                    </article>
+                    <article class="case-study-card">
+                        <div class="case-study-label">Orchestration</div>
+                        <h3>Campaign workflow orchestration</h3>
+                        <p>Implemented end-to-end automation from insight intake to creative adaptation, channel handoff, and performance feedback.</p>
+                        <p class="case-study-impact">Typical outcomes: faster launches with tighter cross-team coordination</p>
+                    </article>
+                    <article class="case-study-card">
+                        <div class="case-study-label">Customer Service</div>
+                        <h3>Voice agents for support</h3>
+                        <p>Deployed voice agents for first-line resolution, structured escalation, and CRM-connected call summaries.</p>
+                        <p class="case-study-impact">Typical outcomes: faster response times and reduced support load</p>
+                    </article>
+                    <article class="case-study-card">
+                        <div class="case-study-label">Knowledge</div>
+                        <h3>RAG copilots and knowledge bases</h3>
+                        <p>Built retrieval systems over internal docs, tickets, and SOPs with citation-first answers and role-based access.</p>
+                        <p class="case-study-impact">Typical outcomes: faster onboarding and fewer repeated internal requests</p>
+                    </article>
+                    <article class="case-study-card">
+                        <div class="case-study-label">Revenue Ops</div>
+                        <h3>Sales intelligence assistants</h3>
+                        <p>Automated account research, meeting prep, follow-up drafting, and CRM updates inside existing sales workflows.</p>
+                        <p class="case-study-impact">Typical outcomes: more selling time and shorter deal cycles</p>
+                    </article>
+                    <article class="case-study-card">
+                        <div class="case-study-label">Finance</div>
+                        <h3>Invoice and AP automation</h3>
+                        <p>Implemented intake-to-approval automation for invoices, exception routing, and audit-ready tracking.</p>
+                        <p class="case-study-impact">Typical outcomes: reduced processing time and fewer manual errors</p>
+                    </article>
+                    <article class="case-study-card">
+                        <div class="case-study-label">Internal Ops</div>
+                        <h3>Service desk and workflow agents</h3>
+                        <p>Automated ticket triage, knowledge retrieval, and routine task execution across IT and internal operations teams.</p>
+                        <p class="case-study-impact">Typical outcomes: faster resolution and improved team throughput</p>
+                    </article>
                 </div>
             </div>
         </div>
@@ -282,9 +239,9 @@
         <div class="story-section" id="schedule-call">
             <div class="story-content">
                 <h2>Let’s find the best fit</h2>
-                <p>See the packages above? Book a quick call so we can learn about your goals and recommend the best path.</p>
+                <p>Book a quick call so we can learn about your goals and map the best next step.</p>
                 <div class="cta">
-                    <a href="https://calendly.com/yousef-settletechnologies/30min" class="cta-button" target="_blank" rel="noopener noreferrer">
+                    <a href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" class="cta-button" target="_blank" rel="noopener noreferrer">
                         Schedule a call →
                     </a>
                 </div>
@@ -308,18 +265,5 @@
     
     <!-- Modular JavaScript -->
     <script type="module" src="src/js/main.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            const prices = window.__PRICING__ || {};
-            document.querySelectorAll('[data-price-key]').forEach((el) => {
-                const key = el.dataset.priceKey;
-                const fallback = el.dataset.default;
-                const value = prices[key] || fallback;
-                if (value) {
-                    el.textContent = value;
-                }
-            });
-        });
-    </script>
 </body>
 </html>
