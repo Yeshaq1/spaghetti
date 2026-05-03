@@ -1,7 +1,7 @@
 {
-  "name": "spaghetti-ai-consulting",
+  "name": "spaghetti-consulting",
   "version": "1.0.0",
-  "description": "Spaghetti AI Consulting Website",
+  "description": "Spaghetti consulting website",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

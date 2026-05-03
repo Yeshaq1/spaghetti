@@ -1,49 +1,22 @@
-/* CSS Custom Properties */
 :root {
-    /* Colors */
-    --primary-color: #73fbd3;
-    --secondary-color: #8a7efc;
-    --accent-color: #ff7edb;
-    --text-primary: #ffffff;
-    --text-secondary: #cccccc;
-    --text-muted: #999999;
-    --background-primary: #000000;
-    --background-secondary: #1a1a1a;
-    --background-tertiary: #333333;
-    
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    --gradient-accent: linear-gradient(45deg, var(--primary-color), var(--accent-color));
-    
-    /* Spacing */
-    --spacing-xs: 0.5rem;
-    --spacing-sm: 1rem;
-    --spacing-md: 1.5rem;
-    --spacing-lg: 2rem;
-    --spacing-xl: 3rem;
-    
-    /* Border Radius */
-    --radius-sm: 5px;
-    --radius-md: 10px;
-    --radius-lg: 15px;
-    --radius-xl: 20px;
-    
-    /* Shadows */
-    --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 20px 80px rgba(0, 0, 0, 0.65);
-    --shadow-glow: 0 0 30px rgba(115, 251, 211, 0.2);
-    
-    /* Transitions */
-    --transition-fast: 0.3s ease;
-    --transition-normal: 0.4s ease;
-    --transition-slow: 0.8s ease;
-    
-    /* Z-index layers */
-    --z-background: -1;
-    --z-content: 1;
-    --z-overlay: 10;
-    --z-modal: 1000;
-    --z-menu: 1500;
-    --z-trigger: 2000;
+    --color-black: #020202;
+    --color-charcoal: #0b0c0d;
+    --color-panel: rgba(15, 16, 18, 0.72);
+    --color-panel-solid: #111214;
+    --color-line: rgba(255, 255, 255, 0.14);
+    --color-line-strong: rgba(255, 255, 255, 0.28);
+    --color-text: #f5f5f2;
+    --color-muted: rgba(245, 245, 242, 0.68);
+    --color-soft: rgba(245, 245, 242, 0.48);
+    --color-inverse: #050505;
+    --max-page: 1280px;
+    --scene-stage: clamp(180px, 24vw, 300px);
+    --header-height: 86px;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --shadow-panel: 0 24px 80px rgba(0, 0, 0, 0.42);
+    --ease-out: cubic-bezier(0.19, 1, 0.22, 1);
+    --z-canvas: 0;
+    --z-content: 2;
+    --z-header: 20;
 }

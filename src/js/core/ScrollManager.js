@@ -1,242 +1,105 @@
-/**
- * ScrollManager.js - Scroll Handling and Section Management
- * Handles scroll-based animations, section visibility, and scroll-triggered effects
- */
-
 export class ScrollManager {
     constructor() {
         this.sections = [];
         this.currentScrollProgress = 0;
+        this.activeScene = null;
         this.callbacks = {
             onSectionVisible: [],
             onScrollProgress: [],
-            onVideoStateChange: [],
-            onSpaghettiStateChange: []
+            onSceneChange: [],
+            onSceneProgress: []
         };
+        this.visibleSections = new WeakSet();
+        this.handleScroll = this.handleScroll.bind(this);
     }
 
-    /**
-     * Initialize scroll manager
-     */
     init() {
-        this.setupSections();
-        this.setupScrollListener();
+        this.refresh();
+        window.addEventListener('scroll', this.handleScroll, { passive: true });
+        this.handleScroll();
         return this;
     }
 
-    /**
-     * Setup story sections
-     */
-    setupSections() {
+    refresh() {
         this.sections = Array.from(document.querySelectorAll('.story-section'));
+        this.handleScroll();
     }
 
-    /**
-     * Setup scroll event listener
-     */
-    setupScrollListener() {
-        const handleScroll = () => {
-            const scrollY = window.scrollY;
-            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-            this.currentScrollProgress = maxScroll > 0 ? scrollY / maxScroll : 0;
-            
-            this.updateSectionVisibility(scrollY);
-            this.handleVideoStates(scrollY);
-            this.handleSpaghettiState(scrollY);
-            
-            // Notify callbacks
-            this.notifyCallbacks('onScrollProgress', this.currentScrollProgress);
-        };
+    handleScroll() {
+        const scrollY = window.scrollY;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        this.currentScrollProgress = maxScroll > 0 ? scrollY / maxScroll : 0;
 
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        document.addEventListener('scroll', handleScroll, { passive: true });
-        
-        // Initial call
-        handleScroll();
-        
+        this.updateSectionVisibility();
+        this.updateActiveScene();
+        this.notifyCallbacks('onScrollProgress', this.currentScrollProgress);
     }
 
-    /**
-     * Update section visibility based on scroll
-     */
-    updateSectionVisibility(scrollY) {
+    updateSectionVisibility() {
         this.sections.forEach((section, index) => {
-            const sectionTop = section.offsetTop;
-            const sectionVisible = scrollY + window.innerHeight > sectionTop + 100;
-            
-            if (sectionVisible && !section.classList.contains('visible')) {
+            const rect = section.getBoundingClientRect();
+            const sectionVisible = rect.top < window.innerHeight * 0.82 && rect.bottom > window.innerHeight * 0.1;
+
+            if (sectionVisible && !this.visibleSections.has(section)) {
+                this.visibleSections.add(section);
                 section.classList.add('visible');
-                
-                // Handle specific section animations
-                this.handleSectionAnimations(section, index);
-                
-                // Notify callbacks
                 this.notifyCallbacks('onSectionVisible', { section, index });
             }
         });
     }
 
-    /**
-     * Handle specific section animations
-     */
-    handleSectionAnimations(section, index) {
-        // Animate automation image when its section becomes visible
-        const automationImage = section.querySelector('img[alt="AI workflow automation"]');
-        if (automationImage) {
-            automationImage.style.opacity = '1';
-            automationImage.style.transform = 'translateY(0)';
-        }
+    updateActiveScene() {
+        if (!this.sections.length) return;
 
-        // Animate company logos when credentials section becomes visible
-        if (section.querySelector('.company-logos')) {
-            const logoItems = section.querySelectorAll('.logo-item');
-            logoItems.forEach((item, logoIndex) => {
-                setTimeout(() => {
-                    item.style.opacity = '1';
-                    item.style.transform = 'translateY(0) scale(1)';
-                }, logoIndex * 150);
-            });
-        }
-    }
+        const viewportCenter = window.innerHeight * 0.5;
+        let activeSection = this.sections[0];
+        let closestDistance = Number.POSITIVE_INFINITY;
 
-    /**
-     * Handle video states (main video and mobile fallback)
-     */
-    handleVideoStates(scrollY) {
-        const firstSection = this.sections[0];
-        if (!firstSection) return;
+        this.sections.forEach((section) => {
+            const rect = section.getBoundingClientRect();
+            const sectionCenter = rect.top + rect.height * 0.5;
+            const distance = Math.abs(sectionCenter - viewportCenter);
 
-        const firstSectionBottom = firstSection.offsetTop + firstSection.offsetHeight;
-        // Restore original working value - both desktop and mobile should use 0.8
-        const typewriterStart = firstSectionBottom - window.innerHeight * 0.8;
-        const videoDisappearPoint = typewriterStart;
-
-        const videoVisible = scrollY < videoDisappearPoint;
-        
-        
-        // Notify callbacks about video state
-        this.notifyCallbacks('onVideoStateChange', { 
-            visible: videoVisible, 
-            scrollY, 
-            videoDisappearPoint 
-        });
-    }
-
-    /**
-     * Handle Spaghetti Monster and EM video state
-     */
-    handleSpaghettiState(scrollY) {
-        const newsImage = document.querySelector('img[alt="Real world example of AI rollout problems"]');
-        const newsSection = newsImage ? newsImage.closest('.story-section') : null;
-        let spaghettiShouldBeVisible = false;
-
-        // Keep monster/video bound to the "On the surface..." section only.
-        if (newsSection) {
-            const viewportEnterOffset = window.innerHeight * 0.45;
-            const viewportExitOffset = window.innerHeight * 0.2;
-            const sectionStart = newsSection.offsetTop - viewportEnterOffset;
-            const sectionEnd = newsSection.offsetTop + newsSection.offsetHeight - viewportExitOffset;
-            spaghettiShouldBeVisible = scrollY > sectionStart && scrollY < sectionEnd;
-        }
-
-        // Handle news image visibility
-        if (newsImage && newsSection) {
-            const newsSectionVisible = scrollY + window.innerHeight > newsSection.offsetTop + 100;
-
-            if (newsSectionVisible && newsImage.style.opacity === '0') {
-                newsImage.style.opacity = '1';
-                newsImage.style.transform = 'translateY(0)';
-            } else if (!newsSectionVisible && newsImage.style.opacity === '1') {
-                newsImage.style.opacity = '0';
-                newsImage.style.transform = 'translateY(30px)';
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                activeSection = section;
             }
-        }
-        
-        // Notify callbacks about Spaghetti state
-        this.notifyCallbacks('onSpaghettiStateChange', { 
-            visible: spaghettiShouldBeVisible, 
-            scrollY 
         });
+
+        const scene = activeSection.dataset.scene || activeSection.id || 'default';
+        const progress = this.getSectionProgress(activeSection);
+        const payload = { section: activeSection, scene, progress, index: this.sections.indexOf(activeSection) };
+
+        if (scene !== this.activeScene) {
+            this.activeScene = scene;
+            this.notifyCallbacks('onSceneChange', payload);
+        }
+
+        this.notifyCallbacks('onSceneProgress', payload);
     }
 
-    /**
-     * Add callback for scroll events
-     */
+    getSectionProgress(section) {
+        const rect = section.getBoundingClientRect();
+        const sectionHeight = Math.max(rect.height, window.innerHeight);
+        const traveled = window.innerHeight - rect.top;
+        return Math.min(Math.max(traveled / (sectionHeight + window.innerHeight), 0), 1);
+    }
+
     on(eventType, callback) {
         if (this.callbacks[eventType]) {
             this.callbacks[eventType].push(callback);
         }
     }
 
-    /**
-     * Remove callback
-     */
-    off(eventType, callback) {
-        if (this.callbacks[eventType]) {
-            const index = this.callbacks[eventType].indexOf(callback);
-            if (index > -1) {
-                this.callbacks[eventType].splice(index, 1);
-            }
-        }
-    }
-
-    /**
-     * Notify callbacks
-     */
     notifyCallbacks(eventType, data) {
-        if (this.callbacks[eventType]) {
-            this.callbacks[eventType].forEach(callback => {
-                try {
-                    callback(data);
-                } catch (error) {
-                    console.error(`Error in ${eventType} callback:`, error);
-                }
-            });
-        }
+        if (!this.callbacks[eventType]) return;
+
+        this.callbacks[eventType].forEach((callback) => {
+            callback(data);
+        });
     }
 
-    /**
-     * Get current scroll progress (0-1)
-     */
     getScrollProgress() {
         return this.currentScrollProgress;
-    }
-
-    /**
-     * Get all sections
-     */
-    getSections() {
-        return this.sections;
-    }
-
-    /**
-     * Get section by index
-     */
-    getSection(index) {
-        return this.sections[index];
-    }
-
-    /**
-     * Scroll to section
-     */
-    scrollToSection(index) {
-        const section = this.sections[index];
-        if (section) {
-            section.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
-        }
-    }
-
-    /**
-     * Check if section is visible
-     */
-    isSectionVisible(index) {
-        const section = this.sections[index];
-        if (!section) return false;
-        
-        const rect = section.getBoundingClientRect();
-        return rect.top < window.innerHeight && rect.bottom > 0;
     }
 }

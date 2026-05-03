@@ -1,8 +1,3 @@
-/**
- * SceneManager.js - Three.js Scene Setup and Management
- * Handles scene initialization, camera, renderer, and basic lighting
- */
-
 export class SceneManager {
     constructor() {
         this.scene = null;
@@ -10,24 +5,16 @@ export class SceneManager {
         this.renderer = null;
         this.canvas = null;
         this.composer = null;
+        this.renderPass = null;
         this.bloomPass = null;
         this.fxaaPass = null;
-        this.filmPass = null;
-        this.scanlinePass = null;
-        this.renderPass = null;
-        
-        // Interaction state
         this.pointer = { x: 0, y: 0 };
         this.pointerTarget = { x: 0, y: 0 };
         this.currentScrollProgress = 0;
-        
-        // Performance settings
+        this.visualScrollProgress = 0;
         this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
 
-    /**
-     * Initialize the Three.js scene
-     */
     init() {
         this.createScene();
         this.setupCamera();
@@ -35,161 +22,121 @@ export class SceneManager {
         this.setupLighting();
         this.setupPostprocessing();
         this.setupInteractions();
-        
         return this;
     }
 
-    /**
-     * Create the Three.js scene
-     */
     createScene() {
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color(0x000000);
+        this.scene.background = new THREE.Color(0x050505);
+        this.scene.fog = new THREE.FogExp2(0x050505, 0.0115);
     }
 
-    /**
-     * Setup camera
-     */
     setupCamera() {
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.set(0, 0, 8);
+        this.camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 300);
+        this.camera.position.set(0, 0, 10.5);
     }
 
-    /**
-     * Setup WebGL renderer
-     */
     setupRenderer() {
         this.canvas = document.getElementById('three-canvas');
-        this.renderer = new THREE.WebGLRenderer({ 
-            canvas: this.canvas, 
+        this.renderer = new THREE.WebGLRenderer({
+            canvas: this.canvas,
             antialias: true,
-            alpha: true
+            alpha: true,
+            powerPreference: 'high-performance'
         });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.7));
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
+        this.renderer.toneMapping = THREE.ReinhardToneMapping;
+        this.renderer.toneMappingExposure = 1.18;
     }
 
-    /**
-     * Setup basic lighting
-     */
     setupLighting() {
-        // Ambient light
-        const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+        const ambientLight = new THREE.AmbientLight(0xfff1db, 0.58);
         this.scene.add(ambientLight);
-        
-        // Point light for video glow
-        const pointLight = new THREE.PointLight(0x73fbd3, 0.5, 100);
-        pointLight.position.set(0, 0, 5);
-        this.scene.add(pointLight);
-        
+
+        const keyLight = new THREE.DirectionalLight(0xffedd2, 1.18);
+        keyLight.position.set(-4, 8, 7);
+        this.scene.add(keyLight);
+
+        const rimLight = new THREE.PointLight(0xffe7c5, 0.98, 82);
+        rimLight.position.set(8, -3, 10);
+        this.scene.add(rimLight);
+
+        const coreLight = new THREE.PointLight(0xffebcb, 0.78, 32);
+        coreLight.position.set(4.5, 0, 2);
+        this.scene.add(coreLight);
+
+        const fillLight = new THREE.PointLight(0xffe6bf, 0.52, 64);
+        fillLight.position.set(-7, 1, 8);
+        this.scene.add(fillLight);
     }
 
-    /**
-     * Setup post-processing effects
-     */
     setupPostprocessing() {
+        if (this.prefersReducedMotion || !THREE.EffectComposer) {
+            this.composer = null;
+            return;
+        }
+
         try {
             this.composer = new THREE.EffectComposer(this.renderer);
             this.renderPass = new THREE.RenderPass(this.scene, this.camera);
             this.composer.addPass(this.renderPass);
 
             this.bloomPass = new THREE.UnrealBloomPass(
-                new THREE.Vector2(window.innerWidth, window.innerHeight), 
-                0.8, 0.8, 0.85
+                new THREE.Vector2(window.innerWidth, window.innerHeight),
+                0.16,
+                0.3,
+                0.94
             );
             this.composer.addPass(this.bloomPass);
 
-            // Film grain effect
-            this.filmPass = new THREE.FilmPass(0.18, 0.35, 512, false);
-            this.filmPass.renderToScreen = false;
-            this.composer.addPass(this.filmPass);
-
-            // Scanlines effect
-            const ScanlineShader = {
-                uniforms: { 
-                    tDiffuse: { value: null }, 
-                    opacity: { value: 0.07 }, 
-                    density: { value: 2.0 } 
-                },
-                vertexShader: `
-                    varying vec2 vUv; 
-                    void main(){ 
-                        vUv=uv; 
-                        gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); 
-                    }
-                `,
-                fragmentShader: `
-                    uniform sampler2D tDiffuse; 
-                    uniform float opacity; 
-                    uniform float density; 
-                    varying vec2 vUv; 
-                    void main(){ 
-                        vec4 c = texture2D(tDiffuse, vUv); 
-                        float s = sin(vUv.y * 3.14159 * 100.0 * density) * 0.5 + 0.5; 
-                        c.rgb *= mix(1.0, 0.96, s*opacity); 
-                        gl_FragColor = c; 
-                    }
-                `
-            };
-            this.scanlinePass = new THREE.ShaderPass(ScanlineShader);
-            this.composer.addPass(this.scanlinePass);
-
-            // FXAA anti-aliasing
-            this.fxaaPass = new THREE.ShaderPass(THREE.FXAAShader);
-            this.fxaaPass.material.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
-            this.composer.addPass(this.fxaaPass);
-            
+            if (THREE.FXAAShader) {
+                this.fxaaPass = new THREE.ShaderPass(THREE.FXAAShader);
+                this.fxaaPass.material.uniforms.resolution.value.set(1 / window.innerWidth, 1 / window.innerHeight);
+                this.composer.addPass(this.fxaaPass);
+            }
         } catch (error) {
-            console.warn('Postprocessing setup failed, falling back to basic rendering:', error);
+            console.warn('Postprocessing unavailable, using direct rendering.', error);
             this.composer = null;
         }
     }
 
-    /**
-     * Setup mouse interactions
-     */
     setupInteractions() {
-        window.addEventListener('mousemove', (e) => {
-            const nx = (e.clientX / window.innerWidth) * 2 - 1;
-            const ny = (e.clientY / window.innerHeight) * 2 - 1;
-            this.pointerTarget.x = nx;
-            this.pointerTarget.y = ny;
-        });
-
-        // Prepare/resume audio context on user gesture
-        window.addEventListener('click', () => {
-            // This will be handled by AudioManager
+        window.addEventListener('mousemove', (event) => {
+            this.pointerTarget.x = (event.clientX / window.innerWidth) * 2 - 1;
+            this.pointerTarget.y = (event.clientY / window.innerHeight) * 2 - 1;
         });
     }
 
-    /**
-     * Update camera based on scroll and mouse
-     */
     updateCamera(time) {
-        // Easing for pointer parallax
-        this.pointer.x += (this.pointerTarget.x - this.pointer.x) * 0.07;
-        this.pointer.y += (this.pointerTarget.y - this.pointer.y) * 0.07;
-        
-        // Parallax camera tilt
-        this.camera.rotation.x = THREE.MathUtils.degToRad(this.pointer.y * -3);
-        this.camera.rotation.y = THREE.MathUtils.degToRad(this.pointer.x * 3);
-        this.camera.position.x = Math.sin(time * 0.1) * 0.1 + this.pointer.x * 0.25;
-        this.camera.position.y = Math.cos(time * 0.15) * 0.05 + this.pointer.y * 0.15;
-        
-        // Scroll-driven dolly
-        this.camera.position.z = 8 - this.currentScrollProgress * 10;
+        const pointerEase = this.prefersReducedMotion ? 0.02 : 0.06;
+        this.pointer.x += (this.pointerTarget.x - this.pointer.x) * pointerEase;
+        this.pointer.y += (this.pointerTarget.y - this.pointer.y) * pointerEase;
+        this.visualScrollProgress += (this.currentScrollProgress - this.visualScrollProgress) * 0.045;
+
+        const scroll = this.getNarrativeProgress(this.visualScrollProgress);
+        const drift = this.prefersReducedMotion ? 0 : 1;
+        const isMobile = window.innerWidth < 820;
+        const isHeroMobile = window.innerWidth < 720;
+        const baseCamX = isHeroMobile ? 0 : isMobile ? 0.08 : 0.12;
+
+        this.camera.position.x = baseCamX - scroll * 0.42 + this.pointer.x * 0.26 + Math.sin(time * 0.12) * 0.08 * drift;
+        this.camera.position.y = 0.02 - scroll * 0.08 + this.pointer.y * 0.18 + Math.cos(time * 0.1) * 0.05 * drift;
+        this.camera.position.z = 10.7 - scroll * 1.3;
+        this.camera.rotation.x = THREE.MathUtils.degToRad(this.pointer.y * -1.2 - scroll * 0.45);
+        this.camera.rotation.y = THREE.MathUtils.degToRad(this.pointer.x * 1.35 - scroll * 1.05);
     }
 
-    /**
-     * Update scroll progress
-     */
     updateScrollProgress(scrollProgress) {
         this.currentScrollProgress = scrollProgress;
     }
 
-    /**
-     * Render the scene
-     */
+    getNarrativeProgress(progress) {
+        const clamped = THREE.MathUtils.clamp(progress, 0, 1);
+        return clamped * clamped * (3 - 2 * clamped);
+    }
+
     render() {
         if (this.composer) {
             this.composer.render();
@@ -198,57 +145,23 @@ export class SceneManager {
         }
     }
 
-    /**
-     * Handle window resize
-     */
     handleResize() {
-        if (this.camera && this.renderer) {
-            this.camera.aspect = window.innerWidth / window.innerHeight;
-            this.camera.updateProjectionMatrix();
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
-            
-            if (this.composer) {
-                this.composer.setSize(window.innerWidth, window.innerHeight);
-            }
-            
-            if (this.fxaaPass) {
-                this.fxaaPass.material.uniforms['resolution'].value.set(1 / window.innerWidth, 1 / window.innerHeight);
-            }
+        if (!this.camera || !this.renderer) return;
+
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+        if (this.composer) {
+            this.composer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        if (this.fxaaPass) {
+            this.fxaaPass.material.uniforms.resolution.value.set(1 / window.innerWidth, 1 / window.innerHeight);
         }
     }
 
-    /**
-     * Get scene reference
-     */
     getScene() {
         return this.scene;
-    }
-
-    /**
-     * Get camera reference
-     */
-    getCamera() {
-        return this.camera;
-    }
-
-    /**
-     * Get renderer reference
-     */
-    getRenderer() {
-        return this.renderer;
-    }
-
-    /**
-     * Get composer reference
-     */
-    getComposer() {
-        return this.composer;
-    }
-
-    /**
-     * Get bloom pass for audio reactivity
-     */
-    getBloomPass() {
-        return this.bloomPass;
     }
 }

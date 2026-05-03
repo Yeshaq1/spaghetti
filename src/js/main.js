@@ -1,373 +1,317 @@
-/**
- * main.js - Main Application Orchestrator
- * Coordinates all modules and manages the overall application flow
- */
-
-// Import core modules
+import { COPY, CLIENT_LOGOS, CALENDAR_URL } from './content.js';
 import { SceneManager } from './core/SceneManager.js';
-import { AudioManager } from './core/AudioManager.js';
 import { ScrollManager } from './core/ScrollManager.js';
-
-// Import component modules
-import { VideoPlayer } from './components/VideoPlayer.js';
-import { HamburgerMenu } from './components/HamburgerMenu.js';
-import { IntroModal } from './components/IntroModal.js';
-import { WebRTCCall } from './components/WebRTCCall.js';
-
-// Import Three.js modules
-import { Models } from './three/Models.js';
 import { Effects } from './three/Effects.js';
 
-/**
- * Main Application Class
- */
+const SUPPORTED_LANGUAGES = ['en', 'ar'];
+const DEFAULT_LANGUAGE = 'en';
+
 class App {
     constructor() {
-        // Core managers
+        this.language = this.getInitialLanguage();
         this.sceneManager = null;
-        this.audioManager = null;
         this.scrollManager = null;
-        
-        // Components
-        this.videoPlayer = null;
-        this.hamburgerMenu = null;
-        this.introModal = null;
-        this.webRTCCall = null;
-        
-        // Three.js modules
-        this.models = null;
         this.effects = null;
-        
-        // Additional video elements
-        this.emVideoElement = null;
-        
-        // Animation state
-        this.isAnimating = false;
         this.clock = new THREE.Clock();
+        this.isAnimating = false;
     }
 
-    /**
-     * Initialize the application
-     */
-    async init() {
-        
-        try {
-            // Initialize core managers
-            this.sceneManager = new SceneManager().init();
-            this.audioManager = new AudioManager().init();
-            this.scrollManager = new ScrollManager().init();
-            
-            // Initialize components
-            this.videoPlayer = new VideoPlayer(this.sceneManager.getScene(), this.audioManager).init();
-            this.hamburgerMenu = new HamburgerMenu().init();
-            this.introModal = new IntroModal(this.audioManager).init();
-            this.webRTCCall = new WebRTCCall().init();
-            
-            // Initialize Three.js modules
-            this.models = new Models(this.sceneManager.getScene()).init();
-            this.effects = new Effects(this.sceneManager.getScene()).init();
-            
-            // Setup additional video elements
-            this.setupAdditionalVideos();
-            
-            // Setup scroll callbacks
-            this.setupScrollCallbacks();
-            
-            // Setup window resize handler
-            this.setupResizeHandler();
-            
-            // Setup click handler for shockwaves
-            this.setupClickHandler();
-            
-            // Setup WebRTC call buttons
-            this.setupWebRTCCallButtons();
-            
-            // Start animation loop
-            this.startAnimation();
-            
-            
-        } catch (error) {
-            console.error('❌ Error initializing application:', error);
+    init() {
+        this.renderContent();
+        this.setupNavigation();
+        this.setupLanguageToggle();
+
+        this.sceneManager = new SceneManager().init();
+        this.effects = new Effects(this.sceneManager.getScene()).init();
+        this.scrollManager = new ScrollManager().init();
+        this.setupScrollCallbacks();
+        this.setupResizeHandler();
+        this.startAnimation();
+    }
+
+    getInitialLanguage() {
+        const storedLanguage = window.localStorage.getItem('spaghetti-language');
+        if (SUPPORTED_LANGUAGES.includes(storedLanguage)) {
+            return storedLanguage;
+        }
+
+        const browserLanguage = navigator.language || '';
+        return browserLanguage.toLowerCase().startsWith('ar') ? 'ar' : DEFAULT_LANGUAGE;
+    }
+
+    get copy() {
+        return COPY[this.language] || COPY[DEFAULT_LANGUAGE];
+    }
+
+    renderContent() {
+        const copy = this.copy;
+        const isArabic = this.language === 'ar';
+
+        document.documentElement.lang = this.language;
+        document.documentElement.dir = isArabic ? 'rtl' : 'ltr';
+        document.body.dataset.language = this.language;
+        document.title = copy.meta.title;
+
+        const description = document.querySelector('meta[name="description"]');
+        if (description) {
+            description.setAttribute('content', copy.meta.description);
+        }
+
+        document.querySelectorAll('[data-i18n]').forEach((element) => {
+            const value = this.getPath(copy, element.dataset.i18n);
+            if (typeof value === 'string') {
+                element.textContent = value;
+            }
+        });
+
+        document.querySelectorAll('a[href*="calendar.app.google"]').forEach((link) => {
+            link.href = CALENDAR_URL;
+        });
+
+        this.renderMethodSteps(copy.method.steps);
+        this.renderWhoList(copy.who.items);
+        this.renderSystems(copy.systems.items);
+        this.renderLogos();
+        this.renderOutcomes(copy.proof.outcomes);
+        this.renderFitList(copy.fit.items);
+        this.updateLanguageToggle();
+        this.updateMenuButton(false);
+
+        if (this.scrollManager) {
+            this.scrollManager.refresh();
         }
     }
 
-    /**
-     * Setup additional video elements (EM video)
-     */
-    setupAdditionalVideos() {
-        // Create EM video element
-        this.emVideoElement = document.createElement('video');
-        this.emVideoElement.src = 'assets/em.mp4';
-        this.emVideoElement.crossOrigin = 'anonymous';
-        this.emVideoElement.loop = true;
-        this.emVideoElement.muted = true;
-        this.emVideoElement.volume = 0.8;
-        this.emVideoElement.playsInline = true;
+    getPath(source, path) {
+        return path.split('.').reduce((value, key) => {
+            if (value && Object.prototype.hasOwnProperty.call(value, key)) {
+                return value[key];
+            }
+            return undefined;
+        }, source);
+    }
 
-        // Video styling
-        this.emVideoElement.style.position = 'relative';
-        this.emVideoElement.style.width = '100%';
-        this.emVideoElement.style.maxWidth = window.innerWidth <= 768 ? '400px' : '500px';
-        this.emVideoElement.style.height = 'auto';
-        this.emVideoElement.style.margin = '0 auto';
-        this.emVideoElement.style.display = 'block';
-        this.emVideoElement.style.borderRadius = '15px';
-        this.emVideoElement.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.5)';
-        this.emVideoElement.style.opacity = '0';
-        this.emVideoElement.style.transition = 'opacity 1s ease-in-out';
-        this.emVideoElement.style.pointerEvents = 'none';
-        
-        // Add to mobile container
-        const mobileContainer = document.getElementById('mobile-video-container');
-        if (mobileContainer) {
-            mobileContainer.appendChild(this.emVideoElement);
-        } else {
-            document.body.appendChild(this.emVideoElement);
-        }
+    renderMethodSteps(steps) {
+        const list = document.getElementById('method-list');
+        if (!list) return;
 
-        // Set video elements in audio manager
-        this.audioManager.setVideoElements(
-            this.videoPlayer.getVideo(),
-            this.emVideoElement,
-            this.videoPlayer.getMobileVideo()
+        list.innerHTML = '';
+        steps.forEach((step, index) => {
+            const item = document.createElement('li');
+            item.className = 'method-card';
+            item.innerHTML = `
+                <span class="method-card__number">${String(index + 1).padStart(2, '0')}</span>
+                <h3>${this.escapeHtml(step.title)}</h3>
+                <p>${this.escapeHtml(step.text)}</p>
+            `;
+            list.appendChild(item);
+        });
+    }
+
+    renderWhoList(items) {
+        const list = document.getElementById('who-list');
+        if (!list) return;
+
+        list.innerHTML = '';
+        items.forEach((text) => {
+            const item = document.createElement('div');
+            item.className = 'fit-item';
+            item.textContent = text;
+            list.appendChild(item);
+        });
+    }
+
+    renderSystems(items) {
+        const grid = document.getElementById('systems-grid');
+        if (!grid) return;
+
+        grid.innerHTML = '';
+        items.forEach((item) => {
+            const article = document.createElement('article');
+            article.className = 'system-card';
+            article.innerHTML = `
+                <h3>${this.escapeHtml(item.title)}</h3>
+                <p>${this.escapeHtml(item.text)}</p>
+            `;
+            grid.appendChild(article);
+        });
+    }
+
+    renderLogos() {
+        const strip = document.getElementById('logo-strip');
+        if (!strip) return;
+
+        strip.innerHTML = '';
+        CLIENT_LOGOS.forEach((logo) => {
+            const item = document.createElement('div');
+            item.className = 'logo-tile';
+            item.innerHTML = `<img src="${logo.src}" alt="${this.escapeHtml(logo.name)}" loading="lazy">`;
+            strip.appendChild(item);
+        });
+    }
+
+    renderOutcomes(outcomes) {
+        const grid = document.getElementById('outcome-grid');
+        if (!grid) return;
+
+        grid.innerHTML = '';
+        outcomes.forEach((outcome) => {
+            const item = document.createElement('div');
+            item.className = 'outcome-item';
+            item.textContent = outcome;
+            grid.appendChild(item);
+        });
+    }
+
+    renderFitList(items) {
+        const list = document.getElementById('fit-list');
+        if (!list) return;
+
+        list.innerHTML = '';
+        items.forEach((text) => {
+            const item = document.createElement('div');
+            item.className = 'fit-item';
+            item.textContent = text;
+            list.appendChild(item);
+        });
+    }
+
+    setupLanguageToggle() {
+        const toggle = document.querySelector('[data-language-toggle]');
+        if (!toggle) return;
+
+        toggle.addEventListener('click', () => {
+            this.language = this.language === 'en' ? 'ar' : 'en';
+            window.localStorage.setItem('spaghetti-language', this.language);
+            this.closeMenu();
+            this.renderContent();
+        });
+    }
+
+    updateLanguageToggle() {
+        const toggle = document.querySelector('[data-language-toggle]');
+        const label = document.querySelector('[data-language-label]');
+        if (!toggle || !label) return;
+
+        const nextLanguage = this.language === 'en' ? 'ar' : 'en';
+        label.textContent = nextLanguage.toUpperCase();
+        toggle.setAttribute(
+            'aria-label',
+            this.language === 'en' ? this.copy.ui.switchToArabic : this.copy.ui.switchToEnglish
         );
-
     }
 
-    /**
-     * Setup scroll callbacks
-     */
+    setupNavigation() {
+        const toggle = document.querySelector('[data-menu-toggle]');
+        const nav = document.getElementById('site-nav');
+        if (!toggle || !nav) return;
+
+        toggle.addEventListener('click', () => {
+            const nextState = !document.body.classList.contains('nav-open');
+            document.body.classList.toggle('nav-open', nextState);
+            this.updateMenuButton(nextState);
+        });
+
+        nav.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', () => {
+                this.closeMenu();
+            });
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                this.closeMenu();
+            }
+        });
+    }
+
+    closeMenu() {
+        document.body.classList.remove('nav-open');
+        this.updateMenuButton(false);
+    }
+
+    updateMenuButton(isOpen) {
+        const toggle = document.querySelector('[data-menu-toggle]');
+        if (!toggle) return;
+
+        toggle.setAttribute('aria-expanded', String(isOpen));
+        toggle.setAttribute('aria-label', isOpen ? this.copy.ui.closeMenu : this.copy.ui.openMenu);
+    }
+
     setupScrollCallbacks() {
-        // Video state changes - use direct control like EM videos
-        this.scrollManager.on('onVideoStateChange', (data) => {
-            // Handle desktop WebGL video
-            if (this.videoPlayer.videoPlane && this.videoPlayer.videoPlane.material) {
-                this.videoPlayer.videoPlane.material.opacity = data.visible ? 1 : 0;
-                
-                // Also control the underlying video element's audio
-                const desktopVideo = this.videoPlayer.getVideo();
-                if (desktopVideo) {
-                    if (data.visible) {
-                        desktopVideo.play().catch(() => {});
-                        this.audioManager.applyAudioState();
-                    } else {
-                        desktopVideo.pause();
-                        desktopVideo.currentTime = 0;
-                        desktopVideo.muted = true;
-                        desktopVideo.volume = 0;
-                    }
-                }
-            }
-            
-            // Handle mobile HTML5 video - same logic as EM video
-            const mobileVideo = this.videoPlayer.getMobileVideo();
-            if (mobileVideo) {
-                if (data.visible && mobileVideo.style.opacity === '0') {
-                    mobileVideo.style.opacity = '1';
-                    mobileVideo.play().catch(() => {});
-                    this.audioManager.applyAudioState();
-                } else if (!data.visible && mobileVideo.style.opacity === '1') {
-                    mobileVideo.style.opacity = '0';
-                    mobileVideo.pause();
-                    mobileVideo.currentTime = 0;
-                    mobileVideo.muted = true;
-                    mobileVideo.volume = 0;
-                }
-            }
-        });
-
-        // Spaghetti state changes
-        this.scrollManager.on('onSpaghettiStateChange', (data) => {
-            if (data.visible) {
-                this.models.showSpaghetti();
-                if (this.emVideoElement.style.opacity === '0') {
-                    this.emVideoElement.style.opacity = '1';
-                    this.audioManager.applyAudioState();
-                    this.emVideoElement.play().catch(() => {});
-                }
-            } else {
-                this.models.hideSpaghetti();
-                if (this.emVideoElement.style.opacity === '1') {
-                    this.emVideoElement.style.opacity = '0';
-                    this.emVideoElement.pause();
-                    this.emVideoElement.currentTime = 0;
-                    // Mute audio when hiding
-                    this.emVideoElement.muted = true;
-                    this.emVideoElement.volume = 0;
-                }
-            }
-        });
-
-        // Scroll progress updates
         this.scrollManager.on('onScrollProgress', (progress) => {
             this.sceneManager.updateScrollProgress(progress);
+            this.effects.updateScrollProgress(progress);
+        });
+
+        this.scrollManager.on('onSceneChange', (payload) => {
+            this.updateActiveNavigation(payload.scene);
+        });
+
+        this.scrollManager.on('onSceneProgress', (payload) => {
+            this.effects.updateSceneState(payload);
+        });
+
+        this.scrollManager.on('onSectionVisible', ({ section }) => {
+            section.classList.add('section-ready');
         });
     }
 
-    /**
-     * Setup window resize handler
-     */
     setupResizeHandler() {
         window.addEventListener('resize', () => {
             this.sceneManager.handleResize();
-            this.videoPlayer.handleResize();
+            this.effects.positionRig();
+            this.scrollManager.refresh();
         });
     }
 
-    /**
-     * Setup click handler for shockwaves
-     */
-    setupClickHandler() {
-        window.addEventListener('click', () => {
-            // Resume audio context
-            if (this.audioManager.audioContext && this.audioManager.audioContext.state === 'suspended') {
-                this.audioManager.audioContext.resume();
-            }
-            
-            // Create shockwave
-            this.effects.createClickShockwave();
+    updateActiveNavigation(scene) {
+        const nav = document.getElementById('site-nav');
+        if (!nav) return;
+
+        nav.querySelectorAll('a').forEach((link) => {
+            const href = link.getAttribute('href') || '';
+            const targetId = href.startsWith('#') ? href.slice(1) : '';
+            const isActive = targetId === scene;
+            link.classList.toggle('is-active', isActive);
+            link.setAttribute('aria-current', isActive ? 'page' : 'false');
         });
     }
 
-    /**
-     * Setup WebRTC call buttons
-     */
-    async setupWebRTCCallButtons() {
-        try {
-            // Check if WebRTC feature is enabled
-            const response = await fetch('/api/features');
-            const features = await response.json();
-            
-            if (!features.webrtcEnabled) {
-                return;
-            }
-            
-            const contactLinks = document.querySelectorAll('a[href*="mailto:yousef+ai@hey.com"]');
-            
-            contactLinks.forEach(link => {
-                const container = document.createElement('div');
-                container.style.cssText = `
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    gap: 10px;
-                    margin: 20px 0;
-                `;
-                
-                // Style the email link
-                link.style.cssText = `
-                    background: rgba(115, 251, 211, 0.1);
-                    color: #73fbd3;
-                    border: 1px solid rgba(115, 251, 211, 0.3);
-                    padding: 12px 24px;
-                    border-radius: 25px;
-                    text-decoration: none;
-                    font-size: 14px;
-                `;
-                
-                // Insert after the link
-                link.parentNode.insertBefore(container, link.nextSibling);
-                container.appendChild(link);
-                
-                // Create call button (now appears first)
-                this.webRTCCall.createCallButton(container);
-            });
-        } catch (error) {
-            console.error('Error setting up WebRTC buttons:', error);
-        }
-    }
-
-    /**
-     * Start animation loop
-     */
     startAnimation() {
         if (this.isAnimating) return;
-        
         this.isAnimating = true;
-        
+
         const animate = () => {
             if (!this.isAnimating) return;
-            
+
             const time = this.clock.getElapsedTime();
-            
-            // Update scene manager
             this.sceneManager.updateCamera(time);
-            
-            // Animate video player
-            this.videoPlayer.animate(time);
-            
-            // Animate models
-            this.models.animate(time);
-            
-            // Animate effects
             this.effects.animate(time, this.sceneManager.pointer);
-            
-            // Audio reactive bloom
-            this.updateAudioReactiveBloom();
-            
-            // Render scene
             this.sceneManager.render();
-            
+
             requestAnimationFrame(animate);
         };
-        
+
         animate();
     }
 
-    /**
-     * Update audio reactive bloom
-     */
-    updateAudioReactiveBloom() {
-        const bloomPass = this.sceneManager.getBloomPass();
-        if (bloomPass && this.audioManager.isReady()) {
-            const audioLevel = this.audioManager.getAverageAudioLevel();
-            const intensity = 0.7 + (audioLevel / 255) * 0.9;
-            bloomPass.strength = THREE.MathUtils.lerp(bloomPass.strength, intensity, 0.15);
-        }
-    }
-
-    /**
-     * Stop animation loop
-     */
-    stopAnimation() {
-        this.isAnimating = false;
-    }
-
-    /**
-     * Get scene manager
-     */
-    getSceneManager() {
-        return this.sceneManager;
-    }
-
-    /**
-     * Get audio manager
-     */
-    getAudioManager() {
-        return this.audioManager;
-    }
-
-    /**
-     * Get scroll manager
-     */
-    getScrollManager() {
-        return this.scrollManager;
+    escapeHtml(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
     }
 }
 
-// Initialize application when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    // Prevent browser from restoring scroll position
     if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
     }
-    
-    // Reset scroll position to top on page load/refresh
-    window.scrollTo(0, 0);
-    
+
     const app = new App();
     app.init();
-    
-    // Make app globally available for debugging
     window.app = app;
 });

@@ -1,269 +1,149 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Spaghetti designs, builds, and embeds AI workflows, agents, and internal tools inside real business operations.">
     <link rel="icon" type="image/png" href="assets/logo.png">
-    <title>Spaghetti</title>
-    <!-- CSS Files -->
+    <title>Spaghetti | AI systems for real operations</title>
+
     <link rel="stylesheet" href="css/base/reset.css">
     <link rel="stylesheet" href="css/base/variables.css">
-    <link rel="stylesheet" href="css/components/intro-modal.css">
-    <link rel="stylesheet" href="css/components/particles.css">
-    <link rel="stylesheet" href="css/components/video-player.css">
-    <link rel="stylesheet" href="css/components/hamburger-menu.css">
-    <link rel="stylesheet" href="css/components/typewriter.css">
-    <link rel="stylesheet" href="css/layout/responsive.css">
     <link rel="stylesheet" href="css/pages/index.css">
+    <link rel="stylesheet" href="css/layout/responsive.css">
 </head>
-<body class="modal-visible">
-    <!-- Full-screen intro modal -->
-    <div class="intro-modal" id="introModal">
-        <!-- Animated particles -->
-        <div class="particles-container">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-        </div>
-        
-        <div class="intro-logo-container">
-            <img src="assets/logo.png" alt="Spaghetti AI" class="intro-logo">
-        </div>
-        <h1 class="intro-title">Spaghetti</h1>
-        <p class="intro-description">
-            We help companies cut repetitive work with AI, build useful internal tools,
-            and get teams using AI in day-to-day work without the chaos.
-        </p>
-        <button class="enter-button" id="enterButton">Enter</button>
-    </div>
-    
-    <!-- Hamburger Menu -->
-    <div class="header" style="opacity: 0;">
-        <div class="trigger" id="menuTrigger">
-            <div class="link">
-                <div class="icon">
-                    <canvas class="canvas" width="40" height="40"></canvas>
-                    <div class="text menu" style="opacity: 0;">MENU</div>
-                    <div class="text close" style="opacity: 0;">CLOSE</div>
-                </div>
-            </div>
-        </div>
+<body>
+    <canvas id="three-canvas" aria-hidden="true"></canvas>
+
+    <header class="site-header" data-site-header>
+        <a class="brand-mark" href="#home" aria-label="Spaghetti home">
+            <img src="assets/logo.png" alt="" class="brand-mark__logo">
+            <span class="brand-mark__text">Spaghetti</span>
+        </a>
+
+        <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+            <a href="#who" data-i18n="nav.method">Method</a>
+            <a href="#systems" data-i18n="nav.systems">Systems</a>
+            <a href="#proof" data-i18n="nav.proof">Proof</a>
+            <a href="#fit" data-i18n="nav.fit">Fit</a>
+        </nav>
+
         <div class="header-actions">
-            <a href="#about" class="header-brand" aria-label="Go to top section">
-                <img src="assets/logo.png" alt="Spaghetti" class="header-brand-logo">
+            <button class="language-toggle" type="button" data-language-toggle aria-label="Switch language">
+                <span data-language-label>AR</span>
+            </button>
+            <a class="button button--small header-cta" href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" target="_blank" rel="noopener noreferrer" data-i18n="nav.call">
+                Book a call
             </a>
-            <a href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" class="header-cta" aria-label="Book a call" target="_blank" rel="noopener noreferrer">
-                Book a Call
-            </a>
+            <button class="menu-toggle" type="button" data-menu-toggle aria-controls="site-nav" aria-expanded="false" aria-label="Open navigation">
+                <span></span>
+                <span></span>
+            </button>
         </div>
-    </div>
-    
-    <!-- Navigation Menu -->
-    <div class="menu-overlay" id="menuOverlay">
-        <div class="page">
-            <div class="main-links">
-                <a href="#case-studies" class="main-link" data-text="CASE STUDIES">
-                    <div class="inner">
-                        <div class="title"></div>
-                        <div class="sup-title">Results</div>
-                    </div>
-                </a>
-                <a href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" class="main-link" data-text="SCHEDULE" target="_blank" rel="noopener noreferrer">
-                    <div class="inner">
-                        <div class="title"></div>
-                        <div class="sup-title">Book a Call</div>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
+    </header>
 
-    <!-- Three.js Canvas -->
-    <canvas id="three-canvas"></canvas>
-    
-    <!-- Scroll hint -->
-    <div class="scroll-hint" style="opacity: 0;">Scroll ↓</div>
-    
-    <!-- Content -->
-    <div class="content">
-        <!-- Story Section 1 -->
-        <div class="story-section" id="about">
-            <div class="story-content door-section">
-                <h2>Are you ready for AI before the door closes?</h2>
-                <p>Teams that move now compound speed and lower cost to pull ahead. Teams that wait don’t just fall behind. They get left out.</p>
-                <div class="door-media-wrap">
-                    <video class="door-video" autoplay muted loop playsinline preload="metadata">
-                        <source src="assets/door.mp4" type="video/mp4">
-                    </video>
-                    <div class="door-video-overlay"></div>
+    <main class="content">
+        <section class="hero-section story-section" id="home" data-scene="hero">
+            <div class="hero-annotation" aria-hidden="true">
+                <div class="hero-annotation__text" data-i18n="hero.annotation">
+                    When the workflow looks like this, the model is rarely the real problem.
+                </div>
+                <div class="hero-annotation__arrow">
+                    <svg class="hero-annotation__arrow-svg" viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M12 22C118 8 182 44 250 112C268 130 286 139 308 142" pathLength="1" />
+                        <path d="M283 128L308 142L283 154" pathLength="1" />
+                    </svg>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Story Section 3 -->
-        <div class="story-section">
-            <div class="story-content">
-                <h2>On the surface it looks calm and ready</h2>
-                <p>Without structure, AI projects turn into spaghetti code and fragile systems that break under real use.</p>
-                <div style="margin-top: 2rem; text-align: center;">
-                    <img src="assets/news.png" 
-                         alt="Real world example of AI rollout problems" 
-                         style="max-width: 100%; 
-                                height: auto; 
-                                border-radius: 15px; 
-                                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-                                opacity: 0;
-                                transform: translateY(30px);
-                                transition: all 0.8s ease;">
-                    <!-- Mobile video container - will be populated by JavaScript -->
-                    <div class="mobile-video-container" id="mobile-video-container"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Spacer -->
-        <div style="height: 50vh;"></div>
-        
-        <!-- Story Section 5 - Merged -->
-        <div class="story-section">
-            <div class="story-content">
-                <h2>That’s why Spaghetti exists</h2>
-                <p>We help teams replace repetitive work with AI workflows and internal tools that hold up in real operations.</p>
-                <p class="logo-lead">Trusted by teams from</p>
-                <div class="company-logos">
-                    <div class="logo-item">
-                        <div class="logo-container">
-                            <img src="assets/meta-logo-facebook.svg" alt="Meta" class="company-logo" loading="lazy">
-                        </div>
-                    </div>
-                    <div class="logo-item">
-                        <div class="logo-container">
-                            <img src="assets/Google__G__logo.svg.webp" alt="Google" class="company-logo" loading="lazy">
-                        </div>
-                    </div>
-                    <div class="logo-item">
-                        <div class="logo-container">
-                            <img src="assets/GM2.png" alt="General Motors" class="company-logo" loading="lazy">
-                        </div>
-                    </div>
-                    <div class="logo-item">
-                        <div class="logo-container">
-                            <img src="assets/unilever.png" alt="Unilever" class="company-logo" loading="lazy">
-                        </div>
-                    </div>
-                    <div class="logo-item">
-                        <div class="logo-container fun-card">
-                            <div class="fun-text">And more</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="story-section" id="case-studies">
-            <div class="story-content">
-                <h2>Automation systems we build</h2>
-                <p>Real AI workflow implementations across growth, operations, customer support, and internal systems.</p>
-                <div class="case-studies-grid">
-                    <article class="case-study-card">
-                        <div class="case-study-label">Search</div>
-                        <h3>GEO visibility operations</h3>
-                        <p>Built recurring workflows to improve AI-era search visibility through content refresh, entity alignment, and measurement loops.</p>
-                        <p class="case-study-impact">Typical outcomes: higher qualified traffic and faster content velocity</p>
-                    </article>
-                    <article class="case-study-card">
-                        <div class="case-study-label">Marketing</div>
-                        <h3>Asset generation pipeline</h3>
-                        <p>Automated image and video asset production with brand controls, variation workflows, approvals, and distribution-ready exports.</p>
-                        <p class="case-study-impact">Typical outcomes: lower production cost and shorter campaign cycles</p>
-                    </article>
-                    <article class="case-study-card">
-                        <div class="case-study-label">Orchestration</div>
-                        <h3>Campaign workflow orchestration</h3>
-                        <p>Implemented end-to-end automation from insight intake to creative adaptation, channel handoff, and performance feedback.</p>
-                        <p class="case-study-impact">Typical outcomes: faster launches with tighter cross-team coordination</p>
-                    </article>
-                    <article class="case-study-card">
-                        <div class="case-study-label">Customer Service</div>
-                        <h3>Voice agents for support</h3>
-                        <p>Deployed voice agents for first-line resolution, structured escalation, and CRM-connected call summaries.</p>
-                        <p class="case-study-impact">Typical outcomes: faster response times and reduced support load</p>
-                    </article>
-                    <article class="case-study-card">
-                        <div class="case-study-label">Knowledge</div>
-                        <h3>RAG copilots and knowledge bases</h3>
-                        <p>Built retrieval systems over internal docs, tickets, and SOPs with citation-first answers and role-based access.</p>
-                        <p class="case-study-impact">Typical outcomes: faster onboarding and fewer repeated internal requests</p>
-                    </article>
-                    <article class="case-study-card">
-                        <div class="case-study-label">Revenue Ops</div>
-                        <h3>Sales intelligence assistants</h3>
-                        <p>Automated account research, meeting prep, follow-up drafting, and CRM updates inside existing sales workflows.</p>
-                        <p class="case-study-impact">Typical outcomes: more selling time and shorter deal cycles</p>
-                    </article>
-                    <article class="case-study-card">
-                        <div class="case-study-label">Finance</div>
-                        <h3>Invoice and AP automation</h3>
-                        <p>Implemented intake-to-approval automation for invoices, exception routing, and audit-ready tracking.</p>
-                        <p class="case-study-impact">Typical outcomes: reduced processing time and fewer manual errors</p>
-                    </article>
-                    <article class="case-study-card">
-                        <div class="case-study-label">Internal Ops</div>
-                        <h3>Service desk and workflow agents</h3>
-                        <p>Automated ticket triage, knowledge retrieval, and routine task execution across IT and internal operations teams.</p>
-                        <p class="case-study-impact">Typical outcomes: faster resolution and improved team throughput</p>
-                    </article>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Spacer -->
-        <div style="height: 100vh;"></div>
-        
-        <!-- CTA Section -->
-        <div class="story-section" id="schedule-call">
-            <div class="story-content">
-                <h2>Let’s find the best fit</h2>
-                <p>Book a quick call so we can learn about your goals and map the best next step.</p>
-                <div class="cta">
-                    <a href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" class="cta-button" target="_blank" rel="noopener noreferrer">
-                        Schedule a call →
+        <section class="intro-section story-section" id="intro" data-scene="intro">
+            <div class="hero-copy">
+                <h1 data-i18n="hero.title">We turn messy workflows into reliable AI systems.</h1>
+                <p class="hero-lede" data-i18n="hero.body">
+                    Spaghetti designs, builds, and integrates AI systems into real operations: internal tools, retrieval workflows, automations, and operator-facing products.
+                </p>
+                <div class="hero-actions">
+                    <a class="button button--primary" href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" target="_blank" rel="noopener noreferrer" data-i18n="hero.primaryCta">
+                        Book a call
+                    </a>
+                    <a class="button button--secondary" href="#systems" data-i18n="hero.secondaryCta">
+                        What we build
                     </a>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <!-- Three.js -->
+        </section>
+
+        <section class="fit-section story-section" id="who" data-scene="who">
+            <div class="section-copy">
+                <h2 data-i18n="who.title">We are a small technical consultancy for operational AI.</h2>
+                <p data-i18n="who.body">
+                    Teams bring us in when the workflow is real, the stakes are real, and someone needs to make the system work end to end.
+                </p>
+            </div>
+            <div class="fit-list" id="who-list"></div>
+        </section>
+
+        <section class="proof-section story-section" id="proof" data-scene="proof">
+            <div class="section-heading">
+                <h2 data-i18n="proof.title">Work around serious teams. Clear outcome areas. No inflated claims.</h2>
+                <p data-i18n="proof.body">
+                    We keep proof narrow: approved logos and the kinds of operational improvements these systems are built to produce.
+                </p>
+            </div>
+            <div class="logo-strip" id="logo-strip" aria-label="Trusted teams"></div>
+            <div class="outcome-grid" id="outcome-grid"></div>
+        </section>
+
+        <section class="systems-section story-section" id="systems" data-scene="systems">
+            <div class="section-heading">
+                <h2 data-i18n="systems.title">What we build</h2>
+                <p data-i18n="systems.body">
+                    Most of the work falls into a few patterns: routing requests, grounding answers, generating assets with control, and connecting AI to the systems people already use.
+                </p>
+            </div>
+            <div class="systems-grid" id="systems-grid"></div>
+        </section>
+
+        <section class="method-section story-section" id="method" data-scene="method">
+            <div class="section-heading">
+                <h2 data-i18n="method.title">How we work</h2>
+                <p data-i18n="method.body">
+                    We map the workflow, define the operating rules, build the system, connect it, and stay through rollout until it behaves under real use.
+                </p>
+            </div>
+            <ol class="method-list" id="method-list"></ol>
+        </section>
+
+        <section class="fit-section story-section" id="fit" data-scene="fit">
+            <div class="section-copy">
+                <h2 data-i18n="fit.title">A good starting point is one workflow with real volume and real friction.</h2>
+                <p data-i18n="fit.body">
+                    Not an AI brainstorm. Not a slide deck. One workflow that is slow, messy, expensive, or fragile enough to be worth fixing properly.
+                </p>
+                <div class="hero-actions">
+                    <a class="button button--primary" href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" target="_blank" rel="noopener noreferrer" data-i18n="fit.cta">
+                        Book a call
+                    </a>
+                </div>
+            </div>
+            <div class="fit-list" id="fit-list"></div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <span>Spaghetti</span>
+        <a href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" target="_blank" rel="noopener noreferrer" data-i18n="footer.cta">Book a call</a>
+    </footer>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-    <!-- Postprocessing (order matters: shaders first) -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/FXAAShader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/FilmShader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/FilmPass.js"></script>
-    
-    <!-- Modular JavaScript -->
     <script type="module" src="src/js/main.js"></script>
 </body>
 </html>
