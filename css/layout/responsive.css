@@ -55,9 +55,9 @@
     .hero-annotation {
         --annotation-x: 36px;
         --annotation-y: 16vh;
-        --annotation-width: 330px;
-        --annotation-text-width: 280px;
-        --annotation-text-size: 1.12rem;
+        --annotation-width: 380px;
+        --annotation-text-width: 340px;
+        --annotation-text-size: 1.32rem;
     }
 
     .hero-annotation__text {
@@ -77,9 +77,6 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .outcome-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
 }
 
 @media (max-width: 720px) {
@@ -119,7 +116,6 @@
         display: none;
     }
 
-    .language-toggle,
     .menu-toggle {
         min-height: 40px;
     }
@@ -141,10 +137,10 @@
     .hero-annotation {
         --annotation-x: 0;
         --annotation-y: 22vh;
-        --annotation-width: min(calc(100vw - 32px), 440px);
+        --annotation-width: min(calc(100vw - 32px), 480px);
         --annotation-gap: 14px;
-        --annotation-text-width: min(400px, calc(100vw - 36px));
-        --annotation-text-size: clamp(1.2rem, 4.5vw, 1.45rem);
+        --annotation-text-width: min(440px, calc(100vw - 36px));
+        --annotation-text-size: clamp(1.38rem, 5.1vw, 1.72rem);
         left: 50%;
         right: auto;
         transform: translateX(-50%);
@@ -178,14 +174,11 @@
 
     .method-list,
     .systems-grid,
-    .outcome-grid,
     .fit-list,
-    .logo-strip,
     .intro-section .hero-copy,
     .proof-section .section-heading,
     .systems-section .section-heading,
     .method-section .section-heading,
-    #who .section-copy,
     #fit .section-copy {
         max-width: 100%;
     }
@@ -219,15 +212,12 @@
 
     .method-card,
     .system-card,
-    .fit-item,
-    .outcome-item {
+    .fit-item {
         background: rgba(10, 10, 10, 0.74);
     }
 
     .method-list,
-    .systems-grid,
-    .logo-strip,
-    .outcome-grid {
+    .systems-grid {
         grid-template-columns: 1fr;
     }
 
@@ -240,8 +230,15 @@
         margin-bottom: 28px;
     }
 
+    .system-card__headline {
+        font-size: 1.26rem;
+    }
+
     .logo-tile {
-        min-height: 106px;
+        flex: 0 0 148px;
+        width: 148px;
+        height: 96px;
+        padding: 16px;
     }
 
     .site-footer {
@@ -273,9 +270,9 @@
     .hero-annotation {
         --annotation-x: 0;
         --annotation-y: 20vh;
-        --annotation-width: min(calc(100vw - 28px), 400px);
-        --annotation-text-width: min(320px, calc(100vw - 32px));
-        --annotation-text-size: clamp(1.08rem, 4.2vw, 1.32rem);
+        --annotation-width: min(calc(100vw - 28px), 440px);
+        --annotation-text-width: min(380px, calc(100vw - 32px));
+        --annotation-text-size: clamp(1.24rem, 5vw, 1.52rem);
     }
 }
 

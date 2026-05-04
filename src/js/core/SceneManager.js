@@ -13,6 +13,7 @@ export class SceneManager {
         this.currentScrollProgress = 0;
         this.visualScrollProgress = 0;
         this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        this.threeBackgroundVisible = true;
     }
 
     init() {
@@ -137,7 +138,20 @@ export class SceneManager {
         return clamped * clamped * (3 - 2 * clamped);
     }
 
+    setThreeBackgroundVisible(visible) {
+        if (this.threeBackgroundVisible === visible) return;
+        this.threeBackgroundVisible = visible;
+        if (this.canvas) {
+            this.canvas.classList.toggle('three-canvas--hidden', !visible);
+        }
+    }
+
+    isThreeBackgroundVisible() {
+        return this.threeBackgroundVisible;
+    }
+
     render() {
+        if (!this.threeBackgroundVisible) return;
         if (this.composer) {
             this.composer.render();
         } else {

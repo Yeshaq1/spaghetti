@@ -3,7 +3,7 @@ import { SceneManager } from './core/SceneManager.js';
 import { ScrollManager } from './core/ScrollManager.js';
 import { Effects } from './three/Effects.js';
 
-const SUPPORTED_LANGUAGES = ['en', 'ar'];
+const SUPPORTED_LANGUAGES = ['en'];
 const DEFAULT_LANGUAGE = 'en';
 
 class App {
@@ -19,14 +19,22 @@ class App {
     init() {
         this.renderContent();
         this.setupNavigation();
-        this.setupLanguageToggle();
 
         this.sceneManager = new SceneManager().init();
         this.effects = new Effects(this.sceneManager.getScene()).init();
         this.scrollManager = new ScrollManager().init();
         this.setupScrollCallbacks();
         this.setupResizeHandler();
+        this.updateThreeBackgroundFromScroll();
         this.startAnimation();
+    }
+
+    updateThreeBackgroundFromScroll() {
+        const intro = document.getElementById('intro');
+        if (!intro || !this.sceneManager) return;
+        const rect = intro.getBoundingClientRect();
+        const pastIntro = rect.bottom < 0;
+        this.sceneManager.setThreeBackgroundVisible(!pastIntro);
     }
 
     getInitialLanguage() {
@@ -35,8 +43,7 @@ class App {
             return storedLanguage;
         }
 
-        const browserLanguage = navigator.language || '';
-        return browserLanguage.toLowerCase().startsWith('ar') ? 'ar' : DEFAULT_LANGUAGE;
+        return DEFAULT_LANGUAGE;
     }
 
     get copy() {
@@ -69,12 +76,9 @@ class App {
         });
 
         this.renderMethodSteps(copy.method.steps);
-        this.renderWhoList(copy.who.items);
         this.renderSystems(copy.systems.items);
         this.renderLogos();
-        this.renderOutcomes(copy.proof.outcomes);
         this.renderFitList(copy.fit.items);
-        this.updateLanguageToggle();
         this.updateMenuButton(false);
 
         if (this.scrollManager) {
@@ -108,19 +112,6 @@ class App {
         });
     }
 
-    renderWhoList(items) {
-        const list = document.getElementById('who-list');
-        if (!list) return;
-
-        list.innerHTML = '';
-        items.forEach((text) => {
-            const item = document.createElement('div');
-            item.className = 'fit-item';
-            item.textContent = text;
-            list.appendChild(item);
-        });
-    }
-
     renderSystems(items) {
         const grid = document.getElementById('systems-grid');
         if (!grid) return;
@@ -129,9 +120,18 @@ class App {
         items.forEach((item) => {
             const article = document.createElement('article');
             article.className = 'system-card';
+            const tags = Array.isArray(item.tags) ? item.tags : [];
+            const tagsMarkup = tags
+                .map(
+                    (tag) =>
+                        `<li><span class="system-card__tag">${this.escapeHtml(tag)}</span></li>`
+                )
+                .join('');
             article.innerHTML = `
-                <h3>${this.escapeHtml(item.title)}</h3>
-                <p>${this.escapeHtml(item.text)}</p>
+                <p class="system-card__area">${this.escapeHtml(item.area)}</p>
+                <h3 class="system-card__headline">${this.escapeHtml(item.headline)}</h3>
+                <p class="system-card__body">${this.escapeHtml(item.text)}</p>
+                <ul class="system-card__tags">${tagsMarkup}</ul>
             `;
             grid.appendChild(article);
         });
@@ -142,25 +142,29 @@ class App {
         if (!strip) return;
 
         strip.innerHTML = '';
-        CLIENT_LOGOS.forEach((logo) => {
+
+        const reduceMotion =
+            typeof window.matchMedia === 'function' &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const loopDuplicate = CLIENT_LOGOS.length > 0 && !reduceMotion;
+
+        const appendTile = (logo, decorative) => {
             const item = document.createElement('div');
             item.className = 'logo-tile';
-            item.innerHTML = `<img src="${logo.src}" alt="${this.escapeHtml(logo.name)}" loading="lazy">`;
+            const alt = decorative ? '' : this.escapeHtml(logo.name);
+            item.innerHTML = `<img src="${logo.src}" alt="${alt}" loading="lazy"${
+                decorative ? ' aria-hidden="true"' : ''
+            }>`;
+            if (decorative) {
+                item.setAttribute('aria-hidden', 'true');
+            }
             strip.appendChild(item);
-        });
-    }
+        };
 
-    renderOutcomes(outcomes) {
-        const grid = document.getElementById('outcome-grid');
-        if (!grid) return;
-
-        grid.innerHTML = '';
-        outcomes.forEach((outcome) => {
-            const item = document.createElement('div');
-            item.className = 'outcome-item';
-            item.textContent = outcome;
-            grid.appendChild(item);
-        });
+        CLIENT_LOGOS.forEach((logo) => appendTile(logo, false));
+        if (loopDuplicate) {
+            CLIENT_LOGOS.forEach((logo) => appendTile(logo, true));
+        }
     }
 
     renderFitList(items) {
@@ -174,31 +178,6 @@ class App {
             item.textContent = text;
             list.appendChild(item);
         });
-    }
-
-    setupLanguageToggle() {
-        const toggle = document.querySelector('[data-language-toggle]');
-        if (!toggle) return;
-
-        toggle.addEventListener('click', () => {
-            this.language = this.language === 'en' ? 'ar' : 'en';
-            window.localStorage.setItem('spaghetti-language', this.language);
-            this.closeMenu();
-            this.renderContent();
-        });
-    }
-
-    updateLanguageToggle() {
-        const toggle = document.querySelector('[data-language-toggle]');
-        const label = document.querySelector('[data-language-label]');
-        if (!toggle || !label) return;
-
-        const nextLanguage = this.language === 'en' ? 'ar' : 'en';
-        label.textContent = nextLanguage.toUpperCase();
-        toggle.setAttribute(
-            'aria-label',
-            this.language === 'en' ? this.copy.ui.switchToArabic : this.copy.ui.switchToEnglish
-        );
     }
 
     setupNavigation() {
@@ -242,6 +221,7 @@ class App {
         this.scrollManager.on('onScrollProgress', (progress) => {
             this.sceneManager.updateScrollProgress(progress);
             this.effects.updateScrollProgress(progress);
+            this.updateThreeBackgroundFromScroll();
         });
 
         this.scrollManager.on('onSceneChange', (payload) => {
@@ -262,6 +242,7 @@ class App {
             this.sceneManager.handleResize();
             this.effects.positionRig();
             this.scrollManager.refresh();
+            this.updateThreeBackgroundFromScroll();
         });
     }
 
@@ -287,8 +268,10 @@ class App {
 
             const time = this.clock.getElapsedTime();
             this.sceneManager.updateCamera(time);
-            this.effects.animate(time, this.sceneManager.pointer);
-            this.sceneManager.render();
+            if (this.sceneManager.isThreeBackgroundVisible()) {
+                this.effects.animate(time, this.sceneManager.pointer);
+                this.sceneManager.render();
+            }
 
             requestAnimationFrame(animate);
         };
