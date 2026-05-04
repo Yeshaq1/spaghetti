@@ -28,8 +28,8 @@ export class SceneManager {
 
     createScene() {
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color(0x050505);
-        this.scene.fog = new THREE.FogExp2(0x050505, 0.0115);
+        this.scene.background = new THREE.Color(0x0a0a0a);
+        this.scene.fog = new THREE.FogExp2(0x0a0a0a, 0.0075);
     }
 
     setupCamera() {
@@ -49,26 +49,26 @@ export class SceneManager {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.7));
         this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.renderer.toneMapping = THREE.ReinhardToneMapping;
-        this.renderer.toneMappingExposure = 1.18;
+        this.renderer.toneMappingExposure = 1.42;
     }
 
     setupLighting() {
-        const ambientLight = new THREE.AmbientLight(0xfff1db, 0.58);
+        const ambientLight = new THREE.AmbientLight(0xfff5eb, 0.74);
         this.scene.add(ambientLight);
 
-        const keyLight = new THREE.DirectionalLight(0xffedd2, 1.18);
+        const keyLight = new THREE.DirectionalLight(0xffefd9, 1.42);
         keyLight.position.set(-4, 8, 7);
         this.scene.add(keyLight);
 
-        const rimLight = new THREE.PointLight(0xffe7c5, 0.98, 82);
+        const rimLight = new THREE.PointLight(0xffebd0, 1.22, 90);
         rimLight.position.set(8, -3, 10);
         this.scene.add(rimLight);
 
-        const coreLight = new THREE.PointLight(0xffebcb, 0.78, 32);
+        const coreLight = new THREE.PointLight(0xfff0e0, 1.05, 38);
         coreLight.position.set(4.5, 0, 2);
         this.scene.add(coreLight);
 
-        const fillLight = new THREE.PointLight(0xffe6bf, 0.52, 64);
+        const fillLight = new THREE.PointLight(0xffead6, 0.68, 72);
         fillLight.position.set(-7, 1, 8);
         this.scene.add(fillLight);
     }
@@ -86,9 +86,9 @@ export class SceneManager {
 
             this.bloomPass = new THREE.UnrealBloomPass(
                 new THREE.Vector2(window.innerWidth, window.innerHeight),
-                0.16,
-                0.3,
-                0.94
+                0.24,
+                0.32,
+                0.88
             );
             this.composer.addPass(this.bloomPass);
 

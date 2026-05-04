@@ -16,7 +16,7 @@
     --radius-md: 8px;
     --shadow-panel: 0 24px 80px rgba(0, 0, 0, 0.42);
     --ease-out: cubic-bezier(0.19, 1, 0.22, 1);
-    --z-canvas: 0;
-    --z-content: 2;
+    --z-canvas: 2;
+    --z-content: 3;
     --z-header: 20;
 }

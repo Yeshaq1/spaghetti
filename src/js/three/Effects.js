@@ -262,23 +262,25 @@ export class Effects {
             (Math.random() - 0.5) * 0.028
         );
 
-        return new THREE.MeshPhysicalMaterial({
+        const mat = new THREE.MeshPhysicalMaterial({
             map: this.pastaAlbedoMap,
             normalMap: this.pastaNormalMap,
             normalScale: new THREE.Vector2(0.52, 0.52),
             color: base,
-            roughness: 0.34 + (strandIndex % 5) * 0.016,
+            roughness: 0.28 + (strandIndex % 5) * 0.014,
             metalness: 0.01,
             roughnessMap: this.pastaRoughnessMap,
-            clearcoat: 0.2,
-            clearcoatRoughness: 0.38,
+            clearcoat: 0.26,
+            clearcoatRoughness: 0.34,
             clearcoatRoughnessMap: this.pastaRoughnessMap,
             clearcoatNormalMap: this.pastaNormalMap,
             clearcoatNormalScale: new THREE.Vector2(0.2, 0.2),
-            emissive: 0x000000,
+            emissive: 0xffe8d4,
             transparent: true,
             opacity: 0.98
         });
+        mat.emissiveIntensity = 0.11;
+        return mat;
     }
 
     createSpaghettiCore() {
@@ -294,20 +296,21 @@ export class Effects {
             map: this.pastaAlbedoMap,
             normalMap: this.pastaNormalMap,
             normalScale: new THREE.Vector2(0.44, 0.44),
-            color: 0xfffff6,
-            roughness: 0.38,
+            color: 0xfffffb,
+            roughness: 0.32,
             metalness: 0.01,
             roughnessMap: this.pastaRoughnessMap,
-            clearcoat: 0.16,
-            clearcoatRoughness: 0.42,
+            clearcoat: 0.22,
+            clearcoatRoughness: 0.36,
             clearcoatRoughnessMap: this.pastaRoughnessMap,
             clearcoatNormalMap: this.pastaNormalMap,
             clearcoatNormalScale: new THREE.Vector2(0.16, 0.16),
-            emissive: 0x000000,
+            emissive: 0xfff0e6,
             transparent: true,
-            opacity: 0.58,
+            opacity: 0.82,
             depthWrite: true
         });
+        knotMaterial.emissiveIntensity = 0.1;
 
         for (let index = 0; index < 4; index++) {
             const knotGeometry = new THREE.TorusGeometry(0.072, 0.022, 12, 22);
