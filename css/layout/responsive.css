@@ -57,7 +57,7 @@
         --annotation-y: 16vh;
         --annotation-width: 380px;
         --annotation-text-width: 340px;
-        --annotation-text-size: 1.32rem;
+        --annotation-text-size: 1.2rem;
     }
 
     .hero-annotation__text {
@@ -72,9 +72,27 @@
         font-size: 3.35rem;
     }
 
-    .method-list,
-    .systems-grid {
+    .method-list {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .system-tab__name {
+        font-size: 0.96rem;
+    }
+
+    /* On phones the art is too small to read anything in, so drop it and give the
+       copy the full width. loading="lazy" means the hidden files are not fetched. */
+    .system-panel {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+    }
+
+    .system-panel__media {
+        display: none;
+    }
+
+    .work-grid[data-count="3"] .work-card:first-child {
+        grid-column: auto;
     }
 
 }
@@ -125,6 +143,26 @@
         padding: calc(var(--header-height) + 44px) 18px 72px;
     }
 
+    /* The header CTA is hidden here, so this is the only persistent call to action. */
+    .audit-float {
+        bottom: 14px;
+        inset-inline-end: 14px;
+        inset-inline-start: 14px;
+        width: auto;
+    }
+
+    .audit-float__link {
+        padding: 15px 16px 14px;
+    }
+
+    .audit-float__title {
+        font-size: 0.96rem;
+    }
+
+    .audit-float__body {
+        font-size: 0.8rem;
+    }
+
     .hero-section {
         min-height: 100vh;
         align-content: center;
@@ -140,7 +178,7 @@
         --annotation-width: min(calc(100vw - 32px), 480px);
         --annotation-gap: 14px;
         --annotation-text-width: min(440px, calc(100vw - 36px));
-        --annotation-text-size: clamp(1.38rem, 5.1vw, 1.72rem);
+        --annotation-text-size: clamp(1.28rem, 4.8vw, 1.58rem);
         left: 50%;
         right: auto;
         transform: translateX(-50%);
@@ -173,12 +211,14 @@
     }
 
     .method-list,
-    .systems-grid,
+    .systems-tabs,
+    .work-grid,
     .fit-list,
     .intro-section .hero-copy,
     .proof-section .section-heading,
     .systems-section .section-heading,
     .method-section .section-heading,
+    .work-section .section-heading,
     #fit .section-copy {
         max-width: 100%;
     }
@@ -211,18 +251,26 @@
     }
 
     .method-card,
-    .system-card,
+    .work-card,
     .fit-item {
         background: rgba(10, 10, 10, 0.74);
     }
 
     .method-list,
-    .systems-grid {
+    .work-grid {
         grid-template-columns: 1fr;
     }
 
+    .system-panel__headline {
+        max-width: none;
+    }
+
+    .system-panel__body {
+        font-size: 1rem;
+    }
+
     .method-card,
-    .system-card {
+    .work-card {
         min-height: 0;
     }
 
@@ -230,8 +278,8 @@
         margin-bottom: 28px;
     }
 
-    .system-card__headline {
-        font-size: 1.26rem;
+    .system-tab__name {
+        font-size: 0.98rem;
     }
 
     .logo-tile {
@@ -272,7 +320,7 @@
         --annotation-y: 20vh;
         --annotation-width: min(calc(100vw - 28px), 440px);
         --annotation-text-width: min(380px, calc(100vw - 32px));
-        --annotation-text-size: clamp(1.24rem, 5vw, 1.52rem);
+        --annotation-text-size: clamp(1.16rem, 4.7vw, 1.42rem);
     }
 }
 

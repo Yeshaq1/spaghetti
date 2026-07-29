@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A Spaghetti case study.">
+    <link rel="icon" type="image/png" href="/assets/logo.png">
+    <title>Case study | Spaghetti</title>
+
+    <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/base/fonts.css">
+    <link rel="stylesheet" href="/css/base/reset.css">
+    <link rel="stylesheet" href="/css/base/variables.css">
+    <link rel="stylesheet" href="/css/pages/index.css">
+    <link rel="stylesheet" href="/css/pages/case-study.css">
+    <link rel="stylesheet" href="/css/layout/responsive.css">
+</head>
+<body class="case-study-body">
+    <canvas id="rail-canvas" aria-hidden="true"></canvas>
+    <div class="reading-progress" aria-hidden="true"><span data-reading-progress></span></div>
+
+    <header class="site-header" data-site-header>
+        <a class="brand-mark" href="/" aria-label="Spaghetti home">
+            <img src="/assets/logo.png" alt="" class="brand-mark__logo">
+            <span class="brand-mark__text">Spaghetti</span>
+        </a>
+
+        <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+            <a href="/#systems" data-i18n="nav.systems">What We Build</a>
+            <a href="/#method" data-i18n="nav.method">How we work</a>
+            <a href="/#work" data-i18n="nav.work">Case studies</a>
+            <a href="/#fit" data-i18n="nav.fit">Talk to us</a>
+        </nav>
+
+        <div class="header-actions">
+            <a class="button button--small header-cta" href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" target="_blank" rel="noopener noreferrer" data-i18n="nav.call">
+                Book a call
+            </a>
+            <button class="menu-toggle" type="button" data-menu-toggle aria-controls="site-nav" aria-expanded="false" aria-label="Open navigation">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <main class="case-study" id="case-study" hidden>
+        <section class="cs-hero">
+            <a class="cs-back" href="/#work" data-cs-back>All case studies</a>
+            <img class="cs-hero__logo" data-cs-logo alt="" hidden>
+            <p class="cs-hero__client" data-cs-client></p>
+            <h1 class="cs-hero__title" data-cs-title></h1>
+            <p class="cs-hero__summary" data-cs-summary></p>
+            <dl class="cs-hero__meta" data-cs-meta></dl>
+            <figure class="cs-hero__cover" data-cs-cover hidden>
+                <img alt="" data-cs-cover-image>
+            </figure>
+        </section>
+
+        <section class="cs-metrics" data-cs-metrics hidden aria-label="Outcomes"></section>
+
+        <div class="cs-chapters" data-cs-chapters></div>
+
+        <figure class="cs-quote" data-cs-quote hidden>
+            <blockquote data-cs-quote-text></blockquote>
+            <figcaption data-cs-quote-attribution></figcaption>
+        </figure>
+
+        <section class="cs-stack" data-cs-stack hidden>
+            <h2 class="cs-stack__label" data-cs-stack-label></h2>
+            <ul class="cs-stack__list" data-cs-stack-list></ul>
+        </section>
+
+        <a class="cs-next" href="/#work" data-cs-next hidden>
+            <span class="cs-next__label" data-cs-next-label></span>
+            <span class="cs-next__client" data-cs-next-client></span>
+            <span class="cs-next__title" data-cs-next-title></span>
+        </a>
+
+        <section class="cs-cta">
+            <h2 data-cs-cta-title></h2>
+            <p data-cs-cta-body></p>
+            <div class="hero-actions">
+                <a class="button button--primary" href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" target="_blank" rel="noopener noreferrer" data-i18n="fit.cta">
+                    Book a call
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <section class="cs-missing" id="case-study-missing" hidden>
+        <h1>That case study does not exist.</h1>
+        <p>The link may be out of date.</p>
+        <a class="button button--primary" href="/#work">All case studies</a>
+    </section>
+
+    <footer class="site-footer">
+        <span>Spaghetti</span>
+        <a href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" target="_blank" rel="noopener noreferrer" data-i18n="footer.cta">Book a call</a>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script type="module" src="/src/js/case-study.js"></script>
+</body>
+</html>
