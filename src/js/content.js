@@ -1,11 +1,18 @@
 export const CALENDAR_URL = 'https://calendar.app.google/XXZGJ4ewqK1f9YPC7';
 
+// Order matters: the carousel renders this list twice back-to-back and loops, so the
+// last entry sits next to the first. Google and General Motors are kept as far apart as
+// a loop allows — three tiles forward, two back. Keep at least two entries between them
+// on both sides when reordering.
+// piti-logo.png is a recolour of the supplied black-on-transparent artwork: strokes moved
+// to #f5f5f2 to match the Monks mark, heart left at its original salmon. The source
+// black version is invisible against the dark logo tiles.
 export const CLIENT_LOGOS = [
     { name: 'Google', src: 'assets/Google__G__logo.svg.webp' },
-    { name: 'General Motors', src: 'assets/GM2.png' },
-    { name: 'Unilever', src: 'assets/unilever.png' },
     { name: 'Winimo', src: 'assets/winimo.png' },
     { name: 'AI DimosNET', src: 'assets/ai-dimosnet.png' },
+    { name: 'Piti', src: 'assets/piti-logo.png' },
+    { name: 'General Motors', src: 'assets/GM2.png' },
     { name: 'Majles', src: 'assets/majles.png' },
     { name: 'Dot monks', src: 'assets/dot-monks-logo.svg' }
 ];
@@ -14,7 +21,7 @@ export const CLIENT_LOGOS = [
 // `systems.items`). Kept outside the copy blocks so both languages share one list.
 // Names must match a CLIENT_LOGOS entry; anything unmatched is skipped.
 export const SYSTEM_LOGOS = [
-    ['AI DimosNET', 'Google'],
+    ['AI DimosNET', 'Google', 'Dot monks'],
     ['Majles'],
     ['AI DimosNET', 'Winimo', 'General Motors'],
     ['Winimo', 'Majles']
@@ -366,6 +373,115 @@ export const CASE_STUDIES = [
             'Subscriptions, billing portal + webhooks',
             'REST API keys + stdio MCP server'
         ]
+    },
+    {
+        slug: 'monks-flow',
+        client: 'Monks.Flow',
+        logo: { src: '/assets/dot-monks-logo.svg', alt: 'Monks' },
+        sector: 'MarTech · Enterprise marketing intelligence',
+        // year: '', // fill in the real range; the row is hidden while this is empty.
+        // duration: '',
+        services: 'Product direction, AI architecture, and the team that built it',
+        title:
+            'Catching a trend while it is still a trend — millions of social signals, read against what the brand actually needs.',
+        excerpt:
+            'A continuous sweep of social platforms, joined to a brand’s own numbers, that returns activatable opportunities instead of another dashboard.',
+        summary:
+            'Monks.Flow is the AI marketing platform our team builds inside Monks. This is the part of it that goes looking for the diamond in the rough: a high-volume pipeline that continuously reads Reddit, X, YouTube and Meta’s platforms, correlates what it finds against a brand’s own reality — quarterly reports, financial position, market data, campaign history, current targets — and hands back specific opportunities an agent can act on, plus the early warning when sentiment turns. Before it existed this was analysts reading threads by hand: slow, partial, and structurally unable to cover millions of data points. It ran inside Monks first, then went to global brands who now run it directly.',
+        tags: [
+            'Automation workflows',
+            'Large-scale data pipelines',
+            'Ontology-based knowledge graphs',
+            'GraphRAG',
+            'Multi-agent flows',
+            'Brand safety'
+        ],
+        cover: '',
+        metrics: [
+            { value: 'Millions', label: 'Social signals swept continuously, not sampled' },
+            { value: 'Near-real-time', label: 'Trend detection, down from weeks of manual research' },
+            { value: 'Global brands', label: 'Running it themselves, after rollout inside Monks' }
+        ],
+        chapters: [
+            {
+                label: 'The problem',
+                title: 'The trend was always findable. Nobody could read fast enough to find it.',
+                body: [
+                    'Brands operate on quarterly targets and campaign calendars. The conversation about them moves hourly, across platforms none of them own. The gap between those two clocks is where the money is: a trend caught in its first days is a campaign, and the same trend caught in week six is a press release about how you also noticed.',
+                    'The way this got done before was manual — strategists reading Reddit threads, scrolling X, watching comment sections, writing up what they saw. That work is genuinely skilled and it still fails in two structural ways. It cannot cover the volume, because the signal that matters is almost never in the first thousand posts someone reads; it is somewhere in the millions they did not. And it has no reliable way to connect what it finds back to whether this particular brand should care. An interesting cultural moment is worth nothing if it points nowhere near this quarter’s targets, this product line, or this market.',
+                    'The same blindness is a risk problem, not only a missed-opportunity one. If it takes six weeks to notice a conversation building, it takes six weeks to notice the conversation is angry.'
+                ]
+            },
+            {
+                label: 'The approach',
+                title: 'Two halves — everything being said, and everything the brand needs. The product is the join.',
+                body: [
+                    'We built it as one pipeline with two very different inputs. The first is the outside: continuous, high-volume ingest of public conversation across Reddit, X, YouTube and Meta’s platforms. Not keyword alerts on a watchlist — the stream, normalised into something a machine can actually reason over.',
+                    'The second is the inside, which is the half most social listening never touches. Quarterly reports, financial position, market and category data, the performance history of previous campaigns, stated goals and live targets. Google’s reasons to care and GM’s reasons to care are not the same reasons and never will be, and a system that cannot tell the difference produces the same generic trend deck for both.',
+                    'Everything valuable is in the join. A trend is not an opportunity until it lines up with something a specific brand is actually trying to do — and once it does, it stops being an insight and becomes a brief.'
+                ]
+            },
+            {
+                label: 'What we built',
+                title: 'The pipeline, and the agents that read it.',
+                points: [
+                    {
+                        title: 'High-volume ingestion, orchestrated as explicit DAGs.',
+                        text: 'A connector per platform, each with its own rate limits, schema, pagination and failure behaviour, feeding staged transformation into a common representation. The challenge: sources fail independently and constantly, and a naive scheduler quietly loses a day of coverage without telling anyone. What we did: modelled the whole thing as dependency graphs with per-stage retries, idempotent re-runs and backfill, so one platform going down degrades coverage visibly instead of dropping data silently.'
+                    },
+                    {
+                        title: 'An ontology, so the same thing counts as the same thing.',
+                        text: 'Entity resolution against a domain ontology — brands, product lines, model years, competitors, categories, markets, people. The challenge: social text refers to one product in dozens of ways, including misspellings, nicknames and abbreviations, and without resolution a "spike" is just an artefact of whichever spelling you happened to track. What we did: resolved mentions onto ontology entities before any counting happens, so volume and sentiment are measured against a real thing rather than a string.'
+                    },
+                    {
+                        title: 'GraphRAG over the resolved graph.',
+                        text: 'The resolved entities and their relationships form a knowledge graph, and retrieval traverses it as well as the embedding space. The challenge: flat vector search returns passages that sound similar, but what mattered was structural — how a conversation connects to a product, to its competitors, to the market it sits in, to what was already run against it last year. What we did: graph traversal plus embeddings, so a question about one model pulls its category, its rivals and its campaign history along with it.'
+                    },
+                    {
+                        title: 'Multi-agent detection, not one big prompt.',
+                        text: 'A flow of narrow agents: detect a rising signal, qualify it against the brand’s own data, check it for safety and reputational risk, then draft the activation. The challenge: a single model asked to "find opportunities" reliably produces confident, unfalsifiable strategy language — it always finds something, and none of it can be checked. What we did: split the job into steps that each have something concrete to verify against, and required every surfaced opportunity to arrive carrying both the signal that triggered it and the brand-side reason it qualified.'
+                    },
+                    {
+                        title: 'Brand safety on the same rails as opportunity.',
+                        text: 'The same resolved stream that finds a trend worth joining also finds the one worth getting ahead of. The challenge: in most stacks opportunity and risk are separate vendors on separate latencies, so the good news arrives daily and the bad news arrives in a monthly report. What we did: ran both off one pipeline, so a sentiment turn on a resolved product entity surfaces on the same clock as a trend — hours, with the underlying conversation attached.'
+                    },
+                    {
+                        title: 'Output that lands in a workflow, not a dashboard.',
+                        text: 'This is the part that decided whether any of it got used. An opportunity arrives as a briefed, activatable item inside Monks.Flow, next to the create-and-scale machinery that can act on it. The challenge: insight products die as a tab nobody opens. What we did: made the output an input to work that was already happening, so acting on it was the path of least resistance rather than an extra meeting.'
+                    }
+                ]
+            },
+            {
+                label: 'The result',
+                title: 'Used inside the agency first, then handed to the brands.',
+                body: [
+                    'It went to Monks’ own strategy teams before it went anywhere else, which is the fastest possible way to find out whether an "opportunity" is real — the people receiving it pitch for a living and will say so when it is filler. What survived that went to clients directly, including GM and Google, who run it against their own brands.',
+                    'The change is a change in clock speed. Research that took weeks, and could only ever cover the fraction one person can read, now runs continuously across millions of signals and surfaces in near-real-time, with the sentiment side of it watching on the same cycle.',
+                    'What it does not do is decide. It takes a volume of conversation no team could read and shortens it to a handful of things worth a human’s attention, each one carrying the evidence and the reason it qualified. The judgement stays with the strategist; what changed is that the strategist is now looking at the right handful.'
+                ]
+            },
+            {
+                label: 'What it demonstrates',
+                title: 'Resolve the entities, then join the outside to the inside.',
+                body: [
+                    'The transferable part is not social listening. It is three decisions that made a firehose usable: an ontology, so volume becomes countable instead of merely large; a graph, so retrieval understands structure and not just similarity; and a hard join against the organisation’s own numbers, so "interesting" has to prove it is relevant before it reaches a person.',
+                    'That shape holds anywhere external signal has to be reconciled with internal priorities — competitor moves against a product roadmap, regulatory chatter against a compliance posture, support volume against an engineering backlog. Enterprise marketing is where we proved it, at the scale where doing it by hand had already stopped working.'
+                ]
+            }
+        ],
+        // Named vendors are deliberately absent — described by capability, as with Majles.
+        stack: [
+            'Multi-source social ingestion (Reddit, X, YouTube, Meta platforms)',
+            'DAG-orchestrated pipelines with retries, idempotency and backfill',
+            'Entity resolution against a domain ontology',
+            'Ontology-backed knowledge graph',
+            'GraphRAG retrieval (graph traversal + embeddings)',
+            'Multi-agent detection, qualification and drafting flows',
+            'Correlation against brand financials, campaign history and targets',
+            'Brand-safety classification on the same pipeline',
+            'Opportunity scoring and ranking',
+            'Delivery into the Monks.Flow activation workflow'
+        ]
     }
 ];
 
@@ -528,7 +644,8 @@ export const COPY = {
             ]
         },
         footer: {
-            cta: 'Book a call'
+            cta: 'Book a call',
+            linkedin: 'LinkedIn'
         },
         ui: {
             openMenu: 'Open navigation',
@@ -693,7 +810,8 @@ export const COPY = {
             ]
         },
         footer: {
-            cta: 'احجز مكالمة'
+            cta: 'احجز مكالمة',
+            linkedin: 'لينكد إن'
         },
         ui: {
             openMenu: 'افتح القائمة',

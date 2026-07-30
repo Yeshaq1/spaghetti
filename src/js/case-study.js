@@ -27,6 +27,7 @@ class CaseStudyPage {
 
         this.applyLanguage();
         this.setupNavigation();
+        this.setFooterYear();
 
         if (!this.study) {
             this.showMissing();
@@ -91,6 +92,12 @@ class CaseStudyPage {
             }
             return undefined;
         }, source);
+    }
+
+    // The markup carries a hardcoded year as the no-JS fallback; this keeps it current.
+    setFooterYear() {
+        const year = document.querySelector('[data-footer-year]');
+        if (year) year.textContent = String(new Date().getFullYear());
     }
 
     showMissing() {

@@ -694,6 +694,19 @@ html[dir='rtl'] .logo-carousel__track {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.site-footer__legal {
+    margin: 0;
+    font-size: 0.86rem;
+    letter-spacing: 0.02em;
+}
+
+.site-footer__links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: clamp(16px, 2.4vw, 28px);
+}
+
 .work-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

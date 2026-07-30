@@ -20,6 +20,7 @@ class App {
         this.renderContent();
         this.setupNavigation();
         this.setupAuditFloat();
+        this.setFooterYear();
 
         this.sceneManager = new SceneManager().init();
         this.effects = new Effects(this.sceneManager.getScene()).init();
@@ -28,6 +29,12 @@ class App {
         this.setupResizeHandler();
         this.updateThreeBackgroundFromScroll();
         this.startAnimation();
+    }
+
+    // The markup carries a hardcoded year as the no-JS fallback; this keeps it current.
+    setFooterYear() {
+        const year = document.querySelector('[data-footer-year]');
+        if (year) year.textContent = String(new Date().getFullYear());
     }
 
     // The rope is a hero device. It resolves to the right of the viewport, which is exactly
