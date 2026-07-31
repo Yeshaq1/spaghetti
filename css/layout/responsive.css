@@ -91,7 +91,8 @@
         display: none;
     }
 
-    .work-grid[data-count="3"] .work-card:first-child {
+    .work-grid[data-count="3"] .work-card:first-child,
+    .work-grid[data-count="5"] .work-card:first-child {
         grid-column: auto;
     }
 

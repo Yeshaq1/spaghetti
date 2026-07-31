@@ -714,8 +714,11 @@ html[dir='rtl'] .logo-carousel__track {
     align-items: stretch;
 }
 
+/* Odd counts would leave a lone card in the final row, so the first card spans instead:
+   3 studies reads as 1 + 2, and 5 as 1 + 2x2. Even counts tile evenly on their own. */
 .work-grid[data-count="1"],
-.work-grid[data-count="3"] .work-card:first-child {
+.work-grid[data-count="3"] .work-card:first-child,
+.work-grid[data-count="5"] .work-card:first-child {
     grid-column: 1 / -1;
 }
 

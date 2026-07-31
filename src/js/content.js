@@ -482,6 +482,132 @@ export const CASE_STUDIES = [
             'Opportunity scoring and ranking',
             'Delivery into the Monks.Flow activation workflow'
         ]
+    },
+    {
+        slug: 'renewal-automation',
+        // Client is deliberately unnamed — this one is back-office work they would rather
+        // not see written up under their own name. No logo for the same reason.
+        client: 'Confidential client',
+        sector: 'Public-sector SaaS · Back-office automation',
+        year: '2026',
+        services: 'Workflow automation and human-in-the-loop system design',
+        title:
+            'A renewal cycle that ran on phone calls and copy-paste, rebuilt as five automations that each ship on their own.',
+        excerpt:
+            'Nine manual steps between a contract expiring and an invoice being paid — automated at the seams, with the judgement calls left to a person.',
+        summary:
+            'A subscription software business was renewing every institutional customer by hand: nine steps from a reminder in the ERP to a paid invoice, including a phone call to find out who currently handles invoices, five documents assembled per offer, and figures retyped out of returned paperwork into a draft invoice. We scoped it as five modular automations rather than one system, each independently useful, joined by a state layer that tracks where every renewal actually is. The design principle throughout: automate the handoffs, never the judgement. The build is underway; the architecture and scope below are what was signed off.',
+        tags: [
+            'Automation workflows',
+            'Human-in-the-loop design',
+            'Document generation',
+            'Email intent routing',
+            'ERP integration'
+        ],
+        cover: '',
+        metrics: [
+            { value: '9 steps', label: 'Manual handoffs between contract expiry and paid invoice' },
+            { value: '60 days', label: 'Lead time now detected automatically on every renewal' },
+            { value: '5 tools', label: 'Modular builds, each one useful before the next exists' }
+        ],
+        chapters: [
+            {
+                label: 'The problem',
+                title: 'Every renewal started with a phone call to ask for an email address.',
+                body: [
+                    'The revenue was contractual and predictable. The process for collecting it was neither. Renewal dates sat as tasks in the ERP, and a person had to notice them, work out which customers were coming up, and set their own reminder to act thirty days out. Nothing failed loudly — it just quietly depended on somebody remembering.',
+                    'Then came the part that captures the whole problem. Before anything could be sent, an employee phoned the customer to confirm the current email address of whoever now handles invoices — a role with high turnover, so last year’s contact was frequently gone. A renewal worth real money began with a phone call to ask where to send it.',
+                    'From there: assemble five documents into an offer packet and email it. Wait. Receive an invitation form back. Review it, then generate and return a signed offer and explanation, this time customised with the customer’s name and logo. Wait again. Receive a decision document, plus a contract for the larger customers. Read the approved figures off those documents, retype them into a draft invoice, apply the right tax treatment, then track payment through a government portal and finally update the renewal date so next year’s cycle could begin. Nine steps, each one a person, each gap a place where a renewal could stall for weeks with nobody noticing.'
+                ],
+                points: [
+                    {
+                        title: 'The reference data was not in the system.',
+                        text: 'Packages, products and the mapping of which customer is on which package lived in loose documents and spreadsheets, not in the ERP — so the automation had nothing authoritative to read.'
+                    },
+                    {
+                        title: 'The numbers were not uniform.',
+                        text: 'Prices were usually stable but negotiable. Some customers were quoted with tax included, others without. There was no rule to infer it from; it had to be looked up.'
+                    },
+                    {
+                        title: 'The paperwork was thinner than the invoice.',
+                        text: 'The decision document validates a total but has no line-item breakdown, so the detail an invoice needs was not present in the document that authorises it.'
+                    },
+                    {
+                        title: 'The approved amount often disagreed with the offer.',
+                        text: 'Customers approve against their own budget, so the final figure frequently came back lower than quoted — which is exactly the situation where an automation that guesses does real damage.'
+                    }
+                ]
+            },
+            {
+                label: 'The approach',
+                title: 'Five tools, not one system — and organise the data before automating anything.',
+                body: [
+                    'The tempting build here is a single agent that watches the inbox and runs the whole renewal end to end. We deliberately did not scope that. A monolith would have to be finished before any of it paid off, and it would need to be trusted with the two things in this process that genuinely require judgement: which package a customer belongs on, and what to do when the approved amount does not match the offer.',
+                    'So it was scoped as five separate tools against one shared state layer. Three of them — renewal detection, the offer packet generator, and invoice drafting — stand alone and deliver value the week they ship. The other two, email routing and countersigning, need the state layer underneath them, so they are sequenced after it rather than pretended to be independent. The employee stays the orchestrator throughout, and the system’s job is to remove typing and remembering, not deciding.',
+                    'The prerequisite work was unglamorous and came first: build a real customer-to-package mapping database, and validate the integrity of the existing renewal dates. Automation reading unorganised spreadsheets would only have produced confident, wrong offers faster than a human could.'
+                ]
+            },
+            {
+                label: 'What we built',
+                title: 'The five tools, and the state layer they share.',
+                points: [
+                    {
+                        title: 'Renewal detection that respects the working week.',
+                        text: 'A daily job reads the ERP, finds contracts expiring in sixty days, and creates the reminder task against the responsible employee automatically — moving the window from thirty days of scramble to sixty days of lead time. The challenge: a reminder that lands on a Saturday is a reminder nobody sees, and a reminder nobody actions is indistinguishable from no reminder at all. What we did: scheduled on business days only, and added an audit pass that checks whether earlier reminders were ever acted on and escalates when a renewal has gone overdue.'
+                    },
+                    {
+                        title: 'Offer packets assembled and previewed, not auto-sent.',
+                        text: 'The user confirms the email address and the system builds the whole packet — the static documents pulled from connected storage, the offer and price analysis selected from the customer-to-package mapping, everything attached to a drafted email, with a copy filed against the customer in the ERP. The challenge: package selection is exactly the kind of lookup that is right ninety-five percent of the time and embarrassing the rest. What we did: a manual override on the package choice, and a review mode that shows the email and every attachment before anything leaves the building.'
+                    },
+                    {
+                        title: 'Invoice drafting that flags instead of guessing.',
+                        text: 'Returned decision documents and contracts are parsed for the customer, the decision number and the approved amounts, and a draft invoice is created against the right customer record with description lines built from a fixed service list, tax applied from a strict lookup of which customers are charged it. The challenge: when the approved amount comes back below the offer, the "helpful" behaviour is to prorate — and a wrong proration is a wrong invoice sent to a public body. What we did: the system compares approved against quoted and, on any discrepancy, flags the draft for a human rather than inferring the split. It also never issues; it only ever drafts.'
+                    },
+                    {
+                        title: 'An inbox monitor that reads intent, not keywords.',
+                        text: 'A dedicated invoicing mailbox is watched by a model that classifies what each message from an active renewal customer actually is, and routes accordingly: an invitation form triggers countersigning, a decision or contract triggers invoice drafting. The challenge: this is the step that closes the waiting gaps, and it is also the one place a misread costs the most. What we did: constrained it to correspondence from customers already in an active renewal, so the classifier works inside a known set of expected documents rather than an open inbox.'
+                    },
+                    {
+                        title: 'Countersigning as a drafted reply.',
+                        text: 'When an invitation form arrives, the signed offer and explanation are generated with the customer’s name and logo applied, attached to a drafted response, and left for the employee to send. The challenge: applying a signature is the most sensitive action in the whole chain. What we did: the system prepares; the person sends.'
+                    },
+                    {
+                        title: 'A state layer that remembers where every renewal is.',
+                        text: 'One record per renewal in flight, tracking what was offered, what was sent, what came back and what is still outstanding. The challenge: without it there is no way to answer "what did we quote this customer?" three steps later, and the inbox monitor has no context to route against. What we did: built it as the shared spine both of the later tools depend on, which is also what makes the process auditable instead of reconstructible from someone’s sent folder.'
+                    }
+                ]
+            },
+            {
+                label: 'The operating model',
+                title: 'What a person still does — deliberately.',
+                body: [
+                    'After the build, the employee confirms the contact address, approves the package when the mapping is ambiguous, sends the packets and countersigned documents, and resolves any invoice where the approved amount disagrees with the offer. Everything else — noticing the expiry, assembling documents, reading figures out of paperwork, drafting the invoice, applying tax rules, updating the next renewal date — happens without anyone retyping it.',
+                    'That division is the point. Every remaining human step is a decision or a signature. Every removed step was typing, fetching, or remembering. The system is measured on whether renewals still slip, not on how few humans touch them.',
+                    'The build is in progress against the scope above. Once it has run through a full renewal cycle we will publish what actually changed — cycle time, how many renewals go overdue, and how often the discrepancy flag fires — rather than estimates.'
+                ]
+            },
+            {
+                label: 'What it demonstrates',
+                title: 'Automate the seams. Leave the judgement.',
+                body: [
+                    'Most back-office processes are not slow because any single step is hard. They are slow because of the gaps between steps, where work sits waiting for a person to notice it. Every automation here targets a gap: the expiry nobody spotted, the packet nobody assembled, the email nobody triaged, the figures nobody had retyped yet.',
+                    'The two design decisions that matter transfer to any process like it. Scope in independently shippable pieces, so value does not wait on the whole thing being finished. And decide up front which steps are judgement — then build the system to stop there and ask, rather than to guess well. An automation that flags a discrepancy is worth more than one that resolves it confidently and wrongly.'
+                ]
+            }
+        ],
+        // Pricing is deliberately absent: publishing a contract value anchors every later quote.
+        stack: [
+            'Odoo ERP integration (tasks, customers, draft invoices)',
+            'Daily scheduled jobs, business-day aware',
+            'Customer-to-package mapping database',
+            'Document templating with per-customer branding',
+            'LLM email intent classification and routing',
+            'Structured extraction from decision documents and contracts',
+            'Rule-based tax and pricing lookups',
+            'Process state store for in-flight renewals',
+            'Cloud file storage integration',
+            'Human review gate before every outbound send'
+        ]
     }
 ];
 
