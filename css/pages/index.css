@@ -259,6 +259,33 @@ body[data-language="ar"] .site-footer a::after {
     min-height: 100vh;
 }
 
+/* Keep the supplied partner artwork intact, with its original proportions. */
+.partner-badge {
+    display: block;
+    width: 210px;
+    max-width: 100%;
+    height: auto;
+    flex-shrink: 0;
+}
+
+.hero-partner {
+    position: absolute;
+    inset-inline-start: clamp(20px, 4vw, 48px);
+    inset-inline-end: clamp(20px, 4vw, 48px);
+    bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.hero-partner p {
+    max-width: 26ch;
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
 .hero-copy,
 .section-copy,
 .section-heading {
@@ -698,6 +725,15 @@ html[dir='rtl'] .logo-carousel__track {
     margin: 0;
     font-size: 0.86rem;
     letter-spacing: 0.02em;
+}
+
+.site-footer__identity {
+    display: grid;
+    gap: 18px;
+}
+
+.partner-badge--footer {
+    width: 160px;
 }
 
 .site-footer__links {

@@ -626,6 +626,7 @@ export const COPY = {
             call: 'Book a call'
         },
         hero: {
+            partner: 'Spaghetti is now an OpenAI Select Partner.',
             title: 'We turn messy workflows into reliable AI systems.',
             annotation:
                 'This is the part AI does not fix for you: tangled data, unclear workflows, and rushed builds.',
@@ -792,6 +793,7 @@ export const COPY = {
             call: 'احجز مكالمة'
         },
         hero: {
+            partner: 'أصبحت Spaghetti الآن شريكًا ضمن فئة OpenAI Select Partner.',
             title: 'نحوّل سير العمل الفوضوي إلى أنظمة ذكاء اصطناعي يمكن الاعتماد عليها.',
             annotation:
                 'هذا ما لا يعالجه الذكاء الاصطناعي عنك: بيانات متشابكة، وسير عمل غير واضح، وتنفيذ متسرّع.',
