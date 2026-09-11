@@ -19,6 +19,13 @@ class App {
     init() {
         this.renderContent();
         this.setupNavigation();
+        const more = document.querySelector('.work-more');
+        more?.addEventListener('click', () => {
+            const expanded = more.getAttribute('aria-expanded') !== 'true';
+            more.setAttribute('aria-expanded', String(expanded));
+            document.getElementById('work-grid').classList.toggle('is-expanded', expanded);
+            more.textContent = expanded ? 'Show fewer case studies' : 'Show all case studies';
+        });
         this.setupAuditFloat();
         this.setFooterYear();
 
@@ -41,17 +48,9 @@ class App {
     // where the following sections put their copy — so retire it as soon as the first
     // content section starts rising, not only once the intro has fully cleared the top.
     updateThreeBackgroundFromScroll() {
-        const intro = document.getElementById('intro');
-        if (!intro || !this.sceneManager) return;
-
-        const pastIntro = intro.getBoundingClientRect().bottom < 0;
-
-        const systems = document.getElementById('systems');
-        const systemsRising = systems
-            ? systems.getBoundingClientRect().top < window.innerHeight * 0.72
-            : false;
-
-        this.sceneManager.setThreeBackgroundVisible(!pastIntro && !systemsRising);
+        const hero = document.getElementById('home');
+        if (!hero || !this.sceneManager) return;
+        this.sceneManager.setThreeBackgroundVisible(hero.getBoundingClientRect().bottom > 0);
     }
 
     getInitialLanguage() {
@@ -104,6 +103,8 @@ class App {
         this.renderLogos();
         this.renderCaseStudies(copy.work);
         this.renderFitList(copy.fit.items);
+        const faq = document.getElementById('faq-list');
+        if (faq) faq.innerHTML = copy.faq.items.map(item => `<details><summary>${this.escapeHtml(item.question)}</summary><p>${this.escapeHtml(item.answer)}</p></details>`).join('');
         this.updateMenuButton(false);
 
         if (this.scrollManager) {
@@ -331,7 +332,7 @@ class App {
                     <span>${this.escapeHtml(study.client)}</span>
                     ${meta.length ? `<span class="work-card__meta">${meta.join(' &middot; ')}</span>` : ''}
                 </p>
-                <h3 class="work-card__title">${this.escapeHtml(study.title)}</h3>
+                <h3 class="work-card__title">${this.escapeHtml(study.cardTitle || study.title)}</h3>
                 <p class="work-card__summary">${this.escapeHtml(study.excerpt || study.summary)}</p>
                 ${metricsMarkup ? `<div class="work-card__metrics">${metricsMarkup}</div>` : ''}
                 <span class="work-card__cta">${this.escapeHtml(workCopy.cardCta)}</span>

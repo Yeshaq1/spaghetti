@@ -11,7 +11,7 @@ import { SpaghettiRope } from './SpaghettiRope.js';
  */
 
 // How far the rope leans while fully knotted, in degrees.
-const HERO_TILT_DEGREES = 45;
+const HERO_TILT_DEGREES = 22;
 
 // Camera values mirrored from SceneManager so the rig can turn a viewport
 // fraction into world x without holding a camera reference. The distance is the
@@ -57,6 +57,9 @@ export class Effects {
         this.createRope();
         this.createSignals();
         this.positionRig();
+        this.artSlot = document.querySelector('.hero-art-space');
+        this.connectorPaths = [...document.querySelectorAll('[data-connector]')];
+
 
         return this;
     }
@@ -76,7 +79,7 @@ export class Effects {
      * `positionRig` re-measures on resize.
      */
     measureResolvedX() {
-        const copy = document.querySelector('#intro .hero-copy');
+        const copy = document.querySelector('#intro');
         const copyRight = copy ? copy.getBoundingClientRect().right : window.innerWidth * 0.55;
         const centre = copyRight + (window.innerWidth - copyRight) * GUTTER_POSITION;
 
@@ -96,8 +99,9 @@ export class Effects {
             // A touch tighter than the case study rail: the hero rope is seen
             // whole rather than sliced by the viewport, so it needs to knot up
             // more compactly to read as a tangle.
-            coilSpread: 0.92,
-            coilTurns: 3.4,
+            coilSpread: 1.3,
+            coilTurns: 4.2,
+            controlPoints: 17,
             staggerSpan: 0.32
         });
 
@@ -169,33 +173,25 @@ export class Effects {
         }
     }
 
-    /**
-     * How far through the hero -> intro transition the reader is. The rope is
-     * fully knotted at the top of the hero and fully straight by the time the
-     * intro headline has settled.
-     */
+    // Scroll owns the transformation in both directions; no timer or controls.
     getFormationProgress() {
-        const intro = document.getElementById('intro');
-        let targetProgress = this.activeScene === 'hero' ? 0.03 : 1;
+        if (this.prefersReducedMotion) return 1;
+        const slot = window.innerWidth < 1100
+            ? document.querySelector('.hero-cta-art')
+            : this.artSlot;
+        const rect = slot?.getBoundingClientRect();
+        if (!rect) return 0;
 
-        if (intro) {
-            const rect = intro.getBoundingClientRect();
-            const startsWhenIntroPeeks = window.innerHeight * 0.98;
-            const finishesBeforeHeadlineSettles = window.innerHeight * 0.34;
-            const rawProgress =
-                (startsWhenIntroPeeks - rect.top) / (startsWhenIntroPeeks - finishesBeforeHeadlineSettles);
-            targetProgress = THREE.MathUtils.clamp(rawProgress, 0.03, 1);
-        }
-
-        if (targetProgress >= 0.98) {
-            this.visualScrollProgress = 1;
-        } else {
-            this.visualScrollProgress +=
-                (targetProgress - this.visualScrollProgress) * (this.prefersReducedMotion ? 0.22 : 0.32);
-        }
-
-        const clamped = THREE.MathUtils.clamp(this.visualScrollProgress, 0, 1);
-        return clamped * clamped * (3 - 2 * clamped);
+        // Start only once the sculpture is comfortably in view. Finish in the
+        // upper-middle of the viewport, leaving time to see the straight strands.
+        // Using its document position also keeps a visible desktop hero knotted
+        // at scroll zero and makes reverse scrolling retrace the animation.
+        const center = rect.top + rect.height * 0.46;
+        const initialCenter = center + window.scrollY;
+        const start = Math.min(initialCenter, window.innerHeight * 0.72);
+        const end = Math.min(window.innerHeight * 0.30, start - 120);
+        const progress = THREE.MathUtils.clamp((start - center) / (start - end), 0, 1);
+        return progress * progress * (3 - 2 * progress);
     }
 
     /**
@@ -203,34 +199,17 @@ export class Effects {
      * something to point at) and resolved (clear of the intro headline).
      */
     getLayoutTier() {
-        const width = window.innerWidth;
-
-        // Phones have no margin beside the copy — the intro paragraph runs to
-        // within ~16px of the edge — so instead of parking the rope next to the
-        // text it finishes straightening early, in the empty hero, and then
-        // dissolves as the headline settles. Wider screens have room to keep it.
-        if (width < 720) {
-            const narrowest = width < 430;
-            return {
-                tangled: { x: narrowest ? 0.1 : 0.15, y: -0.35, scale: narrowest ? 0.62 : 0.68 },
-                resolved: { x: narrowest ? 0.5 : 0.6, y: 0.55, scale: narrowest ? 0.52 : 0.56 },
-                resolveBy: 0.6,
-                fadeFrom: 0.64,
-                fadeTo: 0.88
-            };
-        }
-
-        if (width < 1100) {
-            return {
-                tangled: { x: 0.6, y: -0.3, scale: 0.72 },
-                resolved: { x: 6.05, y: -0.1, scale: 0.62 },
-                resolveBy: 1
-            };
-        }
-
+        const mobile = window.innerWidth < 1100;
+        const slot = mobile ? document.querySelector('.hero-cta-art') : this.artSlot;
+        const rect = slot?.getBoundingClientRect();
+        const visibleHeight = 2 * CAMERA_TO_RIG_DISTANCE * Math.tan(THREE.MathUtils.degToRad(CAMERA_FOV_DEGREES / 2));
+        const x = rect ? this.worldXAtViewportFraction((rect.left + rect.width / 2) / window.innerWidth) : this.measureResolvedX();
+        const y = rect ? (0.5 - (rect.top + rect.height * 0.46) / window.innerHeight) * visibleHeight : 0;
+        const available = rect ? (mobile ? Math.min(rect.height * 0.72, rect.width * 1.6) : Math.min(rect.height * 0.66, rect.width * 0.9)) : 280;
+        const scale = available / window.innerHeight * visibleHeight / 9.2;
         return {
-            tangled: { x: -0.35, y: -0.05, scale: 1.06 },
-            resolved: { x: this.resolvedX ?? this.measureResolvedX(), y: 0, scale: 0.86 },
+            tangled: { x, y, scale },
+            resolved: { x, y, scale },
             resolveBy: 1
         };
     }
@@ -275,9 +254,30 @@ export class Effects {
         this.sceneProgress = progress;
     }
 
+    updateConnectors(progress) {
+        if (Math.abs((this.lastConnectorProgress ?? -1) - progress) < 0.002) return;
+        this.lastConnectorProgress = progress;
+        const shapes = [
+            [85, 92, 170, 30, 100, 210, 180, 140],
+            [315, 108, 210, 35, 320, 240, 220, 155],
+            [85, 285, 180, 365, 100, 155, 180, 235],
+            [315, 300, 205, 360, 310, 160, 220, 250],
+            [140, 32, 80, 100, 250, 50, 190, 115],
+            [270, 365, 340, 290, 150, 340, 210, 275],
+            [60, 195, 130, 110, 110, 285, 175, 185],
+            [340, 200, 275, 100, 280, 285, 225, 205]
+        ];
+        this.connectorPaths.forEach(path => {
+            const [x, y, a, b, c, d, ex, ey] = shapes[Number(path.dataset.connector)];
+            const mix = (from, to) => from + (to - from) * progress;
+            path.setAttribute('d', `M${x} ${y} C${mix(a, x + (ex-x)/3)} ${mix(b, y + (ey-y)/3)} ${mix(c, x + (ex-x)*2/3)} ${mix(d, y + (ey-y)*2/3)} ${ex} ${ey}`);
+        });
+    }
+
     animate(time, pointer) {
         const motion = this.prefersReducedMotion ? 0.18 : 1;
         const formationProgress = this.getFormationProgress();
+        this.updateConnectors(formationProgress);
         const sceneState = this.getRigProgressState(formationProgress);
         const tier = this.getLayoutTier();
 

@@ -1313,3 +1313,69 @@ body[data-language='ar'] .audit-float__link:hover .audit-float__cta::after {
         animation: none;
     }
 }
+
+/* Conversion-focused homepage: offer, evidence, then delivery detail. */
+.hero-section {
+    display: flex;
+    align-items: center;
+    min-height: min(900px, 100svh);
+    padding-top: calc(var(--header-height) + 48px);
+    padding-bottom: 44px;
+}
+.hero-section .hero-copy { max-width: 740px; width: 62%; }
+.hero-section h1 { font-size: clamp(3rem, 5.2vw, 5rem); line-height: 1.03; letter-spacing: -0.035em; }
+.eyebrow { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 24px; }
+.hero-lede { max-width: 570px; font-size: 1.1rem; line-height: 1.65; color: var(--color-muted); }
+.hero-note { color: var(--color-muted); font-size: 0.8rem; margin: 18px 0 28px; }
+.hero-section .hero-partner { position: static; margin-top: 28px; }
+.hero-section .partner-badge { width: 168px; }
+.proof-section { min-height: auto; padding-top: 44px; padding-bottom: 44px; border-top: 1px solid var(--color-line); }
+.proof-section h2 { font-size: 1rem; color: var(--color-muted); }
+.featured-section { min-height: auto; display: grid; grid-template-columns: 1.3fr 1fr; gap: 80px; padding-top: 80px; padding-bottom: 80px; border-bottom: 1px solid var(--color-line); }
+.featured-section h2 { font-size: clamp(2.2rem, 3.6vw, 3.7rem); letter-spacing: -0.025em; }
+.featured-section p:not(.eyebrow) { color: var(--color-muted); line-height: 1.7; max-width: 540px; }
+.featured-results { display: grid; align-content: center; gap: 32px; }
+.featured-results div { padding-bottom: 24px; border-bottom: 1px solid var(--color-line); }
+.featured-results strong { display: block; font-size: clamp(3rem, 5vw, 5rem); font-weight: 500; letter-spacing: -0.04em; }
+.featured-results span { display: block; color: var(--color-muted); margin-top: 8px; font-size: 0.9rem; }
+.systems-section, .method-section, .work-section, .fit-section, .faq-section { min-height: auto; padding-top: 100px; }
+.faq-section { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 70px; }
+.faq-section h2 { font-size: clamp(2.2rem, 3.6vw, 3.7rem); }
+.faq-list details { border-bottom: 1px solid var(--color-line); padding: 23px 0; }
+.faq-list details:first-child { border-top: 1px solid var(--color-line); }
+.faq-list summary { cursor: pointer; font-size: 1.05rem; line-height: 1.5; padding-inline-end: 20px; }
+.faq-list summary:focus-visible { outline: 2px solid var(--color-text); outline-offset: 6px; }
+.faq-list details p { color: var(--color-muted); line-height: 1.7; margin: 18px 0 0; }
+
+.hero-art-space { display: none; }
+
+/* The sculpture has its own stage, with a hands-on untangling control. */
+.hero-section { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: clamp(40px, 5vw, 100px); }
+.hero-section .hero-copy { width: 100%; }
+.hero-section h1 { font-size: clamp(3.2rem, 4.8vw, 5rem); }
+.hero-art-space { display: block; position: relative; width: 100%; height: clamp(440px, 62vh, 620px); border-block: 1px solid rgba(255,255,255,.14); }
+.hero-art__top { display: flex; justify-content: space-between; gap: 12px; padding-top: 18px; font-size: .72rem; color: var(--color-muted); }
+.hero-art__top > span:last-child { font-variant-numeric: tabular-nums; opacity: .5; }
+.hero-art__orbit { position: absolute; width: 90%; aspect-ratio: 1; top: 45%; left: 50%; transform: translate(-50%,-50%); border: 1px solid rgba(255,255,255,.07); border-radius: 50%; pointer-events: none; }
+.hero-art__orbit::after { content: ''; position: absolute; inset: 13%; border: 1px dashed rgba(255,255,255,.07); border-radius: 50%; }
+.work-more { display: none; }
+
+.hero-cta-art { display: none; }
+.hero-art-space { border: 0; }
+.hero-art__top { padding-top: 8px; }
+.hero-art__orbit { border-color: rgba(227,213,185,.09); }
+
+.connector-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.connector-lines path { fill: none; stroke: #b6a88e; stroke-opacity: .48; stroke-width: 1; vector-effect: non-scaling-stroke; }
+.connector-label { position: absolute; display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid rgba(227,213,185,.18); border-radius: 7px; background: #10100f; color: #d7d4cb; font-size: .72rem; line-height: 1; white-space: nowrap; box-shadow: 0 4px 20px rgba(0,0,0,.2); transform: translate(-50%,-50%); }
+.connector-label > span { color: #c6b692; font-size: .95rem; }
+.connector-label--documents { left: 15%; top: 23%; }
+.connector-label--crm { left: 85%; top: 27%; }
+.connector-label--email { left: 15%; top: 71.25%; }
+.connector-label--approvals { left: 85%; top: 75%; }
+
+/* Operational touchpoints drawn from the target-account industry mix. */
+.connector-label--claims { left: 35%; top: 8%; }
+.connector-label--onboarding { left: 67.5%; top: 91.25%; }
+.connector-label--inventory { left: 15%; top: 48.75%; }
+.connector-label--renewals { left: 85%; top: 50%; }

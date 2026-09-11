@@ -35,6 +35,7 @@ export const SYSTEM_LOGOS = [
 export const CASE_STUDIES = [
     {
         slug: 'dimosnet',
+        cardTitle: 'A legal AI product serving 300+ municipalities.',
         client: 'Dimosnet',
         logo: { src: '/assets/ai-dimosnet.png', alt: 'AI DimosNET' },
         sector: 'GovTech · Legal knowledge',
@@ -103,6 +104,7 @@ export const CASE_STUDIES = [
     },
     {
         slug: 'winimo',
+        cardTitle: 'An AI companion used by 10,000+ families.',
         client: 'Winimo',
         logo: { src: '/assets/winimo.png', alt: 'Winimo' },
         sector: 'ConsumerTech · Parenting · Health-adjacent AI',
@@ -237,6 +239,7 @@ export const CASE_STUDIES = [
     },
     {
         slug: 'majles',
+        cardTitle: 'Saudi audience research, with evidence behind the answers.',
         client: 'Majles',
         // Padding-trimmed crop of assets/majles.png — the source has wide black margins that
         // shrink the mark inside the shared logo box.
@@ -623,15 +626,33 @@ export const COPY = {
             proof: 'Track record',
             work: 'Case studies',
             fit: 'Talk to us',
-            call: 'Book a call'
+            call: 'Book your free AI audit'
+        },
+        featured: {
+            eyebrow: 'In production · Dimosnet', title: 'Expert knowledge became a new revenue stream.',
+            body: 'We turned a proprietary legal library into an AI product that gives Greek municipalities sourced answers in seconds.',
+            cta: 'See how we built it', municipalities: 'Greek municipalities served', revenue: 'New annual revenue, as reported in the case study'
+        },
+        faq: {
+            eyebrow: 'Before we start', title: 'A few practical questions.',
+            items: [
+                { question: 'What happens in the free audit?', answer: 'We start by discussing one workflow and where it slows the team down. Over three days, we look for repeat work, routing problems and document bottlenecks. You receive a written report identifying where automation is worth pursuing, whether or not we build together.' },
+                { question: 'Do we need to replace our existing tools?', answer: 'Our delivery process includes connecting the system to the channels, documents, CRMs and business rules you already use. We assess the available integrations and access requirements when we scope the workflow.' },
+                { question: 'How long does a build take, and what does it cost?', answer: 'That depends on the workflow, integrations and data readiness. The audit is free. We define the scope of the build with you before agreeing its budget and delivery schedule.' },
+                { question: 'How do you handle data access and human review?', answer: 'We define permissions, approval steps and failure states before building. The design sets out what the AI can do, what needs a person’s review and how the team steps in when needed.' },
+                { question: 'What happens after launch?', answer: 'Our process includes rollout, an operating model for the team, and ongoing measurement and tuning. We agree the support arrangements and ownership terms for your engagement when defining its scope.' }
+            ]
         },
         hero: {
+            eyebrow: 'AI engineering for real operations',
+            body: 'We build AI agents, knowledge systems, and products that connect to your existing tools and take repetitive work off your team.',
+            note: 'Start with one workflow. Get a written report in three days.',
             partner: 'Spaghetti is now an OpenAI Select Partner.',
             title: 'We turn messy workflows into reliable AI systems.',
             annotation:
                 'This is the part AI does not fix for you: tangled data, unclear workflows, and rushed builds.',
-            primaryCta: 'Book a call',
-            secondaryCta: 'What We Build'
+            primaryCta: 'Book your free AI audit',
+            secondaryCta: 'See our work'
         },
         proof: {
             title: 'We have built inside companies like these.'
@@ -729,7 +750,7 @@ export const COPY = {
             ]
         },
         method: {
-            title: 'How we work',
+            title: 'Start with clarity. Build what matters.',
             body: 'It starts with a free three-day audit. From there we design the workflow, build the system, connect it, and stay through rollout until it behaves under real use.',
             steps: [
                 {
@@ -760,9 +781,9 @@ export const COPY = {
             ]
         },
         fit: {
-            title: 'A good starting point is one workflow with real volume and real friction.',
-            body: 'Not an AI brainstorm. Not a slide deck. One workflow that is slow, messy, expensive, or fragile enough to be worth fixing properly.',
-            cta: 'Book a call',
+            title: 'Bring us one workflow worth fixing.',
+            body: 'Tell us where the work gets stuck. We’ll use the free three-day audit to identify useful automation opportunities and give you a written report to take forward.',
+            cta: 'Book your free AI audit',
             items: [
                 'A team is drowning in requests, tickets, documents, approvals, or repeated updates.',
                 'A prototype looked good but broke as soon as real business conditions showed up.',
@@ -771,7 +792,7 @@ export const COPY = {
             ]
         },
         footer: {
-            cta: 'Book a call',
+            cta: 'Book your free AI audit',
             linkedin: 'LinkedIn'
         },
         ui: {
@@ -946,4 +967,27 @@ export const COPY = {
             closeMenu: 'أغلق القائمة'
         }
     }
+};
+
+// Keep the new homepage copy ready for the existing Arabic content layer.
+Object.assign(COPY.ar.hero, {
+    eyebrow: 'هندسة الذكاء الاصطناعي للعمليات الفعلية',
+    body: 'نبني وكلاء ذكاء اصطناعي وأنظمة معرفة ومنتجات تتصل بأدواتك الحالية وتخفف العمل المتكرر عن فريقك.',
+    note: 'ابدأ بسير عمل واحد. احصل على تقرير مكتوب خلال ثلاثة أيام.',
+    primaryCta: 'احجز تدقيق الذكاء الاصطناعي المجاني', secondaryCta: 'اطّلع على أعمالنا'
+});
+COPY.ar.featured = {
+    eyebrow: 'قيد الاستخدام · Dimosnet', title: 'تحولت المعرفة المتخصصة إلى مصدر إيرادات جديد.',
+    body: 'حوّلنا مكتبة قانونية خاصة إلى منتج ذكاء اصطناعي يقدم للبلديات اليونانية إجابات موثقة خلال ثوانٍ.',
+    cta: 'اكتشف كيف بنيناه', municipalities: 'بلدية يونانية تستفيد من النظام', revenue: 'إيرادات سنوية جديدة وفق دراسة الحالة'
+};
+COPY.ar.faq = {
+    eyebrow: 'قبل أن نبدأ', title: 'أسئلة عملية.',
+    items: [
+        { question: 'ماذا يشمل التدقيق المجاني؟', answer: 'نبدأ بمناقشة سير عمل واحد ونقاط التعطل فيه. خلال ثلاثة أيام نراجع العمل المتكرر ومشكلات التوجيه والمستندات، ونقدم تقريرًا مكتوبًا بفرص الأتمتة سواء تعاونّا في البناء أم لا.' },
+        { question: 'هل يجب استبدال أدواتنا الحالية؟', answer: 'تشمل عملية التنفيذ ربط النظام بالقنوات والمستندات وأنظمة إدارة العملاء وقواعد العمل الحالية. نقيّم إمكانيات الربط ومتطلبات الوصول عند تحديد النطاق.' },
+        { question: 'كم يستغرق البناء وما تكلفته؟', answer: 'يعتمد ذلك على سير العمل والتكاملات وجاهزية البيانات. التدقيق مجاني، ونحدد نطاق البناء معك قبل الاتفاق على الميزانية والجدول الزمني.' },
+        { question: 'كيف تتعاملون مع الوصول إلى البيانات والمراجعة البشرية؟', answer: 'نحدد الصلاحيات وخطوات الموافقة وحالات الفشل قبل البناء، بما يوضح ما يمكن للنظام فعله وما يحتاج إلى مراجعة بشرية وكيف يتدخل الفريق.' },
+        { question: 'ماذا يحدث بعد الإطلاق؟', answer: 'تشمل العملية الإطلاق ونموذج تشغيل للفريق والقياس والتحسين المستمر. نتفق على ترتيبات الدعم وشروط الملكية عند تحديد نطاق التعاون.' }
+    ]
 };

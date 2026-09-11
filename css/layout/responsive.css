@@ -80,16 +80,21 @@
         font-size: 0.96rem;
     }
 
-    /* On phones the art is too small to read anything in, so drop it and give the
-       copy the full width. loading="lazy" means the hidden files are not fetched. */
+    /* Stack the service artwork and copy on smaller screens. */
     .system-panel {
         grid-template-columns: minmax(0, 1fr);
-        gap: 0;
+        gap: 28px;
     }
 
     .system-panel__media {
-        display: none;
+        display: block;
+        margin-inline-start: 0;
+        width: 100%;
+        max-width: 600px;
+        justify-self: center;
     }
+
+    .system-panel__media img { object-fit: contain; }
 
     .work-grid[data-count="3"] .work-card:first-child,
     .work-grid[data-count="5"] .work-card:first-child {
@@ -344,4 +349,136 @@
         opacity: 1;
         transform: none;
     }
+}
+
+@media (max-width: 1099px) {
+    .hero-section .hero-copy { width: 100%; max-width: 740px; }
+    .hero-section { min-height: auto; padding-top: calc(var(--header-height) + 54px); }
+    .featured-section, .faq-section { gap: 36px; }
+}
+@media (max-width: 720px) {
+    .hero-section { padding-top: calc(var(--header-height) + 30px); padding-bottom: 32px; }
+    .hero-section h1 { font-size: clamp(2.45rem, 9.5vw, 3.8rem); }
+    .hero-section .eyebrow { margin-bottom: 18px; font-size: 0.65rem; }
+    .hero-section .hero-lede { font-size: 0.98rem; line-height: 1.55; }
+    .hero-section .hero-partner { margin-top: 20px; }
+    .hero-section .partner-badge { width: 140px; }
+    .hero-note { font-size: 0.75rem; margin-bottom: 18px; }
+    .proof-section { padding-top: 28px; padding-bottom: 28px; }
+    .featured-section, .faq-section { grid-template-columns: 1fr; gap: 28px; }
+    .featured-results { grid-template-columns: 1fr 1fr; gap: 20px; }
+    .featured-results strong { font-size: clamp(2.4rem, 9vw, 3.4rem); }
+    .featured-results span { font-size: 0.8rem; line-height: 1.5; }
+    .featured-section, .systems-section, .work-section, .method-section, .faq-section, .fit-section { padding-top: 60px; padding-bottom: 40px; }
+}
+
+@media (max-width: 1099px) {
+    .hero-section { flex-direction: column; align-items: flex-start; }
+    .hero-art-space { display: block; width: 100%; height: 300px; margin-top: 28px; }
+}
+
+/* Mobile reading order: proposition, sculpture, proof, then focused detail. */
+@media (max-width: 1099px) {
+    .hero-section { grid-template-columns: minmax(0,1fr); gap: 24px; }
+    .hero-art-space { height: 340px; margin: 0; max-width: 540px; justify-self: center; }
+    .hero-art__orbit { width: 260px; }
+}
+@media (max-width: 720px) {
+    .hero-section { padding-top: calc(var(--header-height) + 26px); gap: 24px; }
+    .hero-section h1 { font-size: clamp(2.35rem, 9.2vw, 3.6rem); max-width: 15ch; line-height: 1.04; }
+    .hero-section .hero-lede { margin-bottom: 20px; }
+    .hero-actions { gap: 10px; }
+    .hero-section .hero-actions .button--secondary { background: transparent; border-color: transparent; min-height: 40px; }
+    .hero-note { max-width: 30ch; line-height: 1.5; margin: 12px 0 0; }
+    .hero-section .hero-partner { margin-top: 18px; }
+    .hero-section .partner-badge { width: 112px; }
+    .hero-art-space { height: 300px; }
+    .hero-art__top { font-size: .68rem; }
+    .hero-art__orbit { width: 210px; }
+    .featured-section h2, .section-heading h2, #fit h2 { font-size: 2rem; line-height: 1.1; letter-spacing: -.025em; }
+    .section-heading > p { font-size: .94rem; line-height: 1.6; }
+    .systems-tabs__list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border: 0; }
+    .system-tab { margin: 0; padding: 14px 10px; border: 1px solid var(--color-line); border-radius: 8px; min-height: 54px; align-items: center; }
+    .system-tab__name { white-space: normal; font-size: .84rem; }
+    .system-tab__index { display: none; }
+    .system-tab[aria-selected='true'] { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.5); }
+    .systems-tabs__panels { margin-top: 22px; }
+    .system-panel { gap: 22px; }
+    .system-panel:not(.is-active) { display: none; }
+    .system-panel__headline { font-size: 1.6rem; }
+    .system-panel__body { font-size: .95rem; margin-bottom: 18px; }
+    .system-panel__tags { gap: 6px; }
+    .system-panel__tags li { font-size: .7rem; padding: 6px 9px; }
+    .work-card { padding: 22px; }
+    .work-card__title { font-size: 1.5rem; line-height: 1.16; }
+    .work-card__summary { font-size: .9rem; line-height: 1.6; }
+    .work-grid:not(.is-expanded) .work-card:nth-child(n+3) { display: none; }
+    .work-more { display: flex; justify-content: center; margin-top: 18px; }
+    .method-list { gap: 0; }
+    .method-card { display: grid; grid-template-columns: 28px minmax(0,1fr); gap: 8px 14px; padding: 24px 0; border: 0; border-bottom: 1px solid var(--color-line); border-radius: 0; background: transparent; }
+    .method-card__number { grid-column: 1; grid-row: 1 / 4; margin: 0; font-size: .8rem; padding-top: 4px; }
+    .method-card h3, .method-card p, .method-card__flag { grid-column: 2; margin: 0; }
+    .method-card h3 { font-size: 1.2rem; }
+    .method-card p { font-size: .9rem; line-height: 1.6; }
+    .method-card__flag { position: static; justify-self: start; }
+    .faq-list summary { font-size: .96rem; }
+    .audit-float__body { display: none; }
+    .audit-float__link { padding: 12px 42px 12px 14px; }
+    .audit-float__title { font-size: .85rem; }
+    .audit-float__cta { margin-top: 4px; font-size: .76rem; }
+    .fit-list { gap: 10px; }
+    .fit-item { padding: 18px; font-size: .9rem; line-height: 1.55; }
+}
+
+/* The mobile sculpture sits beside the actions, never in a separate lower section. */
+@media (max-width: 1099px) {
+    .hero-section { display: block; }
+    .hero-section .hero-art-space { display: none; }
+    .hero-section .hero-actions { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); padding-inline-end: 100px; max-width: 480px; min-height: 140px; align-content: center; }
+    .hero-cta-art { display: block; position: absolute; inset-inline-end: 0; top: 50%; transform: translateY(-50%); width: 84px; height: 170px; pointer-events: none; }
+    .hero-section .hero-actions .button { width: 100%; white-space: normal; text-align: center; justify-content: center; }
+}
+@media (max-width: 390px) {
+    .hero-section .hero-actions { padding-inline-end: 78px; }
+    .hero-cta-art { width: 66px; height: 150px; }
+    .hero-section .hero-actions .button { padding-inline: 12px; font-size: .85rem; }
+}
+
+/* Place the mobile sculpture directly above the full-width actions. */
+@media (max-width: 1099px) {
+    .hero-section .hero-actions {
+        padding-inline-end: 0;
+        min-height: 0;
+    }
+
+    .hero-cta-art {
+        position: relative;
+        inset: auto;
+        top: auto;
+        transform: none;
+        width: 150px;
+        height: 170px;
+        justify-self: center;
+        margin-bottom: 12px;
+    }
+}
+
+@media (max-width: 1099px) {
+    .hero-cta-art { width: min(100%, 330px); height: 230px; }
+    .hero-cta-art .connector-label { font-size: .62rem; padding: 7px 8px; gap: 5px; }
+    .hero-cta-art .connector-label--documents { left: 16%; }
+    .hero-cta-art .connector-label--crm { left: 86%; }
+    .hero-cta-art .connector-label--email { left: 16%; }
+    .hero-cta-art .connector-label--approvals,
+    .hero-cta-art [data-connector='3'] { display: none; }
+}
+
+@media (max-width: 1099px) {
+    .hero-cta-art { height: 260px; }
+    .hero-cta-art .connector-label--inventory,
+    .hero-cta-art .connector-label--renewals,
+    .hero-cta-art [data-connector='6'],
+    .hero-cta-art [data-connector='7'] { display: none; }
+    .hero-cta-art .connector-label--claims { left: 35%; }
+    .hero-cta-art .connector-label--onboarding { left: 67.5%; }
 }
