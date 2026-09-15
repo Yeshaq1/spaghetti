@@ -200,7 +200,7 @@ class App {
             // and the copy takes the full width, so a missing gif never leaves a dead frame.
             const mediaMarkup = item.media
                 ? `<figure class="system-panel__media${item.media.blend === 'soft' ? ' system-panel__media--soft' : ''}">
-                        <img src="${this.escapeHtml(item.media.src)}" alt="${this.escapeHtml(item.media.alt || '')}" loading="lazy">
+                        <img src="${this.escapeHtml(item.media.src)}" alt="${this.escapeHtml(item.media.alt || '')}" loading="lazy" decoding="async">
                     </figure>`
                 : '';
 
@@ -227,6 +227,31 @@ class App {
         });
 
         this.bindSystemTabs(tablist, panels);
+        this.preloadSystemArtwork(panels);
+    }
+
+    preloadSystemArtwork(panels) {
+        // Hidden mobile panels do not trigger native lazy loading. Warm their
+        // actual images after the initial load, without competing with the hero.
+        const preload = () => {
+            panels.querySelectorAll('.system-panel__media img').forEach(image => {
+                if (!image.isConnected) return;
+                image.fetchPriority = 'low';
+                image.loading = 'eager';
+                // Decode ahead of tab selection; the existing error handler
+                // still removes a missing asset and restores the text layout.
+                if (typeof image.decode === 'function') image.decode().catch(() => {});
+            });
+        };
+        const schedule = () => {
+            if ('requestIdleCallback' in window) {
+                window.requestIdleCallback(preload, { timeout: 1500 });
+            } else {
+                window.setTimeout(preload, 200);
+            }
+        };
+        if (document.readyState === 'complete') schedule();
+        else window.addEventListener('load', schedule, { once: true });
     }
 
     bindSystemTabs(tablist, panels) {
@@ -234,6 +259,12 @@ class App {
         const views = Array.from(panels.querySelectorAll('.system-panel'));
 
         const select = (index, focus) => {
+            // An early click should not wait for the background preload.
+            const image = views[index].querySelector('.system-panel__media img');
+            if (image) {
+                image.fetchPriority = 'high';
+                image.loading = 'eager';
+            }
             tabs.forEach((tab, i) => {
                 const active = i === index;
                 tab.setAttribute('aria-selected', String(active));
