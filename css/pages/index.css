@@ -736,6 +736,18 @@ html[dir='rtl'] .logo-carousel__track {
     width: 160px;
 }
 
+.partner-badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+}
+
+.partner-badge-link {
+    display: block;
+    flex-shrink: 0;
+}
+
 .site-footer__links {
     display: flex;
     align-items: center;
