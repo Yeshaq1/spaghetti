@@ -515,18 +515,6 @@ body[data-language="ar"] .cs-chapter__number {
     transform: translateY(0);
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .reveal {
-        opacity: 1;
-        transform: none;
-        transition: none;
-    }
-
-    .cs-next {
-        transition: none;
-    }
-}
-
 /* ---------- Responsive ---------- */
 
 @media (max-width: 900px) {

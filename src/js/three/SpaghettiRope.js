@@ -34,7 +34,6 @@ const DEFAULTS = {
 export class SpaghettiRope {
     constructor(options = {}) {
         this.options = { ...DEFAULTS, ...options };
-        this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         this.group = new THREE.Group();
         this.strands = [];
@@ -147,17 +146,15 @@ export class SpaghettiRope {
         const points = tangled.map((tangledPoint, pointIndex) => {
             const point = tangledPoint.clone().lerp(straight[pointIndex], strandProgress);
 
-            if (!this.prefersReducedMotion) {
-                // Sway is loud while knotted and nearly still once resolved.
-                const sway = swayAmplitude * tension + 0.012;
-                point.x += Math.sin(time * 0.62 + phase * 1.3 + pointIndex * 0.8) * sway;
-                point.y += Math.cos(time * 0.48 + phase + pointIndex * 0.5) * sway * 0.5;
-                point.z += Math.sin(time * 0.55 + phase * 1.6 + pointIndex * 0.6) * sway * 0.8;
+            // Sway is loud while knotted and nearly still once resolved.
+            const sway = swayAmplitude * tension + 0.012;
+            point.x += Math.sin(time * 0.62 + phase * 1.3 + pointIndex * 0.8) * sway;
+            point.y += Math.cos(time * 0.48 + phase + pointIndex * 0.5) * sway * 0.5;
+            point.z += Math.sin(time * 0.55 + phase * 1.6 + pointIndex * 0.6) * sway * 0.8;
 
-                const micro = 0.006 + 0.004 * strandProgress;
-                point.x += Math.sin(time * 2.3 + pointIndex * 2.1 + index * 0.4) * micro;
-                point.z += Math.cos(time * 2.1 + pointIndex * 1.7 + index * 0.3) * micro;
-            }
+            const micro = 0.006 + 0.004 * strandProgress;
+            point.x += Math.sin(time * 2.3 + pointIndex * 2.1 + index * 0.4) * micro;
+            point.z += Math.cos(time * 2.1 + pointIndex * 1.7 + index * 0.3) * micro;
 
             return point;
         });

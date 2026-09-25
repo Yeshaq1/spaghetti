@@ -304,10 +304,7 @@ class App {
 
         strip.innerHTML = '';
 
-        const reduceMotion =
-            typeof window.matchMedia === 'function' &&
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const loopDuplicate = CLIENT_LOGOS.length > 0 && !reduceMotion;
+        const loopDuplicate = CLIENT_LOGOS.length > 0;
 
         const appendTile = (logo, decorative) => {
             const item = document.createElement('div');

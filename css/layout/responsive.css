@@ -344,13 +344,6 @@
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .story-section {
-        opacity: 1;
-        transform: none;
-    }
-}
-
 @media (max-width: 1099px) {
     .hero-section .hero-copy { width: 100%; max-width: 740px; }
     .hero-section { min-height: auto; padding-top: calc(var(--header-height) + 54px); }

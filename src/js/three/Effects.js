@@ -28,7 +28,6 @@ const GUTTER_POSITION = 0.58;
 export class Effects {
     constructor(scene) {
         this.scene = scene;
-        this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         this.scrollProgress = 0;
         this.visualScrollProgress = 0;
         this.activeScene = 'hero';
@@ -175,7 +174,6 @@ export class Effects {
 
     // Scroll owns the transformation in both directions; no timer or controls.
     getFormationProgress() {
-        if (this.prefersReducedMotion) return 1;
         const slot = window.innerWidth < 1100
             ? document.querySelector('.hero-cta-art')
             : this.artSlot;
@@ -275,7 +273,6 @@ export class Effects {
     }
 
     animate(time, pointer) {
-        const motion = this.prefersReducedMotion ? 0.18 : 1;
         const formationProgress = this.getFormationProgress();
         this.updateConnectors(formationProgress);
         const sceneState = this.getRigProgressState(formationProgress);
@@ -296,7 +293,7 @@ export class Effects {
         this.rig.rotation.x = pointer.y * -0.04 + (1 - ropeProgress) * 0.08;
 
         if (this.particleField) {
-            this.particleField.rotation.y = time * 0.014 * motion;
+            this.particleField.rotation.y = time * 0.014;
             this.particleField.position.x = pointer.x * -1.1;
             this.particleField.position.y = pointer.y * -0.5;
             this.particleField.material.opacity = sceneState.particleOpacity;
@@ -317,6 +314,6 @@ export class Effects {
             this.signalGroup.visible = fade < 1;
         }
 
-        this.updateSignals(time * motion, ropeProgress);
+        this.updateSignals(time, ropeProgress);
     }
 }

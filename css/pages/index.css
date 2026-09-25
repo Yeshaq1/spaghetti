@@ -17,12 +17,6 @@
     visibility: hidden;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    #three-canvas {
-        transition-duration: 0.01ms;
-    }
-}
-
 body::before {
     content: "";
     position: fixed;
@@ -477,19 +471,6 @@ body[data-language="ar"] .hero-annotation__arrow-svg {
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .hero-annotation__text {
-        opacity: 1;
-        clip-path: none;
-        animation: none;
-    }
-
-    .hero-annotation__arrow path {
-        stroke-dashoffset: 0;
-        animation: none;
-    }
-}
-
 .fit-section {
     display: grid;
     grid-template-columns: minmax(0, 0.95fr) minmax(280px, 0.75fr);
@@ -577,18 +558,6 @@ body[data-language="ar"] .method-card__number {
     line-height: 1.52;
 }
 
-
-
-
-
-
-
-
-
-@media (prefers-reduced-motion: reduce) {
-
-}
-
 /* Heading + logo strip only, so it does not need the full story-section height. */
 .proof-section {
     min-height: 68vh;
@@ -646,18 +615,6 @@ body[data-language="ar"] .method-card__number {
 
 html[dir='rtl'] .logo-carousel__track {
     animation-direction: reverse;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .logo-carousel__track {
-        animation: none;
-        flex-wrap: wrap;
-        justify-content: center;
-        width: 100%;
-        max-width: var(--max-page);
-        margin-left: auto;
-        margin-right: auto;
-    }
 }
 
 @keyframes logo-marquee {
@@ -938,13 +895,6 @@ body[data-language='ar'] .work-card__cta::after {
     outline-offset: 3px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .work-card,
-    .work-card__cta::after {
-        transition: none;
-    }
-}
-
 /* Floating free-audit offer, revealed past the hero. */
 .audit-float {
     position: fixed;
@@ -1066,13 +1016,6 @@ body[data-language='ar'] .audit-float__link:hover .audit-float__cta::after {
 .audit-float__dismiss:focus-visible {
     outline: 2px solid rgba(245, 245, 242, 0.6);
     outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .audit-float,
-    .audit-float__cta::after {
-        transition: none;
-    }
 }
 
 /* Restored: What We Build card grid. */
@@ -1318,12 +1261,6 @@ body[data-language='ar'] .audit-float__link:hover .audit-float__cta::after {
     object-fit: contain;
     filter: grayscale(1) brightness(1.9);
     opacity: 0.6;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .system-panel.is-active {
-        animation: none;
-    }
 }
 
 /* Conversion-focused homepage: offer, evidence, then delivery detail. */

@@ -338,11 +338,7 @@ class CaseStudyPage {
         const targets = document.querySelectorAll('.reveal');
         if (!targets.length) return;
 
-        const reduceMotion =
-            typeof window.matchMedia === 'function' &&
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        if (reduceMotion || typeof IntersectionObserver !== 'function') {
+        if (typeof IntersectionObserver !== 'function') {
             targets.forEach((target) => target.classList.add('is-visible'));
             return;
         }

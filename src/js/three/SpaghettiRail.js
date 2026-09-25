@@ -19,7 +19,6 @@ const RAIL_HALF_WIDTH = 2.4;
 export class SpaghettiRail {
     constructor(canvas) {
         this.canvas = canvas;
-        this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         this.scene = null;
         this.camera = null;
@@ -159,7 +158,7 @@ export class SpaghettiRail {
     }
 
     update(time) {
-        const ease = this.prefersReducedMotion ? 0.2 : 0.075;
+        const ease = 0.075;
         this.progress += (this.targetProgress - this.progress) * ease;
         this.rope.setProgress(this.progress);
         this.rope.update(time);

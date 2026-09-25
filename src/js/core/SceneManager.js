@@ -12,7 +12,6 @@ export class SceneManager {
         this.pointerTarget = { x: 0, y: 0 };
         this.currentScrollProgress = 0;
         this.visualScrollProgress = 0;
-        this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         this.threeBackgroundVisible = true;
     }
 
@@ -74,7 +73,7 @@ export class SceneManager {
     }
 
     setupPostprocessing() {
-        if (this.prefersReducedMotion || !THREE.EffectComposer) {
+        if (!THREE.EffectComposer) {
             this.composer = null;
             return;
         }
@@ -111,19 +110,18 @@ export class SceneManager {
     }
 
     updateCamera(time) {
-        const pointerEase = this.prefersReducedMotion ? 0.02 : 0.06;
+        const pointerEase = 0.06;
         this.pointer.x += (this.pointerTarget.x - this.pointer.x) * pointerEase;
         this.pointer.y += (this.pointerTarget.y - this.pointer.y) * pointerEase;
         this.visualScrollProgress += (this.currentScrollProgress - this.visualScrollProgress) * 0.045;
 
         const scroll = this.getNarrativeProgress(this.visualScrollProgress);
-        const drift = this.prefersReducedMotion ? 0 : 1;
         const isMobile = window.innerWidth < 820;
         const isHeroMobile = window.innerWidth < 720;
         const baseCamX = isHeroMobile ? 0 : isMobile ? 0.08 : 0.12;
 
-        this.camera.position.x = baseCamX - scroll * 0.42 + this.pointer.x * 0.26 + Math.sin(time * 0.12) * 0.08 * drift;
-        this.camera.position.y = 0.02 - scroll * 0.08 + this.pointer.y * 0.18 + Math.cos(time * 0.1) * 0.05 * drift;
+        this.camera.position.x = baseCamX - scroll * 0.42 + this.pointer.x * 0.26 + Math.sin(time * 0.12) * 0.08;
+        this.camera.position.y = 0.02 - scroll * 0.08 + this.pointer.y * 0.18 + Math.cos(time * 0.1) * 0.05;
         this.camera.position.z = 10.7 - scroll * 1.3;
         this.camera.rotation.x = THREE.MathUtils.degToRad(this.pointer.y * -1.2 - scroll * 0.45);
         this.camera.rotation.y = THREE.MathUtils.degToRad(this.pointer.x * 1.35 - scroll * 1.05);
