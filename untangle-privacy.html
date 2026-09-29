@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="How the Untangle Chrome extension handles your data.">
+    <link rel="icon" type="image/png" href="/assets/logo.png">
+    <link rel="canonical" href="https://www.spgti.com/untangle/privacy">
+    <title>Untangle Privacy Policy · Spaghetti</title>
+
+    <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/base/fonts.css">
+    <link rel="stylesheet" href="/css/base/reset.css">
+    <link rel="stylesheet" href="/css/base/variables.css">
+    <link rel="stylesheet" href="/css/pages/index.css">
+    <link rel="stylesheet" href="/css/pages/legal.css">
+    <link rel="stylesheet" href="/css/layout/responsive.css">
+</head>
+<body class="legal-body">
+    <header class="site-header" data-site-header>
+        <a class="brand-mark" href="/" aria-label="Spaghetti home">
+            <img src="/assets/logo.png" alt="" class="brand-mark__logo">
+            <span class="brand-mark__text">Spaghetti</span>
+        </a>
+
+        <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+            <a href="/#systems">What We Build</a>
+            <a href="/#method">How we work</a>
+            <a href="/#work">Case studies</a>
+            <a href="/#fit">Talk to us</a>
+        </nav>
+
+        <div class="header-actions">
+            <a class="button button--small header-cta" href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" target="_blank" rel="noopener noreferrer">
+                Book a call
+            </a>
+            <button class="menu-toggle" type="button" data-menu-toggle aria-controls="site-nav" aria-expanded="false" aria-label="Open navigation">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <main class="legal">
+        <header class="legal-hero">
+            <p class="legal-hero__eyebrow">Untangle · Chrome extension</p>
+            <h1 class="legal-hero__title">Untangle Privacy Policy</h1>
+            <p class="legal-hero__meta">Effective September 29, 2026 · Untangle is made by <a href="https://www.spgti.com">Spaghetti</a></p>
+        </header>
+
+        <div class="legal-content">
+            <p>Untangle is a Chrome extension that reads the LinkedIn posts on your screen and checks them against criteria you set (your "lenses" and the built-in slop check), using TypeSafe's Jev model. This policy explains what data the extension handles and where it goes.</p>
+
+            <p class="legal-summary"><strong>In short:</strong> Spaghetti runs no servers for Untangle and receives none of your data. Post text is sent directly from your browser to TypeSafe for analysis, using your own API key. Everything else stays in your browser.</p>
+
+            <section class="legal-section">
+                <h2>What the extension processes</h2>
+
+                <div class="legal-table-wrap">
+                    <table class="legal-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Data</th>
+                                <th scope="col">Why</th>
+                                <th scope="col">Where it goes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="Data">Text of LinkedIn posts that scroll into view, and the author's name and headline shown on the post</td>
+                                <td data-label="Why">To answer your lenses and the slop check</td>
+                                <td data-label="Where it goes">Sent to TypeSafe's API (api.typesafe.ai) for analysis</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Data">Your "About you" description and your lens questions</td>
+                                <td data-label="Why">Gives Jev context to answer your lenses</td>
+                                <td data-label="Where it goes">Sent to TypeSafe with each analysis request; stored in Chrome's extension storage</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Data">Your TypeSafe API key</td>
+                                <td data-label="Why">To authenticate requests to TypeSafe</td>
+                                <td data-label="Where it goes">Stored in Chrome's extension storage; sent only to TypeSafe</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Data">Analysis results</td>
+                                <td data-label="Why">To avoid re-checking posts you've already seen</td>
+                                <td data-label="Where it goes">Cached in your browser's session storage, cleared when the browser closes</td>
+                            </tr>
+                            <tr>
+                                <td data-label="Data">Usage counters (posts checked, tokens used)</td>
+                                <td data-label="Why">To show your stats and Jev spend in the popup</td>
+                                <td data-label="Where it goes">Stored locally in your browser only</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>Settings (your lenses, "About you", and API key) are saved with Chrome's <code>storage.sync</code>. If you have Chrome sync turned on, Google syncs them across your signed-in browsers, as with any extension setting.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>What we don't do</h2>
+                <ul>
+                    <li>We don't collect, store, or see any of your data. Untangle has no Spaghetti backend, analytics, or tracking.</li>
+                    <li>We don't read pages other than linkedin.com, and on LinkedIn we only read posts as they appear on your screen. We don't read messages, and we don't automate scrolling or visit profiles.</li>
+                    <li>We don't sell or share data, use it for advertising, or use it to determine creditworthiness or for lending.</li>
+                </ul>
+            </section>
+
+            <section class="legal-section">
+                <h2>TypeSafe</h2>
+                <p>Analysis is performed by TypeSafe (typesafe.ai) under your own TypeSafe account. TypeSafe states that Jev is not trained on customer requests or responses. Its handling of the data you send is governed by <a href="https://docs.typesafe.ai/legal">TypeSafe's legal terms and privacy policy</a>.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>Limited Use</h2>
+                <p>Untangle's use of information received from Chrome APIs adheres to the <a href="https://developer.chrome.com/docs/webstore/program-policies/limited-use">Chrome Web Store User Data Policy</a>, including the Limited Use requirements. Data is used only to provide the extension's single purpose: analyzing the LinkedIn posts you view against criteria you define.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>Your control</h2>
+                <ul>
+                    <li>Pause Untangle at any time with the switch in the popup.</li>
+                    <li>Remove your API key, lenses, and "About you" in the settings page, or uninstall the extension to delete all locally stored data.</li>
+                </ul>
+            </section>
+
+            <section class="legal-section">
+                <h2>Children</h2>
+                <p>Untangle is not directed to children under 13 and does not knowingly process their data.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>Changes</h2>
+                <p>If this policy changes, we'll update the effective date above and, for material changes, note it in the extension's store listing.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>Contact</h2>
+                <p>Questions? Email <a href="mailto:info@spgti.com">info@spgti.com</a> or visit <a href="https://www.spgti.com">spgti.com</a>.</p>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer__identity">
+            <div class="partner-badges">
+                <img class="partner-badge partner-badge--footer" src="/assets/openai-select-partner.svg" alt="OpenAI Select Partner" width="375" height="177" loading="lazy">
+                <a class="partner-badge-link" href="https://cloud.google.com/find-a-partner/partner/spaghetti-llc" target="_blank" rel="noopener noreferrer"><img class="partner-badge partner-badge--footer" src="/assets/google-cloud-partner.svg" alt="Google Cloud Partner" width="375" height="177" loading="lazy"></a>
+            </div>
+            <p class="site-footer__legal">
+                &copy; <span data-footer-year>2026</span> Spaghetti LLC
+                <br>Sheridan, Wyoming, United States
+                <br>Serving clients across the US and EU
+            </p>
+        </div>
+        <div class="site-footer__links">
+            <a href="mailto:info@spgti.com">info@spgti.com</a>
+            <a href="https://www.linkedin.com/company/llm-rag/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" target="_blank" rel="noopener noreferrer">Book a call</a>
+        </div>
+    </footer>
+
+    <script src="/src/js/legal.js" defer></script>
+</body>
+</html>

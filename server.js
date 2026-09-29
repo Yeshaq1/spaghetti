@@ -7,6 +7,7 @@ const HOST = process.env.HOST;
 const rootDir = __dirname;
 const indexPath = path.join(rootDir, 'index.html');
 const caseStudyPath = path.join(rootDir, 'case-study.html');
+const untanglePrivacyPath = path.join(rootDir, 'untangle-privacy.html');
 
 app.use(express.static(rootDir));
 
@@ -25,6 +26,11 @@ app.get('/work/:slug', (_req, res) => {
 
 app.get('/work', (_req, res) => {
   res.redirect(301, '/#work');
+});
+
+// Linked from the Chrome Web Store listing; must stay public.
+app.get('/untangle/privacy', (_req, res) => {
+  res.sendFile(untanglePrivacyPath);
 });
 
 app.get('*', (_req, res) => {

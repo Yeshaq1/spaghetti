@@ -1,0 +1,263 @@
+/* Legal and policy pages. Shares tokens, header, footer and buttons with index.css,
+   and follows the reading-page typography of case-study.css. */
+
+.legal-body {
+    background: var(--color-black);
+}
+
+/* The homepage overlay is shaped around the Three.js scene. Reading pages get a calmer wash. */
+.legal-body::before {
+    background:
+        radial-gradient(120% 62% at 50% -8%, rgba(255, 255, 255, 0.05) 0%, rgba(2, 2, 2, 0) 62%),
+        linear-gradient(180deg, rgba(2, 2, 2, 0) 0%, rgba(2, 2, 2, 0.45) 70%, rgba(2, 2, 2, 0.86) 100%);
+}
+
+.legal-body .site-footer {
+    position: relative;
+    z-index: var(--z-content);
+    background: var(--color-black);
+}
+
+.legal {
+    position: relative;
+    z-index: var(--z-content);
+    width: min(100%, var(--max-page));
+    margin: 0 auto;
+    padding: calc(var(--header-height) + 72px) clamp(20px, 4vw, 48px) clamp(80px, 10vw, 140px);
+}
+
+/* ---------- Hero ---------- */
+
+.legal-hero {
+    padding-bottom: clamp(48px, 7vw, 88px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.legal-hero__eyebrow {
+    margin: 0 0 20px;
+    color: var(--color-text);
+    font-size: 0.78rem;
+    font-weight: 720;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.legal-hero__title {
+    max-width: 16ch;
+    margin: 0 0 28px;
+    font-size: clamp(2.4rem, 5.6vw, 4.4rem);
+    font-weight: 520;
+    line-height: 1;
+    letter-spacing: -0.01em;
+}
+
+.legal-hero__meta {
+    margin: 0;
+    color: var(--color-soft);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* ---------- Body ---------- */
+
+.legal-content {
+    max-width: 72ch;
+    padding-top: clamp(48px, 7vw, 88px);
+}
+
+.legal-content p,
+.legal-content li {
+    color: rgba(245, 245, 242, 0.74);
+    font-size: clamp(1rem, 1.2vw, 1.08rem);
+    line-height: 1.72;
+}
+
+.legal-content p {
+    margin: 0 0 22px;
+}
+
+.legal-content a {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-decoration-color: rgba(245, 245, 242, 0.36);
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+    transition: text-decoration-color 180ms ease;
+}
+
+.legal-content a:hover {
+    text-decoration-color: var(--color-text);
+}
+
+.legal-hero__meta a {
+    color: var(--color-text);
+    text-underline-offset: 3px;
+}
+
+.legal-content strong {
+    color: var(--color-text);
+    font-weight: 640;
+}
+
+.legal-content code {
+    padding: 2px 6px;
+    color: var(--color-text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.9em;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+}
+
+.legal-summary {
+    padding: 22px 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.legal-section {
+    padding-top: clamp(40px, 5vw, 64px);
+}
+
+.legal-section h2 {
+    margin: 0 0 22px;
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    font-weight: 540;
+    line-height: 1.12;
+}
+
+.legal-section ul {
+    margin: 0 0 22px;
+    padding: 0;
+    list-style: none;
+}
+
+.legal-section li {
+    position: relative;
+    padding: 14px 0 14px 22px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.legal-section li:last-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.legal-section li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: calc(14px + 0.78em);
+    width: 8px;
+    height: 1px;
+    background: var(--color-soft);
+}
+
+/* ---------- Table ---------- */
+
+/* Wide tables scroll inside their own box rather than the page. */
+.legal-table-wrap {
+    margin: 0 0 28px;
+    overflow-x: auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+}
+
+.legal-table {
+    width: 100%;
+    min-width: 560px;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.legal-table th {
+    padding: 14px 18px;
+    color: var(--color-soft);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.legal-table td {
+    padding: 16px 18px;
+    color: rgba(245, 245, 242, 0.74);
+    font-size: 0.94rem;
+    line-height: 1.55;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.legal-table td:first-child {
+    color: var(--color-text);
+    font-weight: 560;
+}
+
+.legal-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+/* ---------- Responsive ---------- */
+
+/* On phones each row becomes a card, with the column name above each value. */
+@media (max-width: 720px) {
+    .legal {
+        padding-top: calc(var(--header-height) + 44px);
+    }
+
+    .legal-hero__title {
+        max-width: none;
+    }
+
+    .legal-table-wrap {
+        overflow: visible;
+        border: 0;
+    }
+
+    .legal-table {
+        min-width: 0;
+    }
+
+    .legal-table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+
+    .legal-table,
+    .legal-table tbody,
+    .legal-table tr,
+    .legal-table td {
+        display: block;
+    }
+
+    .legal-table tr {
+        margin-bottom: 12px;
+        padding: 6px 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-md);
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .legal-table td,
+    .legal-table tbody tr:last-child td {
+        padding: 10px 18px;
+        border-bottom: 0;
+    }
+
+    .legal-table td::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 4px;
+        color: var(--color-soft);
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+}
