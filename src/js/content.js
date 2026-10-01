@@ -2,7 +2,7 @@ export const CALENDAR_URL = 'https://calendar.app.google/XXZGJ4ewqK1f9YPC7';
 
 // Order matters: the carousel renders this list twice back-to-back and loops, so the
 // last entry sits next to the first. Google and General Motors are kept as far apart as
-// a loop allows — three tiles forward, two back. Keep at least two entries between them
+// a loop allows — three tiles between them in each direction. Keep at least two entries between them
 // on both sides when reordering.
 // piti-logo.png is a recolour of the supplied black-on-transparent artwork: strokes moved
 // to #f5f5f2 to match the Monks mark, heart left at its original salmon. The source
@@ -14,7 +14,8 @@ export const CLIENT_LOGOS = [
     { name: 'Piti', src: 'assets/piti-logo.png' },
     { name: 'General Motors', src: 'assets/GM2.png' },
     { name: 'Majles', src: 'assets/majles.png' },
-    { name: 'Dot monks', src: 'assets/dot-monks-logo.svg' }
+    { name: 'Dot monks', src: 'assets/dot-monks-logo.svg' },
+    { name: 'Today Group', src: 'assets/today-group.png' }
 ];
 
 // Client marks shown under each "What We Build" area, by area index (order matches
