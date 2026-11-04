@@ -1,184 +1,362 @@
-/* /gist: The Gist daily briefing under the Spaghetti brand.
+/* /gist: today's episode of The Gist plus one line about today's brief.
    Builds on legal.css for the page shell (header offset, background wash, footer). */
 
-.gist-mark {
-    width: 26px;
-    height: 26px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.44;
+/* ---------- Spaghetti rail (same rope as the case study pages) ---------- */
+
+#rail-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: var(--z-canvas);
+    pointer-events: none;
 }
 
-.gist-mark__dot {
-    fill: #dc2626;
-    stroke: none;
+.has-rail #rail-canvas {
+    opacity: 0.9;
+    -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000 12%, #000 88%, rgba(0, 0, 0, 0) 100%);
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000 12%, #000 88%, rgba(0, 0, 0, 0) 100%);
 }
 
-/* ---------- Hero ---------- */
-
-.gist-hero {
-    padding-bottom: clamp(48px, 7vw, 88px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+/* Keep text out of the margin the rope lives in. */
+.has-rail .gist {
+    padding-inline-end: clamp(320px, 25vw, 440px);
 }
 
-.gist-hero__brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0 0 24px;
-    font-size: 0.95rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
+@media (max-width: 1199px) {
+    #rail-canvas {
+        display: none;
+    }
 }
 
-.gist-hero__by {
-    padding-left: 10px;
-    border-left: 1px solid var(--color-line-strong);
-    color: var(--color-soft);
-    font-weight: 500;
-}
+/* ---------- Page ---------- */
 
-.gist-hero__title {
-    max-width: 18ch;
-    margin: 0 0 24px;
-    font-size: clamp(2.4rem, 5.6vw, 4.4rem);
-    font-weight: 520;
-    line-height: 1.02;
-    letter-spacing: -0.01em;
-}
-
-.gist-hero__lede {
-    max-width: 58ch;
-    margin: 0 0 32px;
-    color: var(--color-muted);
-    font-size: clamp(1rem, 1.3vw, 1.15rem);
-    line-height: 1.65;
-}
-
-.gist-hero__actions {
+.gist {
+    min-height: calc(100vh - 120px);
     display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* ---------- Today's edition ---------- */
-
-.gist-edition {
-    padding: clamp(48px, 7vw, 88px) 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.gist-edition__date {
+.gist-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     margin: 0 0 14px;
     color: var(--color-soft);
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 720;
     letter-spacing: 0.16em;
     text-transform: uppercase;
 }
 
-.gist-edition__title {
-    max-width: 30ch;
-    margin: 0 0 16px;
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
-    font-weight: 560;
-    line-height: 1.15;
+.gist-live {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #dc2626;
 }
 
-.gist-edition__summary {
-    max-width: 68ch;
-    margin: 0 0 28px;
-    color: var(--color-muted);
-    font-size: clamp(1rem, 1.2vw, 1.08rem);
-    line-height: 1.7;
+.is-playing .gist-live {
+    animation: gist-pulse 1.4s ease-in-out infinite;
 }
 
-.gist-items {
+@keyframes gist-pulse {
+    50% { opacity: 0.3; }
+}
+
+/* ---------- Episode ---------- */
+
+.gist-episode {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-    gap: 16px;
-    margin: 40px 0 0;
-    padding: 0;
-    list-style: none;
+    grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 48px);
+    align-items: center;
+    max-width: 880px;
 }
 
-.gist-item {
+.gist-episode--empty {
+    display: block;
+}
+
+.gist-episode__title {
+    margin: 0 0 28px;
+    font-size: clamp(1.8rem, 3.6vw, 2.8rem);
+    font-weight: 540;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+}
+
+/* Cover art, drawn in the page palette. */
+.gist-cover {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    height: 100%;
-    padding: 24px;
-    color: var(--color-text);
-    text-decoration: none;
-    background: var(--color-panel);
+    justify-content: center;
+    aspect-ratio: 1;
+    padding: 30px;
+    overflow: hidden;
+    background:
+        radial-gradient(90% 70% at 85% 0%, rgba(220, 38, 38, 0.16) 0%, rgba(220, 38, 38, 0) 60%),
+        radial-gradient(80% 80% at 0% 100%, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 70%),
+        #121315;
     border: 1px solid var(--color-line);
     border-radius: var(--radius-md);
-    transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+    box-shadow: var(--shadow-panel);
 }
 
-.gist-item:hover {
-    transform: translateY(-2px);
-    border-color: var(--color-line-strong);
-    background: rgba(255, 255, 255, 0.05);
+.gist-cover__logo {
+    position: absolute;
+    top: 9%;
+    right: 9%;
+    width: 13%;
+    opacity: 0.85;
 }
 
-.gist-item__tag {
-    color: var(--color-soft);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
+.gist-cover__the {
+    color: var(--color-muted);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.4em;
     text-transform: uppercase;
 }
 
-.gist-item__title {
+.gist-cover__word {
+    margin: 4px 0 10px;
+    color: var(--color-text);
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+    font-size: 68px;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+}
+
+.gist-cover__rule {
+    display: block;
+    height: 2px;
+    background: #c2493c;
+}
+
+.gist-cover__tag {
+    margin-top: 10px;
+    color: #e08a7b;
+    font-size: 13px;
+}
+
+/* Sound bars: still until the episode plays. */
+.gist-cover__bars {
+    position: absolute;
+    left: 30px;
+    bottom: 22px;
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 14px;
+}
+
+.gist-cover__bars i {
+    width: 3px;
+    height: 30%;
+    border-radius: 1px;
+    background: var(--color-soft);
+}
+
+.is-playing .gist-cover__bars i {
+    background: var(--color-text);
+    animation: gist-bars 900ms ease-in-out infinite alternate;
+}
+
+.is-playing .gist-cover__bars i:nth-child(2) { animation-delay: -300ms; }
+.is-playing .gist-cover__bars i:nth-child(3) { animation-delay: -600ms; }
+.is-playing .gist-cover__bars i:nth-child(4) { animation-delay: -150ms; }
+.is-playing .gist-cover__bars i:nth-child(5) { animation-delay: -450ms; }
+
+@keyframes gist-bars {
+    from { height: 25%; }
+    to { height: 100%; }
+}
+
+/* ---------- Player ---------- */
+
+.gist-player {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.gist-player__toggle {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    color: var(--color-inverse);
+    background: var(--color-text);
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 180ms ease, background 180ms ease;
+}
+
+.gist-player__toggle:hover {
+    transform: scale(1.05);
+    background: #ffffff;
+}
+
+.gist-player__toggle:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 3px;
+}
+
+.gist-player__icon {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+.gist-player__icon--pause,
+.is-playing .gist-player__icon--play {
+    display: none;
+}
+
+.is-playing .gist-player__icon--pause {
+    display: block;
+}
+
+.gist-player__seek {
+    --progress: 0%;
+    flex: 1;
+    min-width: 0;
+    height: 20px;
     margin: 0;
-    font-size: 1.2rem;
-    font-weight: 620;
+    background: transparent;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.gist-player__seek::-webkit-slider-runnable-track {
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--color-text) var(--progress), rgba(255, 255, 255, 0.16) var(--progress));
+}
+
+.gist-player__seek::-moz-range-track {
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--color-text) var(--progress), rgba(255, 255, 255, 0.16) var(--progress));
+}
+
+.gist-player__seek::-webkit-slider-thumb {
+    width: 12px;
+    height: 12px;
+    margin-top: -4.5px;
+    border-radius: 50%;
+    background: var(--color-text);
+    -webkit-appearance: none;
+}
+
+.gist-player__seek::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--color-text);
+}
+
+.gist-player__time {
+    flex: none;
+    color: var(--color-soft);
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Today's brief ---------- */
+
+.gist-brief {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 880px;
+    margin-top: clamp(48px, 7vw, 72px);
+    padding-top: 28px;
+    color: var(--color-text);
+    text-decoration: none;
+    border-top: 1px solid var(--color-line);
+}
+
+.gist-brief .gist-label {
+    margin-bottom: 4px;
+}
+
+.gist-brief__title {
+    font-size: clamp(1.15rem, 1.8vw, 1.35rem);
+    font-weight: 580;
     line-height: 1.3;
 }
 
-.gist-item__summary {
-    margin: 0;
+.gist-brief__line {
+    max-width: 64ch;
     color: var(--color-muted);
-    font-size: 0.95rem;
-    line-height: 1.65;
+    line-height: 1.6;
 }
 
-.gist-item__more {
-    margin-top: auto;
-    padding-top: 8px;
-    font-size: 0.85rem;
+.gist-brief__more {
+    margin-top: 8px;
+    font-size: 0.88rem;
     font-weight: 650;
+    transition: transform 180ms ease;
 }
 
-.gist-edition--empty p {
-    color: var(--color-muted);
+.gist-brief:hover .gist-brief__title {
+    text-decoration: underline;
+    text-underline-offset: 4px;
 }
 
-/* ---------- Spaghetti CTA ---------- */
+.gist-brief:hover .gist-brief__more {
+    transform: translateX(3px);
+}
 
-.gist-cta {
+/* ---------- Footer links ---------- */
+
+.gist-foot {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px 48px;
-    margin-top: clamp(48px, 7vw, 88px);
-    padding: clamp(28px, 4vw, 44px);
-    background: var(--color-panel-solid);
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-md);
+    gap: 8px 14px;
+    margin: clamp(40px, 6vw, 64px) 0 0;
+    color: var(--color-soft);
+    font-size: 0.88rem;
 }
 
-.gist-cta__title {
-    margin: 0 0 10px;
-    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
-    font-weight: 580;
-}
-
-.gist-cta__body {
-    max-width: 56ch;
-    margin: 0;
+.gist-foot a {
     color: var(--color-muted);
-    line-height: 1.65;
+    text-decoration: none;
+}
+
+.gist-foot a:hover {
+    color: var(--color-text);
+}
+
+/* ---------- Narrow screens ---------- */
+
+@media (max-width: 720px) {
+    .gist-episode {
+        grid-template-columns: 1fr;
+    }
+
+    .gist-cover {
+        width: 180px;
+    }
+
+    .gist-cover {
+        padding: 24px;
+    }
+
+    .gist-cover__word {
+        font-size: 54px;
+    }
+
+    .gist-cover__bars {
+        left: 24px;
+        bottom: 18px;
+    }
 }
