@@ -626,6 +626,7 @@ export const COPY = {
             systems: 'What We Build',
             proof: 'Track record',
             work: 'Case studies',
+            gist: 'The Gist',
             fit: 'Talk to us',
             call: 'Book your free AI audit'
         },
@@ -811,6 +812,7 @@ export const COPY = {
             systems: 'ماذا نبني',
             proof: 'سجل أعمالنا',
             work: 'دراسات حالة',
+            gist: 'The Gist',
             fit: 'تواصل معنا',
             call: 'احجز مكالمة'
         },

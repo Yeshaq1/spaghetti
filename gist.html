@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{pageTitle}}</title>
+    <meta name="description" content="{{pageDescription}}">
+    <link rel="icon" type="image/png" href="/assets/logo.png">
+    <link rel="canonical" href="https://www.spgti.com/gist">
+
+    <meta property="og:site_name" content="Spaghetti">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.spgti.com/gist">
+    <meta property="og:title" content="{{pageTitle}}">
+    <meta property="og:description" content="{{pageDescription}}">
+    <meta property="og:image" content="https://www.spgti.com/assets/logo.png">
+    <meta name="twitter:card" content="summary">
+
+    <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/base/fonts.css">
+    <link rel="stylesheet" href="/css/base/reset.css">
+    <link rel="stylesheet" href="/css/base/variables.css">
+    <link rel="stylesheet" href="/css/pages/index.css">
+    <link rel="stylesheet" href="/css/pages/legal.css">
+    <link rel="stylesheet" href="/css/pages/gist.css">
+    <link rel="stylesheet" href="/css/layout/responsive.css">
+</head>
+<body class="legal-body gist-body">
+    <header class="site-header" data-site-header>
+        <a class="brand-mark" href="/" aria-label="Spaghetti home">
+            <img src="/assets/logo.png" alt="" class="brand-mark__logo">
+            <span class="brand-mark__text">Spaghetti</span>
+        </a>
+
+        <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+            <a href="/#systems">What We Build</a>
+            <a href="/#method">How we work</a>
+            <a href="/#work">Case studies</a>
+            <a href="/gist" class="is-active" aria-current="page">The Gist</a>
+            <a href="/#fit">Talk to us</a>
+        </nav>
+
+        <div class="header-actions">
+            <a class="button button--small header-cta" href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" target="_blank" rel="noopener noreferrer">
+                Book your free AI audit
+            </a>
+            <button class="menu-toggle" type="button" data-menu-toggle aria-controls="site-nav" aria-expanded="false" aria-label="Open navigation">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <main class="legal gist">
+        <header class="gist-hero">
+            <p class="gist-hero__brand">
+                <svg class="gist-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <circle cx="8.4" cy="12" r="5.28" />
+                    <circle cx="15.6" cy="12" r="5.28" />
+                    <circle class="gist-mark__dot" cx="12" cy="12" r="0.96" />
+                </svg>
+                <span>The Gist</span>
+                <span class="gist-hero__by">by Spaghetti</span>
+            </p>
+            <h1 class="gist-hero__title">What moved in AI today, and why it matters.</h1>
+            <p class="gist-hero__lede">A daily briefing on AI policy, compute, capital and capabilities, built from 100+ sources every morning. An 8-minute read, plus a weekly podcast.</p>
+            <div class="gist-hero__actions">
+                <a class="button button--primary" href="https://aigist.co/?utm_source=spaghetti&amp;utm_medium=gist_page&amp;utm_campaign=subscribe" target="_blank" rel="noopener">Subscribe free</a>
+                <a class="button button--secondary" href="https://aigist.co/digests?utm_source=spaghetti&amp;utm_medium=gist_page" target="_blank" rel="noopener">Browse the archive</a>
+            </div>
+        </header>
+
+        {{edition}}
+
+        <section class="gist-cta">
+            <div>
+                <h2 class="gist-cta__title">Reading about it is step one.</h2>
+                <p class="gist-cta__body">Spaghetti builds the AI agents, knowledge systems and workflows these stories are about, inside real operations. If something here sparked an idea, let's talk it through.</p>
+            </div>
+            <a class="button button--primary" href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" target="_blank" rel="noopener noreferrer">Book your free AI audit</a>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-footer__identity">
+            <p class="site-footer__legal">
+                &copy; <span data-footer-year>2026</span> Spaghetti LLC
+                <br>Sheridan, Wyoming, United States
+                <br>Serving clients across the US and EU
+            </p>
+        </div>
+        <div class="site-footer__links">
+            <a href="mailto:info@spgti.com">info@spgti.com</a>
+            <a href="https://www.linkedin.com/company/llm-rag/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://calendar.app.google/XXZGJ4ewqK1f9YPC7" target="_blank" rel="noopener noreferrer">Book your free AI audit</a>
+        </div>
+    </footer>
+
+    <script src="/src/js/legal.js" defer></script>
+</body>
+</html>

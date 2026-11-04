@@ -1,0 +1,184 @@
+/* /gist: The Gist daily briefing under the Spaghetti brand.
+   Builds on legal.css for the page shell (header offset, background wash, footer). */
+
+.gist-mark {
+    width: 26px;
+    height: 26px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.44;
+}
+
+.gist-mark__dot {
+    fill: #dc2626;
+    stroke: none;
+}
+
+/* ---------- Hero ---------- */
+
+.gist-hero {
+    padding-bottom: clamp(48px, 7vw, 88px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gist-hero__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 24px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.gist-hero__by {
+    padding-left: 10px;
+    border-left: 1px solid var(--color-line-strong);
+    color: var(--color-soft);
+    font-weight: 500;
+}
+
+.gist-hero__title {
+    max-width: 18ch;
+    margin: 0 0 24px;
+    font-size: clamp(2.4rem, 5.6vw, 4.4rem);
+    font-weight: 520;
+    line-height: 1.02;
+    letter-spacing: -0.01em;
+}
+
+.gist-hero__lede {
+    max-width: 58ch;
+    margin: 0 0 32px;
+    color: var(--color-muted);
+    font-size: clamp(1rem, 1.3vw, 1.15rem);
+    line-height: 1.65;
+}
+
+.gist-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* ---------- Today's edition ---------- */
+
+.gist-edition {
+    padding: clamp(48px, 7vw, 88px) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gist-edition__date {
+    margin: 0 0 14px;
+    color: var(--color-soft);
+    font-size: 0.78rem;
+    font-weight: 720;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.gist-edition__title {
+    max-width: 30ch;
+    margin: 0 0 16px;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 560;
+    line-height: 1.15;
+}
+
+.gist-edition__summary {
+    max-width: 68ch;
+    margin: 0 0 28px;
+    color: var(--color-muted);
+    font-size: clamp(1rem, 1.2vw, 1.08rem);
+    line-height: 1.7;
+}
+
+.gist-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 16px;
+    margin: 40px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.gist-item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+    padding: 24px;
+    color: var(--color-text);
+    text-decoration: none;
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+}
+
+.gist-item:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-line-strong);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.gist-item__tag {
+    color: var(--color-soft);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.gist-item__title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 620;
+    line-height: 1.3;
+}
+
+.gist-item__summary {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+
+.gist-item__more {
+    margin-top: auto;
+    padding-top: 8px;
+    font-size: 0.85rem;
+    font-weight: 650;
+}
+
+.gist-edition--empty p {
+    color: var(--color-muted);
+}
+
+/* ---------- Spaghetti CTA ---------- */
+
+.gist-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px 48px;
+    margin-top: clamp(48px, 7vw, 88px);
+    padding: clamp(28px, 4vw, 44px);
+    background: var(--color-panel-solid);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+}
+
+.gist-cta__title {
+    margin: 0 0 10px;
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    font-weight: 580;
+}
+
+.gist-cta__body {
+    max-width: 56ch;
+    margin: 0;
+    color: var(--color-muted);
+    line-height: 1.65;
+}
