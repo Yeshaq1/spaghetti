@@ -71,7 +71,7 @@
     display: grid;
     grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
     gap: clamp(24px, 4vw, 48px);
-    align-items: center;
+    align-items: start;
     max-width: 880px;
 }
 
@@ -314,6 +314,50 @@
 
 .gist-brief:hover .gist-brief__more {
     transform: translateX(3px);
+}
+
+/* ---------- Follow the podcast ---------- */
+
+.gist-subscribe {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.gist-subscribe__button {
+    display: inline-flex;
+    flex: 0 0 164px;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    aspect-ratio: 129.1546 / 41;
+    text-decoration: none;
+}
+
+/* Apple's complete supplied badge, including its border. Do not restyle the artwork. */
+.gist-subscribe__apple {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.gist-subscribe__button--spotify {
+    border: 1px solid #a6a6a6;
+    border-radius: 12px;
+    background: #000;
+}
+
+/* Official full logo: clear space exceeds half the icon height, including the border. */
+.gist-subscribe__spotify {
+    display: block;
+    width: 90px;
+    height: auto;
+}
+
+.gist-subscribe__button:focus-visible {
+    outline: 2px solid var(--color-text);
+    outline-offset: 5px;
 }
 
 /* ---------- Footer links ---------- */

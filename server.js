@@ -41,7 +41,7 @@ app.get('/untangle/privacy', (_req, res) => {
 // The Gist (aigist.co): /gist shows today's podcast episode and brief under the Spaghetti brand.
 app.get('/gist', async (_req, res, next) => {
   try {
-    res.set('Cache-Control', 'public, max-age=600');
+    res.set('Cache-Control', process.env.NODE_ENV === 'production' ? 'public, max-age=600' : 'no-store');
     res.type('html').send(await renderGistPage());
   } catch (error) {
     next(error);
