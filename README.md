@@ -67,6 +67,30 @@ must stay in step with the `.has-rail` gutter and the `max-width: 1199px` rule i
 `css/pages/case-study.css`. Its render loop pauses when the tab is hidden, and idle sway is
 dropped under `prefers-reduced-motion`.
 
+## Careers: the bench
+
+`/careers` is the bench landing page plus a full-screen application (one question per
+screen, keyboard-driven, drafts saved in the browser). Applications post to
+`/api/careers/apply` and land in a private directory at `/careers/bench`.
+
+- Questions live in `src/js/bench-questions.js`. Reword, reorder or add steps there; the
+  flow (`src/js/careers.js`) renders whatever it finds. If you add a field, also add it to
+  `SCHEMA` in `lib/bench.js` or the server will drop it.
+- Storage lives in `lib/bench-store.js`. In production, applications, statuses and notes go
+  to **Postgres** (one `careers_applications` table, created automatically) and CVs go to an
+  **S3-compatible bucket** under `careers/cv/<id>.pdf`. With neither configured, local dev
+  falls back to files in `.data/bench/` (git-ignored). Nothing is kept in app memory.
+- Spam: hidden honeypot field, a 45-second minimum fill time, and 5 submissions per IP per hour.
+
+| Env var | Purpose |
+| --- | --- |
+| `BENCH_ADMIN_PASSWORD` | Required for `/careers/bench` (HTTP basic auth, any username). Unset = page returns 404. |
+| `DATABASE_URL` | Postgres connection string. On Railway, reference the Postgres service's `DATABASE_URL`. |
+| `S3_BUCKET`, `S3_ENDPOINT`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` | The bucket for CVs (Railway Buckets, R2, S3, GCS). `S3_REGION` defaults to `auto`; set `S3_FORCE_PATH_STYLE=true` only if your provider needs it. |
+| `RESEND_API_KEY`, `BENCH_NOTIFY_TO` | Optional. Emails you each new application and sends the applicant a confirmation. |
+| `BENCH_NOTIFY_FROM` | Optional sender, default `Spaghetti <bench@spgti.com>` (domain must be verified in Resend). |
+| `BENCH_WEBHOOK_URL` | Optional Slack-compatible webhook for new-application pings. |
+
 ## Deployment
 
 The app serves static files from Express and falls back to `index.html` for all routes.

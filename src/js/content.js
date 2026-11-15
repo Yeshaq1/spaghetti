@@ -18,6 +18,33 @@ export const CLIENT_LOGOS = [
     { name: 'Today Group', src: 'assets/today-group.png' }
 ];
 
+// Careers page "Collective experience": companies Spaghetti's people have worked at or built
+// for. Every assets/experience/ file is a single-colour #f5f5f2 PNG on a transparent
+// background, trimmed tight and 120px tall (the homepage keeps its original artwork).
+// Keep new additions in the same style so the wall reads as one set.
+export const EXPERIENCE_LOGOS = [
+    { name: 'Shell', src: 'assets/experience/shell.png' },
+    { name: 'Google', src: 'assets/experience/google.png' },
+    { name: 'IBM', src: 'assets/experience/ibm.png' },
+    { name: 'General Electric', src: 'assets/experience/general-electric.png' },
+    { name: 'Strategy& (PwC)', src: 'assets/experience/strategyand.png' },
+    { name: 'General Motors', src: 'assets/experience/general-motors.png' },
+    { name: 'Pratt & Whitney', src: 'assets/experience/pratt-whitney.png' },
+    { name: 'First American', src: 'assets/experience/first-american.png' },
+    { name: 'Monks', src: 'assets/experience/monks.png' },
+    { name: 'Dialectica', src: 'assets/experience/dialectica.png' },
+    { name: 'Atheneum', src: 'assets/experience/atheneum.png' },
+    { name: 'BrainBox AI', src: 'assets/experience/brainbox-ai.png' },
+    { name: 'TheoremOne', src: 'assets/experience/theoremone.png' },
+    { name: 'QSAS', src: 'assets/experience/qsas.png' },
+    { name: 'RTE Energy Solutions', src: 'assets/experience/rte-energy.png' },
+    { name: 'HB Body', src: 'assets/experience/hb-body.png' },
+    { name: 'Today Group', src: 'assets/experience/today-group.png' },
+    { name: 'AI DimosNET', src: 'assets/experience/dimosnet.png' },
+    { name: 'Majles', src: 'assets/experience/majles.png' },
+    { name: 'Winimo', src: 'assets/experience/winimo.png' }
+];
+
 // Client marks shown under each "What We Build" area, by area index (order matches
 // `systems.items`). Kept outside the copy blocks so both languages share one list.
 // Names must match a CLIENT_LOGOS entry; anything unmatched is skipped.
@@ -627,6 +654,7 @@ export const COPY = {
             proof: 'Track record',
             work: 'Case studies',
             gist: 'The Gist',
+            careers: 'Careers',
             fit: 'Talk to us',
             call: 'Book your free AI audit'
         },
@@ -813,6 +841,7 @@ export const COPY = {
             proof: 'سجل أعمالنا',
             work: 'دراسات حالة',
             gist: 'The Gist',
+            careers: 'انضم إلينا',
             fit: 'تواصل معنا',
             call: 'احجز مكالمة'
         },

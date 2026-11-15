@@ -27,7 +27,8 @@ const DEFAULTS = {
     coilSpread: 1,
     coilBulge: 0.72,
     baseRadius: 0.055,
-    knotCount: 3,
+    // Floating torus "knots" read as cereal hoops at rail size, so none by default.
+    knotCount: 0,
     swayAmplitude: 0.16
 };
 

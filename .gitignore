@@ -81,3 +81,6 @@ jspm_packages/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Bench applications (careers page) when stored locally
+.data/
