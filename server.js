@@ -21,6 +21,7 @@ app.set('trust proxy', 1);
 
 // Keep the raw template, server code, stored applications and the admin page out of static serving.
 app.use('/gist.html', (_req, res) => res.redirect(301, '/gist'));
+app.use('/recover.html', (_req, res) => res.redirect(301, '/recover'));
 app.use('/careers.html', (_req, res) => res.redirect(301, '/careers'));
 app.use(['/lib', '/.data', '/bench-admin.html', '/src/js/bench-admin.js'], (_req, res) => res.sendStatus(404));
 // Scripts and styles have no version in their URLs, so browsers must revalidate them
@@ -37,6 +38,10 @@ app.get('/api/features', (_req, res) => {
 
 app.get(['/', '/index.html'], (_req, res) => {
   res.sendFile(indexPath);
+});
+
+app.get('/recover', (_req, res) => {
+  res.sendFile(path.join(rootDir, 'recover.html'));
 });
 
 // Case study pages resolve their slug client-side from the URL.
